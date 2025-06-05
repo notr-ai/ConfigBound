@@ -1,7 +1,6 @@
 {
   "name": "@config-bound/config-bound",
   "version": "0.0.3",
-  "type": "module",
   "packageManager": "npm@10.5.0",
   "repository": {
     "type": "git",
@@ -23,8 +22,39 @@
     "build": "tsc",
     "prepare": "husky"
   },
+  "main": "./dist/configBound.js",
+  "types": "./dist/configBound.d.ts",
   "exports": {
-    ".": "./src/configBound.ts"
+    ".": {
+      "types": "./dist/configBound.d.ts",
+      "require": "./dist/configBound.js",
+      "import": "./dist/configBound.js"
+    },
+    "./section": {
+      "types": "./dist/section/section.d.ts",
+      "require": "./dist/section/section.js",
+      "import": "./dist/section/section.js"
+    },
+    "./element": {
+      "types": "./dist/element/element.d.ts",
+      "require": "./dist/element/element.js",
+      "import": "./dist/element/element.js"
+    },
+    "./bind": {
+      "types": "./dist/bind/bind.d.ts",
+      "require": "./dist/bind/bind.js",
+      "import": "./dist/bind/bind.js"
+    },
+    "./bind/bindContext": {
+      "types": "./dist/bind/bindContext.d.ts",
+      "require": "./dist/bind/bindContext.js",
+      "import": "./dist/bind/bindContext.js"
+    },
+    "./bind/binds/envVar": {
+      "types": "./dist/bind/binds/envVar.d.ts",
+      "require": "./dist/bind/binds/envVar.js",
+      "import": "./dist/bind/binds/envVar.js"
+    }
   },
   "publishConfig": {
     "access": "public",

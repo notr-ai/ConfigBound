@@ -2,6 +2,7 @@ import { BindContext } from './bind/bindContext';
 import { Bind } from './bind/bind';
 import { Section } from './section/section';
 import {
+  ConfigInvalidException,
   ElementNotFoundException,
   SectionExistsException,
   SectionNotFoundException
@@ -99,7 +100,21 @@ export class ConfigBound implements BindContext {
         this.logger.trace?.(
           `Found value for ${sectionName}.${elementName} in ${bind.name}: ${element.sensitive ? '[MASKED]' : value}`
         );
-        return value;
+
+        // Validate the value against the element's schema
+        const validationResult = element.validator.validate(value);
+        if (validationResult.error) {
+          this.logger.error(
+            `Value for ${sectionName}.${elementName} failed validation: ${validationResult.error.message}`
+          );
+          throw new ConfigInvalidException(
+            `${sectionName}.${elementName}`,
+            validationResult.error.message
+          );
+        }
+
+        // Return the validated (and potentially transformed) value
+        return validationResult.value as T;
       } else {
         this.logger.trace?.(
           `No value found for ${sectionName}.${elementName} in ${bind.name}`

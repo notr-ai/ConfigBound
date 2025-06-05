@@ -137,7 +137,7 @@ export class Element<T> {
     this.logger?.debug(
       `Getting value for ${this.sectionName}.${this.name} from bind context`
     );
-    // Use the bindContext to get the value
+    // Use the bindContext to get the value (validation happens at ConfigBound level)
     const contextValue = bindContext.get<R>(this.sectionName, this.name);
     // If we got a value from context, return it
     if (contextValue !== undefined) {
