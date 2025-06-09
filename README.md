@@ -44,6 +44,10 @@ const port = config.get<number>('app', 'port');
 
 See the [docs](./docs).
 
+## Examples
+
+See the [examples](./examples).
+
 ## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
