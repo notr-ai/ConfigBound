@@ -1,0 +1,16 @@
+{
+  "name": "examples",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "tsc",
+    "start:envVarExample": "npm run build && MY_APP_SERVER_PORT=8080 MY_APP_DATABASE_PASSWORD=supersecret123 MY_APP_API_KEY=abc1234xyz node dist/envVarExample.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "Examples for ConfigBound",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@config-bound/config-bound": "file:.."
+  }
+}
