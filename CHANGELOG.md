@@ -6,6 +6,7 @@
 - Fix element validation
 - Update tsconfig to use ES2020 target and module resolution
 - Update tsconfig to emit declaration files
+- Add example directory
 
 ## 0.0.3 - 2025-05-23
 
