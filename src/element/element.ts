@@ -5,7 +5,7 @@ import {
 } from '../utilities/errors';
 import { Logger } from '../utilities/logger';
 import { sanitizeName } from '../utilities/sanitizeNames';
-import { BindContext } from '../bind/bindContext';
+import { ConfigValueProvider } from '../bind/configValueProvider';
 
 /**
  * A Element is a single configuration option
@@ -35,10 +35,6 @@ export class Element<T> {
    * The Joi validator of the Element
    */
   validator: Joi.AnySchema<T>;
-  /**
-   * The value of the Element
-   */
-  value?: T;
   /**
    * The parent section name
    */
@@ -101,32 +97,13 @@ export class Element<T> {
     return this.validator._flags.presence === 'required';
   }
 
-  /**
-   * Set the value of Element
-   * @param value - The value of the element
-   */
-  set(value?: T): void {
-    const result = this.validator.validate(value);
-    if (result.error) {
-      throw new ConfigInvalidException(this.name, result.error.message);
-    }
-    this.value = result.value ?? this.default;
-  }
 
   /**
    * Retrieves the value of the element
-   * @param bindContext - The context to use for retrieving values
+   * @param valueProvider - The provider to use for retrieving values
    * @returns the value of the Element. If it's unset, then it returns undefined.
    */
-  get<R>(bindContext: BindContext): R | undefined {
-    // First check if we have a locally set value
-    if (this.value !== undefined) {
-      this.logger?.trace?.(
-        `Using locally set value for ${this.sectionName}.${this.name}: ${this.sensitive ? '[MASKED]' : this.value}`
-      );
-      return this.value as unknown as R;
-    }
-    // Otherwise try to get from the bind context
+  get<R>(valueProvider: ConfigValueProvider): R | undefined {
     if (!this.sectionName) {
       const error = new Error(
         `${this.name} is not associated with any section`
@@ -134,38 +111,23 @@ export class Element<T> {
       this.logger?.error(`Error getting value: ${error.message}`);
       throw error;
     }
+
     this.logger?.debug(
-      `Getting value for ${this.sectionName}.${this.name} from bind context`
+      `Getting value for ${this.sectionName}.${this.name} from value provider`
     );
-    // Use the bindContext to get the value (validation happens at ConfigBound level)
-    const contextValue = bindContext.get<R>(this.sectionName, this.name);
-    // If we got a value from context, return it
-    if (contextValue !== undefined) {
-      this.logger?.trace?.(
-        `Found value in context for ${this.sectionName}.${this.name}: ${this.sensitive ? '[MASKED]' : contextValue}`
-      );
-      return contextValue;
-    }
-    // If no value in context but we have a default, use that
-    if (this.default !== undefined) {
-      this.logger?.trace?.(
-        `Using default value for ${this.sectionName}.${this.name}: ${this.sensitive ? '[MASKED]' : this.default}`
-      );
-      return this.default as unknown as R;
-    }
-    // Otherwise return undefined
-    this.logger?.debug(`No value found for ${this.sectionName}.${this.name}`);
-    return undefined;
+
+    // Delegate to the valueProvider - it will handle validation and fallbacks
+    return valueProvider.get<R>(this.sectionName, this.name);
   }
 
   /**
    * Retrieves the value of the element or throws an error if the value isn't found.
-   * @param bindContext - The context to use for retrieving values
+   * @param valueProvider - The provider to use for retrieving values
    * @throws {@link ConfigUnsetException ConfigUnsetException} if the value has not been set
    * @returns the value of the Element.
    */
-  getOrThrow<R>(bindContext: BindContext): R {
-    const value = this.get<R>(bindContext);
+  getOrThrow<R>(valueProvider: ConfigValueProvider): R {
+    const value = this.get<R>(valueProvider);
     if (typeof value === 'undefined') {
       throw new ConfigUnsetException(this.name);
     }

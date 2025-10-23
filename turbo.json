@@ -5,16 +5,13 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "clean": {
+      "cache": false
+    },
     "lint": {
       "outputs": []
     },
-    "lint:ci": {
-      "outputs": []
-    },
     "format": {
-      "outputs": []
-    },
-    "format:ci": {
       "outputs": []
     },
     "test": {
@@ -33,6 +30,16 @@
       "dependsOn": ["build"],
       "inputs": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.spec.ts"],
       "outputs": ["coverage/**"]
+    },
+    "examples": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "examples:envVar": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
     }
   }
 }

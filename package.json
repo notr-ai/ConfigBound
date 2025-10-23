@@ -2,24 +2,31 @@
   "name": "@config-bound/config-bound",
   "version": "0.0.4",
   "packageManager": "npm@10.5.0",
+  "workspaces": [
+    "examples"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/RobertKeyser/ConfigBound"
   },
   "scripts": {
+    "build": "tsc",
+    "build:all": "npm run build && turbo run build",
+    "clean": "rimraf dist coverage .turbo examples/dist examples/.turbo",
+    "check": "npm run format:ci && npm run lint:ci && npm run test",
     "format": "prettier --write --config .config/.prettierrc --ignore-path .config/.prettierignore .",
     "format:ci": "prettier --check --config .config/.prettierrc --ignore-path .config/.prettierignore .",
-    "test": "jest --config .config/jest.config.js",
-    "test:dev": "TEST_USE_CONSOLE_LOGGER=true npm run test -- --watch",
-    "test:coverage": "npm run test -- --coverage",
-    "test:verbose": "TEST_USE_CONSOLE_LOGGER=true npm run test -- --verbose",
     "lint": "npm run lint:code && npm run lint:markdown",
     "lint:ci": "npm run lint:code:ci && npm run lint:markdown:ci",
     "lint:code": "npm run lint:code:ci -- --fix",
     "lint:code:ci": "eslint --config .config/eslint.config.mjs .",
     "lint:markdown": "npm run lint:markdown:ci -- --fix",
     "lint:markdown:ci": "markdownlint-cli2 --config .config/.markdownlint-cli2.jsonc \"**/*.md\" \"!**/node_modules\"",
-    "build": "tsc",
+    "test": "jest --config .config/jest.config.js",
+    "test:dev": "TEST_USE_CONSOLE_LOGGER=true npm run test -- --watch",
+    "test:coverage": "npm run test -- --coverage",
+    "test:verbose": "TEST_USE_CONSOLE_LOGGER=true npm run test -- --verbose",
+    "examples:envVar": "turbo run examples:envVar --filter=examples",
     "prepare": "husky"
   },
   "main": "./dist/configBound.js",
@@ -29,6 +36,11 @@
       "types": "./dist/configBound.d.ts",
       "require": "./dist/configBound.js",
       "import": "./dist/configBound.js"
+    },
+    "./createConfig": {
+      "types": "./dist/createConfig.d.ts",
+      "require": "./dist/createConfig.js",
+      "import": "./dist/createConfig.js"
     },
     "./section": {
       "types": "./dist/section/section.d.ts",
@@ -45,10 +57,10 @@
       "require": "./dist/bind/bind.js",
       "import": "./dist/bind/bind.js"
     },
-    "./bind/bindContext": {
-      "types": "./dist/bind/bindContext.d.ts",
-      "require": "./dist/bind/bindContext.js",
-      "import": "./dist/bind/bindContext.js"
+    "./bind/configValueProvider": {
+      "types": "./dist/bind/configValueProvider.d.ts",
+      "require": "./dist/bind/configValueProvider.js",
+      "import": "./dist/bind/configValueProvider.js"
     },
     "./bind/binds/envVar": {
       "types": "./dist/bind/binds/envVar.d.ts",
@@ -64,22 +76,23 @@
   "license": "MIT",
   "description": "A config registration library",
   "devDependencies": {
-    "@eslint/js": "^9.26.0",
+    "@eslint/js": "^9.38.0",
     "@types/jest": "^29.5.14",
-    "@typescript-eslint/eslint-plugin": "^8.31.1",
-    "eslint": "^9.26.0",
-    "eslint-config-prettier": "^10.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest": "^28.11.0",
-    "eslint-plugin-turbo": "^2.5.3",
-    "globals": "^16.1.0",
+    "eslint-plugin-turbo": "^2.5.8",
+    "globals": "^16.4.0",
     "husky": "^9.1.7",
     "jest-runner-groups": "^2.2.0",
-    "markdownlint-cli2": "^0.18.0",
-    "prettier": "3.5.3",
-    "ts-jest": "^29.3.2",
+    "markdownlint-cli2": "^0.18.1",
+    "prettier": "3.6.2",
+    "rimraf": "^5.0.10",
+    "ts-jest": "^29.4.5",
     "turbo": "^2.5.3",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.31.1"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2"
   },
   "dependencies": {
     "joi": "^17.13.3"

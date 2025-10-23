@@ -49,7 +49,7 @@ describe('envVarBindIntegration', () => {
     );
 
     // Create an env var bind
-    const envVarBind = new EnvVarBind('MY_APP');
+    const envVarBind = new EnvVarBind({ prefix: 'MY_APP' });
 
     // Create the config bound with the bind
     config = new ConfigBound(

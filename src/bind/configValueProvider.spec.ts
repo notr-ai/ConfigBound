@@ -8,7 +8,7 @@ import { ConsoleLogger, NullLogger } from '../utilities/logger';
 /**
  * @group integration
  */
-describe('BindContext functionality', () => {
+describe('ConfigValueProvider functionality', () => {
   let configBound: ConfigBound;
   let serverSection: Section;
   let databaseSection: Section;
@@ -74,7 +74,7 @@ describe('BindContext functionality', () => {
     );
 
     // Create bind first
-    const envVarBind = new EnvVarBind('TEST_APP');
+    const envVarBind = new EnvVarBind({ prefix: 'TEST_APP' });
 
     // Create the config bound with bind and then add sections
     configBound = new ConfigBound(
@@ -97,17 +97,17 @@ describe('BindContext functionality', () => {
     delete process.env.TEST_APP_DATABASE_HOST;
   });
 
-  test('elements can get their values directly from the bind context', () => {
-    // Get the bind context from the section
-    const serverBindContext = serverSection.getBindContext();
-    expect(serverBindContext).toBeDefined();
+  test('elements can get their values directly from the config value provider', () => {
+    // Get the config value provider from the section
+    const serverConfigValueProvider = serverSection.getConfigValueProvider();
+    expect(serverConfigValueProvider).toBeDefined();
 
-    // Elements should be able to get their values from the bind context
-    const portValue = portElement.get<number>(serverBindContext!);
+    // Elements should be able to get their values from the config value provider
+    const portValue = portElement.get<number>(serverConfigValueProvider!);
     expect(portValue).toBe(8081);
 
     // Host element should use default since not in env
-    const hostValue = hostElement.get<string>(serverBindContext!);
+    const hostValue = hostElement.get<string>(serverConfigValueProvider!);
     expect(hostValue).toBe('localhost');
   });
 
