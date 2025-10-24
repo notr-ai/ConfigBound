@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Cache turbo build setup
         uses: actions/cache@v4
@@ -32,9 +32,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.12.0
-          cache: 'npm'
-          cache-dependency-path: './package-lock.json'
-          registry-url: 'https://registry.npmjs.org'
+          cache: "npm"
+          cache-dependency-path: "./package-lock.json"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install npm packages
         run: npm ci --no-fund
@@ -54,11 +54,11 @@ jobs:
       - name: Security Scan
         uses: aquasecurity/trivy-action@0.30.0
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          scanners: 'vuln,license,secret'
-          severity: 'HIGH,CRITICAL'
-          exit-code: '1'
+          scan-type: "fs"
+          scan-ref: "."
+          scanners: "vuln,license,secret"
+          severity: "HIGH,CRITICAL"
+          exit-code: "1"
 
       - name: Publish to npm
         uses: JS-DevTools/npm-publish@v3
