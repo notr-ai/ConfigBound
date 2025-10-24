@@ -1,14 +1,28 @@
 import { Bind } from '../bind';
+import { ConfigInvalidException } from '../../utilities/errors';
 
 /**
  * A Bind that retrieves the value of an environment variable.
  */
 export class EnvVarBind extends Bind {
-  envVarPrefix?: string;
+  private envVarPrefix?: string;
+  private customEnvVarName?: (elementPath: string) => string;
 
-  constructor(envVarPrefix?: string) {
+  constructor(options?: {
+    prefix?: string;
+    customEnvVarName?: (elementPath: string) => string;
+  }) {
     super('EnvironmentVariable');
-    this.envVarPrefix = envVarPrefix;
+
+    if (options?.prefix && options?.customEnvVarName) {
+      throw new ConfigInvalidException(
+        'EnvVarBind',
+        'Cannot specify both prefix and customEnvVarName. They are mutually exclusive.'
+      );
+    }
+
+    this.envVarPrefix = options?.prefix;
+    this.customEnvVarName = options?.customEnvVarName;
   }
 
   /**
@@ -17,7 +31,11 @@ export class EnvVarBind extends Bind {
    * @returns The value of the environment variable.
    */
   retrieve<T>(fullName: string): T | undefined {
-    const envVarName = this.getEnvVarName(fullName);
+    // Use custom function if provided, otherwise use default naming convention
+    const envVarName = this.customEnvVarName
+      ? this.customEnvVarName(fullName)
+      : this.getEnvVarName(fullName);
+
     const envVarValue = process.env[envVarName];
 
     if (envVarValue === undefined) {
@@ -52,17 +70,29 @@ export class EnvVarBind extends Bind {
       return false as unknown as T;
     }
 
+    // Try to parse as JSON array or object
+    if (
+      (value.startsWith('[') && value.endsWith(']')) ||
+      (value.startsWith('{') && value.endsWith('}'))
+    ) {
+      try {
+        return JSON.parse(value) as T;
+      } catch {
+        // If parsing fails, return as string
+      }
+    }
+
     // Return as string by default
     return value as unknown as T;
   }
 
   /**
-   * Gets the name of the environment variable.
-   * @param envVarName The name of the environment variable.
+   * Gets the name of the environment variable using the default naming convention.
+   * @param elementPath The element path in format sectionName.elementName
    * @returns The name of the environment variable.
    */
-  getEnvVarName(envVarName: string): string {
-    let name = envVarName.replace(/\./g, '_'); // Replace dots with underscores
+  private getEnvVarName(elementPath: string): string {
+    let name = elementPath.replace(/\./g, '_'); // Replace dots with underscores
     if (this.envVarPrefix) {
       name = `${this.envVarPrefix}_${name}`;
     }

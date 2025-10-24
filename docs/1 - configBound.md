@@ -1,3 +1,14 @@
 # ConfigBound
 
-ConfigBound is the top level object that contains all sections and binds.
+Main configuration object containing sections and binds.
+
+## Constructor
+
+```typescript
+new ConfigBound(name: string, binds: Bind[], sections: Section[])
+```
+
+## Methods
+
+- `get(section: string, element: string): T` - Get configuration value
+- `validate(): void` - Validate all configuration values

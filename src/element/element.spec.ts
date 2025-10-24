@@ -58,7 +58,6 @@ describe('Element', () => {
     expect(element.default).toBe('defaultValue');
     expect(element.example).toBe('exampleValue');
     expect(element.sensitive).toBe(false);
-    expect(element.value).toBeUndefined();
   });
 
   // Test for constructor with invalid default value
@@ -75,19 +74,10 @@ describe('Element', () => {
     }).toThrow(ConfigInvalidException);
   });
 
-  test('set method should set the value', () => {
-    element.set('newValue');
-    expect(element.value).toBe('newValue');
-  });
-
-  test('set method should set value to default if no value is provided', () => {
-    element.set();
-    expect(element.value).toBe('defaultValue');
-  });
-
-  test('get method should return the current value', () => {
-    element.set('newValue');
-    expect(element.get(configBound)).toBe('newValue');
+  test('get method should return the value from value provider', () => {
+    // This test verifies that get() delegates to the value provider
+    // The actual value comes from the ConfigBound's get() method
+    expect(element.get(configBound)).toBe('defaultValue');
   });
 
   test('get method should return default if value is not set and default exists', () => {
@@ -100,9 +90,9 @@ describe('Element', () => {
     expect(elementNoDefault.get(configBound)).toBeUndefined();
   });
 
-  test('getOrThrow method should return the value if set', () => {
-    element.set('newValue');
-    expect(element.getOrThrow(configBound)).toBe('newValue');
+  test('getOrThrow method should return the value from value provider', () => {
+    // This test verifies that getOrThrow() delegates to the value provider
+    expect(element.getOrThrow(configBound)).toBe('defaultValue');
   });
 
   test('getOrThrow method should return default if value is not set but default exists', () => {

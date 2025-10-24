@@ -2,7 +2,7 @@ import { Element } from '../element/element';
 import { ElementExistsException } from '../utilities/errors';
 import { Logger } from '../utilities/logger';
 import { sanitizeName } from '../utilities/sanitizeNames';
-import { BindContext } from '../bind/bindContext';
+import { ConfigValueProvider } from '../bind/configValueProvider';
 
 /**
  * A grouping of {@link Element Elements}
@@ -25,22 +25,21 @@ export class Section {
    */
   private logger?: Logger;
   /**
-   * Reference to the parent BindContext
+   * Reference to the parent ConfigValueProvider
    */
-  private bindContext?: BindContext;
+  private valueProvider?: ConfigValueProvider;
 
   constructor(
     name: string,
     elements: Element<unknown>[],
     description?: string,
     logger?: Logger,
-    bindContext?: BindContext
+    valueProvider?: ConfigValueProvider
   ) {
     this.name = sanitizeName(name);
     this.description = description;
     this.logger = logger;
-    this.bindContext = bindContext;
-    // Initialize with empty elements array, then add each element with parent section reference
+    this.valueProvider = valueProvider;
     this.elements = [];
     if (elements.length > 0) {
       this.setElements(elements);
@@ -101,20 +100,20 @@ export class Section {
   }
 
   /**
-   * Sets the bind context
-   * @param bindContext - The BindContext to use
+   * Sets the value provider
+   * @param valueProvider - The ConfigValueProvider to use
    */
-  public setBindContext(bindContext: BindContext): void {
-    this.bindContext = bindContext;
-    // No need to pass to elements as they'll use it when needed
+  public setConfigValueProvider(valueProvider: ConfigValueProvider): void {
+    this.valueProvider = valueProvider;
+    // Elements will use this provider through the getValue method
   }
 
   /**
-   * Gets the current bind context
-   * @returns The current BindContext or undefined if not set
+   * Gets the current value provider
+   * @returns The current ConfigValueProvider or undefined if not set
    */
-  public getBindContext(): BindContext | undefined {
-    return this.bindContext;
+  public getConfigValueProvider(): ConfigValueProvider | undefined {
+    return this.valueProvider;
   }
 
   /**
@@ -131,7 +130,7 @@ export class Section {
       throw new ElementExistsException(duplicateElements[0].name);
     }
 
-    // Set the parent section name
+    // Wire up the element with proper dependencies
     element.setParentSection(this.name);
 
     // Pass the logger to the element if we have one
@@ -161,14 +160,14 @@ export class Section {
   }
 
   /**
-   * Gets the value of a specific element using the current bind context
+   * Gets the value of a specific element using the current value provider
    * @param elementName - The name of the element to get the value for
-   * @returns The value or undefined if not found or no bind context set
+   * @returns The value or undefined if not found or no value provider set
    */
   public getValue<T>(elementName: string): T | undefined {
-    if (!this.bindContext) {
+    if (!this.valueProvider) {
       this.logger?.warn(
-        `Cannot get value for ${this.name}.${elementName}: No bind context set`
+        `Cannot get value for ${this.name}.${elementName}: No value provider set`
       );
       return undefined;
     }
@@ -177,6 +176,7 @@ export class Section {
       this.logger?.warn(`Element not found: ${elementName}`);
       return undefined;
     }
-    return element.get<T>(this.bindContext);
+    // Delegate to the element's get method, which will handle validation and fallbacks
+    return element.get<T>(this.valueProvider);
   }
 }
