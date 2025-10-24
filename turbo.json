@@ -11,7 +11,13 @@
     "lint": {
       "outputs": []
     },
+    "lint:ci": {
+      "outputs": []
+    },
     "format": {
+      "outputs": []
+    },
+    "format:ci": {
       "outputs": []
     },
     "test": {

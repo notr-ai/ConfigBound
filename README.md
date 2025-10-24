@@ -22,10 +22,10 @@ import {
   ConfigBound,
   configItem,
   configEnum,
-  configSection,
-} from "@config-bound/config-bound";
-import { EnvVarBind } from "@config-bound/config-bound";
-import Joi from "joi";
+  configSection
+} from '@config-bound/config-bound';
+import { EnvVarBind } from '@config-bound/config-bound';
+import Joi from 'joi';
 
 // Define your configuration schema with full type safety
 const config = ConfigBound.createConfig(
@@ -33,46 +33,46 @@ const config = ConfigBound.createConfig(
     port: configItem<number>({
       default: 3000,
       validator: Joi.number().port(),
-      description: "Application port",
+      description: 'Application port'
     }),
-    environment: configEnum<"development" | "production">({
-      values: ["development", "production"],
-      default: "development",
-      description: "Runtime environment",
+    environment: configEnum<'development' | 'production'>({
+      values: ['development', 'production'],
+      default: 'development',
+      description: 'Runtime environment'
     }),
     database: configSection(
       {
         host: configItem<string>({
-          default: "localhost",
+          default: 'localhost',
           validator: Joi.string().hostname(),
-          description: "Database host",
+          description: 'Database host'
         }),
         port: configItem<number>({
           default: 5432,
           validator: Joi.number().port(),
-          description: "Database port",
-        }),
+          description: 'Database port'
+        })
       },
-      "Database configuration"
-    ),
+      'Database configuration'
+    )
   },
   {
     binds: [new EnvVarBind()],
-    validateOnInit: true, // Catch config errors at startup!
+    validateOnInit: true // Catch config errors at startup!
   }
 );
 
 // Access values with full type safety - types are inferred, autocomplete works!
-const port = config.get("app", "port"); // TypeScript knows this is number
-const env = config.get("app", "environment"); // TypeScript knows this is "development" | "production"
-const dbHost = config.get("database", "host"); // TypeScript knows this is string
+const port = config.get('app', 'port'); // TypeScript knows this is number
+const env = config.get('app', 'environment'); // TypeScript knows this is "development" | "production"
+const dbHost = config.get('database', 'host'); // TypeScript knows this is string
 
 // Validate all config at once
 try {
   config.validate();
-  console.log("✅ All configuration is valid");
+  console.log('✅ All configuration is valid');
 } catch (error) {
-  console.error("❌ Configuration errors:", error);
+  console.error('❌ Configuration errors:', error);
 }
 ```
 
@@ -81,27 +81,27 @@ try {
 For advanced use cases where you need fine-grained control over construction, you can use the imperative API:
 
 ```typescript
-import { ConfigBound } from "@config-bound/config-bound";
-import { Section } from "@config-bound/config-bound/section/section";
-import { Element } from "@config-bound/config-bound/element/element";
-import { EnvVarBind } from "@config-bound/config-bound/bind/binds/envVar";
+import { ConfigBound } from '@config-bound/config-bound';
+import { Section } from '@config-bound/config-bound/section/section';
+import { Element } from '@config-bound/config-bound/element/element';
+import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
 
 // Create configuration elements
-const portElement = new Element<number>("port", "Application port", 3000);
+const portElement = new Element<number>('port', 'Application port', 3000);
 const logLevelElement = new Element<string>(
-  "logLevel",
-  "Logging level",
-  "info"
+  'logLevel',
+  'Logging level',
+  'info'
 );
 
 // Create a configuration section
-const appSection = new Section("app", [portElement, logLevelElement]);
+const appSection = new Section('app', [portElement, logLevelElement]);
 
 // Create the config instance
-const config = new ConfigBound("app", [new EnvVarBind()], [appSection]);
+const config = new ConfigBound('app', [new EnvVarBind()], [appSection]);
 
 // Use it in your application (still fully type-safe!)
-const port = config.get("app", "port");
+const port = config.get('app', 'port');
 ```
 
 **Note**: The declarative `createConfig` API is recommended for most use cases.

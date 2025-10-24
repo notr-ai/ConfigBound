@@ -97,7 +97,6 @@ export class Element<T> {
     return this.validator._flags.presence === 'required';
   }
 
-
   /**
    * Retrieves the value of the element
    * @param valueProvider - The provider to use for retrieving values

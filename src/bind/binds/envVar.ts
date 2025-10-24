@@ -15,7 +15,10 @@ export class EnvVarBind extends Bind {
     super('EnvironmentVariable');
 
     if (options?.prefix && options?.customEnvVarName) {
-      throw new ConfigInvalidException('EnvVarBind', 'Cannot specify both prefix and customEnvVarName. They are mutually exclusive.');
+      throw new ConfigInvalidException(
+        'EnvVarBind',
+        'Cannot specify both prefix and customEnvVarName. They are mutually exclusive.'
+      );
     }
 
     this.envVarPrefix = options?.prefix;

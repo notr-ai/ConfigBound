@@ -42,11 +42,15 @@ export type ConfigSchema<T = Record<string, unknown>> = {
 
 // Helper type to separate sections from top-level items
 type ExtractSections<T> = {
-  [K in keyof T as T[K] extends ConfigSection<unknown> ? K : never]: T[K] extends ConfigSection<infer U> ? U : never;
+  [K in keyof T as T[K] extends ConfigSection<unknown>
+    ? K
+    : never]: T[K] extends ConfigSection<infer U> ? U : never;
 };
 
 type ExtractTopLevelItems<T> = {
-  [K in keyof T as T[K] extends ConfigItem<unknown> ? K : never]: T[K] extends ConfigItem<infer V> ? V : never;
+  [K in keyof T as T[K] extends ConfigItem<unknown>
+    ? K
+    : never]: T[K] extends ConfigItem<infer V> ? V : never;
 };
 
 // Helper type to extract the actual config type from a schema
@@ -73,9 +77,7 @@ export type InferConfigType<T> = ExtractSections<T> &
  * });
  * ```
  */
-export function configItem<T>(
-  options: ConfigItem<T>
-): ConfigItem<T> {
+export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
   // Validate that default matches example if both are provided
   if (options.default !== undefined && options.example !== undefined) {
     if (options.validator) {
@@ -105,21 +107,21 @@ export function configItem<T>(
  * });
  * ```
  */
-export function configEnum<T extends string>(
-  options: {
-    values: readonly T[];
-    default?: T;
-    description?: string;
-    example?: T;
-    sensitive?: boolean;
-  }
-): ConfigItem<T> {
+export function configEnum<T extends string>(options: {
+  values: readonly T[];
+  default?: T;
+  description?: string;
+  example?: T;
+  sensitive?: boolean;
+}): ConfigItem<T> {
   return {
     default: options.default,
     description: options.description,
     example: options.example,
     sensitive: options.sensitive,
-    validator: Joi.string().valid(...options.values) as unknown as Joi.AnySchema<T>
+    validator: Joi.string().valid(
+      ...options.values
+    ) as unknown as Joi.AnySchema<T>
   };
 }
 
@@ -161,9 +163,15 @@ export class TypedConfigBound<T extends ConfigSchema> {
     this.configBound = configBound;
   }
 
-  get name() { return this.configBound.name; }
-  get binds() { return this.configBound.binds; }
-  get sections() { return this.configBound.sections; }
+  get name() {
+    return this.configBound.name;
+  }
+  get binds() {
+    return this.configBound.binds;
+  }
+  get sections() {
+    return this.configBound.sections;
+  }
 
   addBind(bind: Bind): void {
     this.configBound.addBind(bind);
@@ -177,18 +185,24 @@ export class TypedConfigBound<T extends ConfigSchema> {
     return this.configBound.getSections();
   }
 
-  get<K extends keyof InferConfigType<T>, E extends keyof InferConfigType<T>[K]>(
-    sectionName: K,
-    elementName: E
-  ): InferConfigType<T>[K][E] | undefined {
-    return this.configBound.get<InferConfigType<T>[K][E]>(sectionName as string, elementName as string);
+  get<
+    K extends keyof InferConfigType<T>,
+    E extends keyof InferConfigType<T>[K]
+  >(sectionName: K, elementName: E): InferConfigType<T>[K][E] | undefined {
+    return this.configBound.get<InferConfigType<T>[K][E]>(
+      sectionName as string,
+      elementName as string
+    );
   }
 
-  getOrThrow<K extends keyof InferConfigType<T>, E extends keyof InferConfigType<T>[K]>(
-    sectionName: K,
-    elementName: E
-  ): InferConfigType<T>[K][E] {
-    return this.configBound.getOrThrow<InferConfigType<T>[K][E]>(sectionName as string, elementName as string);
+  getOrThrow<
+    K extends keyof InferConfigType<T>,
+    E extends keyof InferConfigType<T>[K]
+  >(sectionName: K, elementName: E): InferConfigType<T>[K][E] {
+    return this.configBound.getOrThrow<InferConfigType<T>[K][E]>(
+      sectionName as string,
+      elementName as string
+    );
   }
 
   validate(): void {
@@ -278,7 +292,10 @@ export class ConfigBound implements ConfigValueProvider {
    * @throws {ElementNotFoundException} If element doesn't exist in section
    * @throws {ConfigInvalidException} If value fails validation
    */
-  public get<T = unknown>(sectionName: string, elementName: string): T | undefined {
+  public get<T = unknown>(
+    sectionName: string,
+    elementName: string
+  ): T | undefined {
     this.logger.debug(`Getting value for ${sectionName}.${elementName}`);
 
     // Check if section exists
@@ -368,7 +385,9 @@ export class ConfigBound implements ConfigValueProvider {
   public validate(): void {
     const errors = this.getValidationErrors();
     if (errors.length > 0) {
-      const errorMessages = errors.map(e => `  - ${e.path}: ${e.message}`).join('\n');
+      const errorMessages = errors
+        .map((e) => `  - ${e.path}: ${e.message}`)
+        .join('\n');
       throw new ConfigInvalidException(
         'configuration',
         `Validation failed for ${errors.length} value(s):\n${errorMessages}`
@@ -509,12 +528,19 @@ class ConfigBoundBuilder {
     for (const [key, config] of Object.entries(schema)) {
       if ('properties' in config && config.properties) {
         // Nested object = new section
-        const elements = this.buildElements(config.properties as Record<string, unknown>, logger);
+        const elements = this.buildElements(
+          config.properties as Record<string, unknown>,
+          logger
+        );
         sectionMap.set(key, elements);
       } else {
         // Top-level element goes in 'app' section
         const existingElements = sectionMap.get('app') ?? [];
-        const element = this.buildElement(key, config as ConfigItem<unknown>, logger);
+        const element = this.buildElement(
+          key,
+          config as ConfigItem<unknown>,
+          logger
+        );
         existingElements.push(element);
         sectionMap.set('app', existingElements);
       }
@@ -532,7 +558,11 @@ class ConfigBoundBuilder {
   ): Element<unknown>[] {
     const elements: Element<unknown>[] = [];
     for (const [propKey, propConfig] of Object.entries(properties)) {
-      const element = this.buildElement(propKey, propConfig as ConfigItem<unknown>, logger);
+      const element = this.buildElement(
+        propKey,
+        propConfig as ConfigItem<unknown>,
+        logger
+      );
       elements.push(element);
     }
     return elements;
