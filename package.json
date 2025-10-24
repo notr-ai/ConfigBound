@@ -1,13 +1,13 @@
 {
   "name": "@config-bound/config-bound",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "packageManager": "npm@10.5.0",
   "workspaces": [
     "examples"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/RobertKeyser/ConfigBound"
+    "url": "https://github.com/notr-ai/ConfigBound"
   },
   "scripts": {
     "build": "tsc",
