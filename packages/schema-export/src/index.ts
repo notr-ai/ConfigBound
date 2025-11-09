@@ -7,4 +7,8 @@ export {
   type ExportedSchema
 } from './schemaExporter';
 
-export { formatAsJSON, formatAsYAML } from './schemaFormatters';
+export {
+  formatAsJSON,
+  formatAsYAML,
+  formatAsEnvExample
+} from './schemaFormatters';

@@ -1,4 +1,8 @@
-import { formatAsJSON, formatAsYAML } from './schemaFormatters';
+import {
+  formatAsJSON,
+  formatAsYAML,
+  formatAsEnvExample
+} from './schemaFormatters';
 import { ExportedSchema } from './schemaExporter';
 
 describe('Schema Formatters', () => {
@@ -79,9 +83,106 @@ describe('Schema Formatters', () => {
       const result = formatAsYAML(mockSchema);
 
       expect(result).toContain('name: testApp');
-      expect(result).toContain('port:');
-      expect(result).toContain('database:');
+      expect(result).toContain('- name: port');
+      expect(result).toContain('- name: database');
       expect(result).toBeTruthy();
+    });
+  });
+
+  describe('formatAsEnvExample', () => {
+    it('should format schema as .env.example without prefix', () => {
+      const result = formatAsEnvExample(mockSchema);
+
+      expect(result).toContain('# testApp Configuration');
+      expect(result).toContain('# Generated from schema export');
+      expect(result).toContain('APP_PORT=');
+      expect(result).toContain('APP_APIKEY=');
+      expect(result).toContain('DATABASE_HOST=');
+      expect(result).toContain('# Server port');
+      expect(result).toContain('# API key');
+      expect(result).toContain('# Database host');
+    });
+
+    it('should format schema as .env.example with prefix', () => {
+      const result = formatAsEnvExample(mockSchema, 'MYAPP');
+
+      expect(result).toContain('MYAPP_APP_PORT=');
+      expect(result).toContain('MYAPP_APP_APIKEY=');
+      expect(result).toContain('MYAPP_DATABASE_HOST=');
+    });
+
+    it('should include example values when available', () => {
+      const result = formatAsEnvExample(mockSchema);
+
+      expect(result).toContain('APP_PORT=8080');
+    });
+
+    it('should include default values when example is not available', () => {
+      const result = formatAsEnvExample(mockSchema);
+
+      expect(result).toContain('DATABASE_HOST=localhost');
+    });
+
+    it('should use placeholder for sensitive values', () => {
+      const result = formatAsEnvExample(mockSchema);
+
+      expect(result).toContain('APP_APIKEY=your-example-value');
+    });
+
+    it('should mark required fields', () => {
+      const result = formatAsEnvExample(mockSchema);
+
+      expect(result).toContain('# API key (required)');
+    });
+
+    it('should handle sections without descriptions', () => {
+      const schemaWithoutDesc: ExportedSchema = {
+        name: 'test',
+        sections: [
+          {
+            name: 'app',
+            elements: [
+              {
+                name: 'port',
+                type: 'number',
+                default: 3000,
+                required: false,
+                sensitive: false,
+                joiValidation: {}
+              }
+            ]
+          }
+        ]
+      };
+
+      const result = formatAsEnvExample(schemaWithoutDesc);
+      expect(result).toContain('APP_PORT=3000');
+    });
+
+    it('should handle elements without descriptions', () => {
+      const schemaWithoutElementDesc: ExportedSchema = {
+        name: 'test',
+        sections: [
+          {
+            name: 'app',
+            description: 'App config',
+            elements: [
+              {
+                name: 'port',
+                type: 'number',
+                default: 3000,
+                required: false,
+                sensitive: false,
+                joiValidation: {}
+              }
+            ]
+          }
+        ]
+      };
+
+      const result = formatAsEnvExample(schemaWithoutElementDesc);
+      expect(result).toContain('# App config');
+      expect(result).toContain('APP_PORT=3000');
     });
   });
 });
