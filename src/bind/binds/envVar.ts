@@ -77,8 +77,11 @@ export class EnvVarBind extends Bind {
     ) {
       try {
         return JSON.parse(value) as T;
-      } catch {
-        // If parsing fails, return as string
+      } catch (error) {
+        throw new ConfigInvalidException(
+          'EnvVarBind',
+          `Failed to parse JSON value "${value}": ${error instanceof Error ? error.message : String(error)}. JSON arrays and objects must use double quotes for strings.`
+        );
       }
     }
 

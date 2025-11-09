@@ -32,6 +32,10 @@ export class Element<T> {
    */
   example?: T;
   /**
+   * Whether to omit the Element from the exported schema
+   */
+  omitFromSchema: boolean;
+  /**
    * The Joi validator of the Element
    */
   validator: Joi.AnySchema<T>;
@@ -50,11 +54,13 @@ export class Element<T> {
     defaultValue?: T,
     exampleValue?: T,
     sensitive: boolean = false,
+    omitFromSchema: boolean = false,
     validator: Joi.AnySchema<T> = Joi.any<T>(),
     logger?: Logger
   ) {
     this.name = sanitizeName(name);
     this.description = description;
+    this.omitFromSchema = omitFromSchema;
     this.validator = validator;
     this.logger = logger;
 

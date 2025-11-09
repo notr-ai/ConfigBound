@@ -8,6 +8,7 @@ A type-safe configuration management library for TypeScript applications.
 - **Easy Validation**: Validate all config at startup with `validate()` or get detailed error reports
 - **Schema-Based**: Define your configuration declaratively with Joi validators
 - **Flexible Binds**: Environment variables, files, or custom sources
+- **Documentation Export**: Generate JSON or YAML documentation from your config schema
 
 ## Installation
 
@@ -57,7 +58,7 @@ const config = ConfigBound.createConfig(
     )
   },
   {
-    binds: [new EnvVarBind()],
+    binds: [new EnvVarBind({ prefix: 'MYAPP' })],
     validateOnInit: true // Catch config errors at startup!
   }
 );
@@ -98,13 +99,71 @@ const logLevelElement = new Element<string>(
 const appSection = new Section('app', [portElement, logLevelElement]);
 
 // Create the config instance
-const config = new ConfigBound('app', [new EnvVarBind()], [appSection]);
+const config = new ConfigBound(
+  'app',
+  [new EnvVarBind({ prefix: 'MYAPP' })],
+  [appSection]
+);
 
 // Use it in your application (still fully type-safe!)
 const port = config.get('app', 'port');
 ```
 
 **Note**: The declarative `createConfig` API is recommended for most use cases.
+
+## Exporting Configuration Schema
+
+ConfigBound can automatically generate documentation in multiple formats:
+
+```typescript
+// Export as JSON
+const json = config.toJSON();
+
+// Export as YAML (requires js-yaml)
+const yaml = config.toYAML();
+
+// Get structured schema object
+const schema = config.exportSchema();
+```
+
+This is useful for:
+
+- Generating documentation automatically
+- Creating IDE autocomplete schemas
+- Validating environment variables
+- Building configuration UIs
+- API documentation
+
+See the [Export Documentation](./docs/5%20-%20exporting-schema.md) for detailed usage and examples.
+
+## Environment Variables
+
+ConfigBound automatically maps configuration to environment variables using the `EnvVarBind`. By default, it uses a prefix to avoid conflicts:
+
+```typescript
+const config = ConfigBound.createConfig(
+  {
+    /* your schema */
+  },
+  {
+    binds: [new EnvVarBind({ prefix: 'MYAPP' })]
+  }
+);
+```
+
+This creates environment variables like:
+
+- `MYAPP_APP_PORT` for `app.port`
+- `MYAPP_DATABASE_HOST` for `database.host`
+- `MYAPP_API_APIKEY` for `api.apiKey`
+
+Override values at runtime:
+
+```bash
+MYAPP_APP_PORT=8080
+MYAPP_DATABASE_HOST=prod-db.example.com
+MYAPP_API_APIKEY=your-secret-key
+```
 
 ## Documentation
 

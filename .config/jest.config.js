@@ -4,7 +4,19 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
 export const testEnvironment = 'node';
 export const transform = {
-  '^.+\.tsx?$': ['ts-jest', {}]
+  '^.+\.tsx?$': [
+    'ts-jest',
+    {
+      tsconfig: {
+        experimentalDecorators: true,
+        emitDecoratorMetadata: true,
+        isolatedModules: false
+      },
+      diagnostics: {
+        ignoreCodes: [151002]
+      }
+    }
+  ]
 };
 export const extensionsToTreatAsEsm = ['.ts'];
 export const testMatch = [

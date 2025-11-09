@@ -23,6 +23,7 @@ describe('envVarBindIntegration', () => {
       3000, // default
       8080, // example
       false, // not sensitive
+      false, // not omitted from schema
       Joi.number().port().required()
     );
 
@@ -32,6 +33,7 @@ describe('envVarBindIntegration', () => {
       undefined, // no default
       'abc123', // example
       true, // sensitive
+      false, // not omitted from schema
       Joi.string().required()
     );
 
