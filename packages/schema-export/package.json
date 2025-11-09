@@ -1,0 +1,51 @@
+{
+  "name": "@config-bound/schema-export",
+  "version": "0.0.1",
+  "description": "Schema export utilities for ConfigBound configuration library",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "test": "jest"
+  },
+  "keywords": [
+    "config",
+    "configuration",
+    "schema",
+    "export",
+    "json",
+    "yaml",
+    "documentation"
+  ],
+  "author": "Robert Keyser",
+  "license": "MIT",
+  "dependencies": {
+    "@config-bound/config-bound": "0.0.5",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.10.0",
+    "jest": "^30.2.0",
+    "rimraf": "^6.1.0",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/notr-ai/ConfigBound"
+  }
+}

@@ -1,4 +1,4 @@
-import { formatAsJSON } from './schemaFormatters';
+import { formatAsJSON, formatAsYAML } from './schemaFormatters';
 import { ExportedSchema } from './schemaExporter';
 
 describe('Schema Formatters', () => {
@@ -71,6 +71,17 @@ describe('Schema Formatters', () => {
 
       expect(result).not.toContain('\n');
       expect(JSON.parse(result)).toEqual(mockSchema);
+    });
+  });
+
+  describe('formatAsYAML', () => {
+    it('should format schema as YAML', () => {
+      const result = formatAsYAML(mockSchema);
+
+      expect(result).toContain('name: testApp');
+      expect(result).toContain('port:');
+      expect(result).toContain('database:');
+      expect(result).toBeTruthy();
     });
   });
 });

@@ -1,5 +1,5 @@
-import { Section } from '../section/section';
-import { Element } from '../element/element';
+import { Section } from '@config-bound/config-bound/section';
+import { Element } from '@config-bound/config-bound/element';
 import Joi from 'joi';
 import { exportElement, exportSection, exportSchema } from './schemaExporter';
 

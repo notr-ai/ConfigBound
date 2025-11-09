@@ -3,8 +3,8 @@ import {
   configItem,
   configEnum,
   configSection
-} from '../src/configBound';
-import { EnvVarBind } from '../src/bind/binds/envVar';
+} from '@config-bound/config-bound';
+import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
 import Joi from 'joi';
 
 /**

@@ -5,7 +5,8 @@
   "workspaces": [
     ".",
     "examples",
-    "packages/nestjs"
+    "packages/nestjs",
+    "packages/schema-export"
   ],
   "repository": {
     "type": "git",
@@ -88,7 +89,6 @@
     "@changesets/cli": "^2.29.7",
     "@eslint/js": "^9.39.1",
     "@types/jest": "^30.0.0",
-    "@types/js-yaml": "^4.0.9",
     "@typescript-eslint/eslint-plugin": "^8.46.3",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
@@ -107,8 +107,5 @@
   },
   "dependencies": {
     "joi": "^18.0.1"
-  },
-  "optionalDependencies": {
-    "js-yaml": "^4.1.0"
   }
 }

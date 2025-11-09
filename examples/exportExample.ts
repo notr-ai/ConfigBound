@@ -3,8 +3,13 @@ import {
   configItem,
   configEnum,
   configSection
-} from '../src/configBound';
-import { EnvVarBind } from '../src/bind/binds/envVar';
+} from '@config-bound/config-bound';
+import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+import {
+  exportSchema,
+  formatAsJSON,
+  formatAsYAML
+} from '@config-bound/schema-export';
 import Joi from 'joi';
 
 /**
@@ -147,13 +152,13 @@ console.log('='.repeat(48));
 console.log();
 
 // Get the schema for inspection
-const schema = config.exportSchema();
+const schema = exportSchema(config.name, config.sections);
 
 // Handle different format outputs
 if (format === 'all' || format === 'json') {
   console.log('JSON EXPORT');
   console.log('-'.repeat(48));
-  const json = config.toJSON();
+  const json = formatAsJSON(schema);
   console.log(json);
   console.log();
 }
@@ -161,14 +166,8 @@ if (format === 'all' || format === 'json') {
 if (format === 'all' || format === 'yaml') {
   console.log('YAML EXPORT');
   console.log('-'.repeat(48));
-  try {
-    const yaml = config.toYAML();
-    console.log(yaml);
-  } catch (error) {
-    console.log(
-      'YAML export requires js-yaml to be installed: npm install js-yaml'
-    );
-  }
+  const yaml = formatAsYAML(schema);
+  console.log(yaml);
   console.log();
 }
 

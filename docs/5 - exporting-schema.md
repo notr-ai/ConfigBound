@@ -1,11 +1,19 @@
 # Exporting Configuration Schema
 
-ConfigBound provides built-in methods to export your configuration schema to various formats. This is useful for:
+ConfigBound provides schema export functionality through the `@config-bound/schema-export` package. This is useful for:
 
 - **Documentation generation**: Create structured docs from your config
 - **Tooling integration**: Export schema for IDE plugins, validators, or other tools
 - **Configuration discovery**: Programmatically inspect available config options
 - **API documentation**: Include config requirements in your API docs
+
+## Installation
+
+The export functionality is provided by a separate package:
+
+```bash
+npm install @config-bound/schema-export
+```
 
 ## Available Export Formats
 
@@ -14,16 +22,16 @@ ConfigBound supports exporting to:
 - **JSON** - Structured data format for programmatic use
 - **YAML** - Human-readable structured format
 
-## Export Methods
+## Export Functions
 
-All export methods are available on `ConfigBound` instances:
-
-### `exportSchema(includeOmitted: boolean = false)`
+### `exportSchema(name: string, sections: Section[], includeOmitted?: boolean)`
 
 Returns the configuration schema as a structured JavaScript object.
 
 ```typescript
-const schema = config.exportSchema();
+import { exportSchema } from '@config-bound/schema-export';
+
+const schema = exportSchema(config.name, config.sections);
 console.log(schema);
 // {
 //   name: 'app',
@@ -36,41 +44,36 @@ console.log(schema);
 // }
 
 // Include elements marked with omitFromSchema: true
-const fullSchema = config.exportSchema(true);
+const fullSchema = exportSchema(config.name, config.sections, true);
 ```
 
-### `toJSON(pretty: boolean = true, includeOmitted: boolean = false)`
+### `formatAsJSON(schema: ExportedSchema, pretty?: boolean)`
 
 Exports the schema as a JSON string.
 
 ```typescript
+import { exportSchema, formatAsJSON } from '@config-bound/schema-export';
+
+const schema = exportSchema(config.name, config.sections);
+
 // Pretty-printed JSON
-const json = config.toJSON();
+const json = formatAsJSON(schema);
 console.log(json);
 
 // Compact JSON
-const compact = config.toJSON(false);
-
-// Include omitted elements
-const fullJson = config.toJSON(true, true);
+const compact = formatAsJSON(schema, false);
 ```
 
-### `toYAML(includeOmitted: boolean = false)`
+### `formatAsYAML(schema: ExportedSchema)`
 
-Exports the schema as a YAML string. Requires `js-yaml` to be installed.
+Exports the schema as a YAML string.
 
 ```typescript
-const yaml = config.toYAML();
+import { exportSchema, formatAsYAML } from '@config-bound/schema-export';
+
+const schema = exportSchema(config.name, config.sections);
+const yaml = formatAsYAML(schema);
 console.log(yaml);
-
-// Include omitted elements
-const fullYaml = config.toYAML(true);
-```
-
-**Note**: `js-yaml` is an optional dependency. If you want to use YAML export, install it:
-
-```bash
-npm install js-yaml
 ```
 
 ## Complete Example
@@ -83,6 +86,11 @@ import {
   configEnum
 } from '@config-bound/config-bound';
 import { EnvVarBind } from '@config-bound/config-bound';
+import {
+  exportSchema,
+  formatAsJSON,
+  formatAsYAML
+} from '@config-bound/schema-export';
 import Joi from 'joi';
 import { writeFileSync } from 'fs';
 
@@ -126,8 +134,9 @@ const config = ConfigBound.createConfig(
 );
 
 // Export to different formats
-writeFileSync('config-schema.json', config.toJSON());
-writeFileSync('config-schema.yaml', config.toYAML());
+const schema = exportSchema(config.name, config.sections);
+writeFileSync('config-schema.json', formatAsJSON(schema));
+writeFileSync('config-schema.yaml', formatAsYAML(schema));
 ```
 
 ## Private Configuration Elements
@@ -148,10 +157,10 @@ const config = ConfigBound.createConfig({
 });
 
 // Normal export - excludes internalApiKey
-const publicSchema = config.exportSchema();
+const publicSchema = exportSchema(config.name, config.sections);
 
 // Full export - includes all elements
-const fullSchema = config.exportSchema(true);
+const fullSchema = exportSchema(config.name, config.sections, true);
 ```
 
 ## Use Cases
@@ -161,18 +170,27 @@ const fullSchema = config.exportSchema(true);
 ```typescript
 // scripts/generate-config-docs.ts
 import { config } from './config';
+import {
+  exportSchema,
+  formatAsJSON,
+  formatAsYAML
+} from '@config-bound/schema-export';
 import { writeFileSync } from 'fs';
 
-writeFileSync('docs/CONFIGURATION.md', config.toMarkdown());
+const schema = exportSchema(config.name, config.sections);
+writeFileSync('docs/config-schema.json', formatAsJSON(schema));
+writeFileSync('docs/config-schema.yaml', formatAsYAML(schema));
 console.log('✅ Configuration documentation generated');
 ```
 
 ### Validate Environment Variables
 
 ```typescript
+import { exportSchema } from '@config-bound/schema-export';
+
 // List all required config with no defaults
 // Note: Environment variables use the prefix from EnvVarBind (e.g., "MYAPP_")
-const schema = config.exportSchema();
+const schema = exportSchema(config.name, config.sections);
 const requiredVars = schema.sections.flatMap((section) =>
   section.elements
     .filter((el) => el.required && el.default === undefined)

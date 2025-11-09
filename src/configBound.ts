@@ -11,8 +11,6 @@ import { ConsoleLogger, Logger, NullLogger } from './utilities/logger';
 import { sanitizeName } from './utilities/sanitizeNames';
 import Joi from 'joi';
 import { Element } from './element/element';
-import { exportSchema, ExportedSchema } from './utilities/schemaExporter';
-import { formatAsJSON, formatAsYAML } from './utilities/schemaFormatters';
 
 /**
  * Base schema type for individual config items
@@ -214,35 +212,6 @@ export class TypedConfigBound<T extends ConfigSchema> {
 
   getValidationErrors(): Array<{ path: string; message: string }> {
     return this.configBound.getValidationErrors();
-  }
-
-  /**
-   * Exports the configuration schema as a structured object
-   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
-   * @returns The exported schema
-   */
-  exportSchema(includeOmitted: boolean = false): ExportedSchema {
-    return this.configBound.exportSchema(includeOmitted);
-  }
-
-  /**
-   * Exports the configuration schema as JSON
-   * @param pretty - Whether to format the JSON with indentation (default: true)
-   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
-   * @returns JSON string representation of the schema
-   */
-  toJSON(pretty: boolean = true, includeOmitted: boolean = false): string {
-    return this.configBound.toJSON(pretty, includeOmitted);
-  }
-
-  /**
-   * Exports the configuration schema as YAML
-   * Note: Requires js-yaml to be installed
-   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
-   * @returns YAML string representation of the schema
-   */
-  toYAML(includeOmitted: boolean = false): string {
-    return this.configBound.toYAML(includeOmitted);
   }
 }
 
@@ -465,38 +434,6 @@ export class ConfigBound implements ConfigValueProvider {
     }
 
     return errors;
-  }
-
-  /**
-   * Exports the configuration schema as a structured object
-   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
-   * @returns The exported schema
-   */
-  public exportSchema(includeOmitted: boolean = false): ExportedSchema {
-    return exportSchema(this.name, this.sections, includeOmitted);
-  }
-
-  /**
-   * Exports the configuration schema as JSON
-   * @param pretty - Whether to format the JSON with indentation (default: true)
-   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
-   * @returns JSON string representation of the schema
-   */
-  public toJSON(
-    pretty: boolean = true,
-    includeOmitted: boolean = false
-  ): string {
-    return formatAsJSON(this.exportSchema(includeOmitted), pretty);
-  }
-
-  /**
-   * Exports the configuration schema as YAML
-   * Note: Requires js-yaml to be installed
-   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
-   * @returns YAML string representation of the schema
-   */
-  public toYAML(includeOmitted: boolean = false): string {
-    return formatAsYAML(this.exportSchema(includeOmitted));
   }
 
   /**

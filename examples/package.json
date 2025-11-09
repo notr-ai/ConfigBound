@@ -14,6 +14,7 @@
   "description": "Examples for ConfigBound",
   "private": true,
   "dependencies": {
-    "@config-bound/config-bound": "0.0.5"
+    "@config-bound/config-bound": "0.0.5",
+    "@config-bound/schema-export": "0.0.1"
   }
 }

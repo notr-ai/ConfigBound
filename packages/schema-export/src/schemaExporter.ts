@@ -1,5 +1,5 @@
-import { Section } from '../section/section';
-import { Element } from '../element/element';
+import { Section } from '@config-bound/config-bound/section';
+import { Element } from '@config-bound/config-bound/element';
 import Joi from 'joi';
 
 /**
@@ -61,7 +61,6 @@ function extractJoiType(validator: Joi.AnySchema): string {
  * Extracts the raw Joi object from a schema
  */
 function extractJoiValidation(validator: Joi.AnySchema): unknown {
-  // Return the raw Joi schema description as a native object
   return validator.describe();
 }
 
@@ -95,7 +94,9 @@ export function exportSection(
     description: section.description,
     elements: section
       .getElements()
-      .filter((element) => includeOmitted || !element.omitFromSchema)
+      .filter(
+        (element: Element<unknown>) => includeOmitted || !element.omitFromSchema
+      )
       .map(exportElement)
   };
 }
