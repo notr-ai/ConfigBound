@@ -1,0 +1,36 @@
+# Source files (we publish dist/)
+src/
+*.spec.ts
+*.spec.js
+*.spec.d.ts
+
+# Examples and documentation
+examples/
+docs/
+
+# Packages (published separately)
+packages/
+
+# Build and config files
+tsconfig.json
+turbo.json
+.config/
+
+# Git and CI/CD
+.github/
+.git/
+.gitignore
+
+# Development files
+node_modules/
+.DS_Store
+*.log
+coverage/
+*.tsbuildinfo
+.turbo/
+.husky/
+
+# Documentation (keep in repo but not in package)
+CHANGELOG.md
+CONTRIBUTING.md
+

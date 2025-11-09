@@ -9,7 +9,7 @@ import turbo from 'eslint-plugin-turbo';
 
 export default defineConfig([
   {
-    ignores: ['dist/**', 'docs/**']
+    ignores: ['**/dist/**', 'docs/**', 'examples/**']
   },
   {
     files: ['**/*.{js,mjs,cjs,ts}'],

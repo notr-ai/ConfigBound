@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -43,6 +44,21 @@
       "cache": false
     },
     "examples:envVar": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "examples:export": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "examples:export:json": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "examples:export:yaml": {
       "dependsOn": ["build"],
       "outputs": [],
       "cache": false

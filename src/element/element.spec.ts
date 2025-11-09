@@ -69,6 +69,7 @@ describe('Element', () => {
         -10, // Invalid default according to validator
         100,
         false,
+        false,
         Joi.number().min(0).max(100) // Validator requires positive numbers
       );
     }).toThrow(ConfigInvalidException);
@@ -113,6 +114,7 @@ describe('Element', () => {
       'default',
       'example',
       false,
+      false,
       Joi.string().required()
     );
 
@@ -128,5 +130,29 @@ describe('Element', () => {
     );
 
     expect(element.isRequired()).toBe(false);
+  });
+
+  test('should initialize with omitFromSchema property', () => {
+    const element = new Element<string>(
+      'privateConfig',
+      'A private config element',
+      'default',
+      'example',
+      false,
+      true
+    );
+
+    expect(element.omitFromSchema).toBe(true);
+  });
+
+  test('should default omitFromSchema to false when not specified', () => {
+    const element = new Element<string>(
+      'publicConfig',
+      'A public config element',
+      'default',
+      'example'
+    );
+
+    expect(element.omitFromSchema).toBe(false);
   });
 });

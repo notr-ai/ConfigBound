@@ -11,6 +11,8 @@ import { ConsoleLogger, Logger, NullLogger } from './utilities/logger';
 import { sanitizeName } from './utilities/sanitizeNames';
 import Joi from 'joi';
 import { Element } from './element/element';
+import { exportSchema, ExportedSchema } from './utilities/schemaExporter';
+import { formatAsJSON, formatAsYAML } from './utilities/schemaFormatters';
 
 /**
  * Base schema type for individual config items
@@ -20,6 +22,7 @@ export type ConfigItem<T = unknown> = {
   description?: string;
   example?: T;
   sensitive?: boolean;
+  omitFromSchema?: boolean;
   validator?: Joi.AnySchema<T>;
 };
 
@@ -211,6 +214,35 @@ export class TypedConfigBound<T extends ConfigSchema> {
 
   getValidationErrors(): Array<{ path: string; message: string }> {
     return this.configBound.getValidationErrors();
+  }
+
+  /**
+   * Exports the configuration schema as a structured object
+   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
+   * @returns The exported schema
+   */
+  exportSchema(includeOmitted: boolean = false): ExportedSchema {
+    return this.configBound.exportSchema(includeOmitted);
+  }
+
+  /**
+   * Exports the configuration schema as JSON
+   * @param pretty - Whether to format the JSON with indentation (default: true)
+   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
+   * @returns JSON string representation of the schema
+   */
+  toJSON(pretty: boolean = true, includeOmitted: boolean = false): string {
+    return this.configBound.toJSON(pretty, includeOmitted);
+  }
+
+  /**
+   * Exports the configuration schema as YAML
+   * Note: Requires js-yaml to be installed
+   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
+   * @returns YAML string representation of the schema
+   */
+  toYAML(includeOmitted: boolean = false): string {
+    return this.configBound.toYAML(includeOmitted);
   }
 }
 
@@ -436,6 +468,38 @@ export class ConfigBound implements ConfigValueProvider {
   }
 
   /**
+   * Exports the configuration schema as a structured object
+   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
+   * @returns The exported schema
+   */
+  public exportSchema(includeOmitted: boolean = false): ExportedSchema {
+    return exportSchema(this.name, this.sections, includeOmitted);
+  }
+
+  /**
+   * Exports the configuration schema as JSON
+   * @param pretty - Whether to format the JSON with indentation (default: true)
+   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
+   * @returns JSON string representation of the schema
+   */
+  public toJSON(
+    pretty: boolean = true,
+    includeOmitted: boolean = false
+  ): string {
+    return formatAsJSON(this.exportSchema(includeOmitted), pretty);
+  }
+
+  /**
+   * Exports the configuration schema as YAML
+   * Note: Requires js-yaml to be installed
+   * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
+   * @returns YAML string representation of the schema
+   */
+  public toYAML(includeOmitted: boolean = false): string {
+    return formatAsYAML(this.exportSchema(includeOmitted));
+  }
+
+  /**
    * Creates a ConfigBound instance from a declarative schema with full type safety.
    * This is the recommended way to create configuration objects.
    *
@@ -500,9 +564,14 @@ class ConfigBoundBuilder {
     const sectionMap = this.buildSectionMap(schema, logger);
 
     // Step 3: Create sections and wire them to ConfigBound
-    for (const [sectionName, elements] of sectionMap.entries()) {
+    for (const [sectionName, sectionData] of sectionMap.entries()) {
       // Create section without passing configBound to avoid circular ref in constructor
-      const section = new Section(sectionName, elements, undefined, logger);
+      const section = new Section(
+        sectionName,
+        sectionData.elements,
+        sectionData.description,
+        logger
+      );
 
       // Wire section to configBound through addSection (which handles the binding)
       configBound.addSection(section);
@@ -522,8 +591,11 @@ class ConfigBoundBuilder {
   private static buildSectionMap<T extends ConfigSchema>(
     schema: T,
     logger: Logger
-  ): Map<string, Element<unknown>[]> {
-    const sectionMap = new Map<string, Element<unknown>[]>();
+  ): Map<string, { elements: Element<unknown>[]; description?: string }> {
+    const sectionMap = new Map<
+      string,
+      { elements: Element<unknown>[]; description?: string }
+    >();
 
     for (const [key, config] of Object.entries(schema)) {
       if ('properties' in config && config.properties) {
@@ -532,17 +604,20 @@ class ConfigBoundBuilder {
           config.properties as Record<string, unknown>,
           logger
         );
-        sectionMap.set(key, elements);
+        sectionMap.set(key, {
+          elements,
+          description: (config as ConfigSection).description
+        });
       } else {
         // Top-level element goes in 'app' section
-        const existingElements = sectionMap.get('app') ?? [];
+        const existing = sectionMap.get('app') ?? { elements: [] };
         const element = this.buildElement(
           key,
           config as ConfigItem<unknown>,
           logger
         );
-        existingElements.push(element);
-        sectionMap.set('app', existingElements);
+        existing.elements.push(element);
+        sectionMap.set('app', existing);
       }
     }
 
@@ -582,6 +657,7 @@ class ConfigBoundBuilder {
       config.default,
       config.example,
       config.sensitive ?? false,
+      config.omitFromSchema ?? false,
       config.validator ?? Joi.any(),
       logger
     );

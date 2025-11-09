@@ -29,6 +29,7 @@ describe('ConfigValueProvider functionality', () => {
       3000, // default
       8080, // example
       false, // not sensitive
+      false, // not omitted from schema
       Joi.number().port().required()
     );
 
@@ -38,6 +39,7 @@ describe('ConfigValueProvider functionality', () => {
       'localhost', // default
       '0.0.0.0', // example
       false, // not sensitive
+      false, // not omitted from schema
       Joi.string().required()
     );
 
@@ -48,6 +50,7 @@ describe('ConfigValueProvider functionality', () => {
       'localhost', // default
       'db.example.com', // example
       false, // not sensitive
+      false, // not omitted from schema
       Joi.string().required()
     );
 
@@ -57,6 +60,7 @@ describe('ConfigValueProvider functionality', () => {
       5432, // default
       5432, // example
       false, // not sensitive
+      false, // not omitted from schema
       Joi.number().port().required()
     );
 

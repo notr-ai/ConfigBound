@@ -1,8 +1,8 @@
 # ConfigBound Examples
 
-This directory contains a comprehensive example demonstrating the ConfigBound library using the recommended `createConfig` approach.
+This directory contains comprehensive examples demonstrating the ConfigBound library using the recommended `createConfig` approach.
 
-## Example
+## Examples
 
 ### `createConfigExample.ts` - Comprehensive Configuration Example
 
@@ -24,15 +24,35 @@ The example demonstrates a typical application configuration with:
 - **API Section**: External API configuration with timeouts and retries
 - **Logging Section**: Logging configuration with array support
 
-## Running the example
+### `exportExample.ts` - Schema Export Example
+
+Demonstrates configuration schema export functionality:
+
+- Export configuration schema to JSON, YAML, Markdown, and plain text formats
+- Generate documentation automatically from your config
+- Programmatically inspect configuration structure
+- List required environment variables
+- Extract validation rules and metadata
+
+Use cases shown:
+
+- **Documentation Generation**: Create Markdown docs from schema
+- **Configuration Discovery**: Inspect all config options programmatically
+- **Environment Variable Mapping**: Generate lists of required env vars
+- **Schema Inspection**: Find all required fields, validation rules, etc.
+
+## Running the examples
 
 You can run the example in several ways:
 
 ### From the root directory using Turbo
 
 ```bash
-# Run the example
-npm run examples
+# Run the basic configuration example
+npm run examples:envVar
+
+# Run the export example
+npm run examples:export
 ```
 
 ### Direct execution

@@ -24,5 +24,7 @@
     "MD050": {
       "style": "asterisk"
     }
-  }
+  },
+  "globs": ["**/*.md"],
+  "ignores": [".changeset", "**/CHANGELOG.md", "**/node_modules"]
 }

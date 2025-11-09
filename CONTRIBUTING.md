@@ -13,7 +13,8 @@ Thank you for your interest in contributing to Config-bound! Here's how you can 
 1. Make your changes
 2. Test your changes thoroughly. See [Testing](#testing)
 3. Commit with descriptive messages, preferably using [Conventional Commits](https://www.conventionalcommits.org/en) format: `git commit -m "feat: feature description"`
-4. Push to your branch: `git push origin feature/your-feature-name`
+4. Add a changeset describing your changes, running `npm run changeset` to create a changeset file in the `.changeset` directory. See [Releasing](./RELEASING.md) for more details. Don't edit the CHANGELOG.md file manually.
+5. Push to your branch: `git push origin feature/your-feature-name`
 
 ## Testing
 
@@ -58,7 +59,7 @@ The hooks should install automatically when you run `npm install`. If you need t
 
 ### Skipping hooks (use sparingly!)
 
-In certain edge-case situations, you can bypass the hooks with:
+In certain edge-case situations, you may need to bypass the hooks with:
 `git commit -m "Your message" --no-verify`
 Note: Please avoid skipping hooks unless absolutely necessary.
 

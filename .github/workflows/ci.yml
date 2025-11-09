@@ -20,9 +20,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-
             ${{ runner.os }}-turbo-
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 22.12.0
+          node-version-file: '.nvmrc'
           cache: 'npm'
           cache-dependency-path: './package-lock.json'
       - name: Install npm packages
@@ -46,9 +46,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 22.12.0
+          node-version-file: '.nvmrc'
           cache: 'npm'
           cache-dependency-path: './package-lock.json'
       - name: Install npm packages
