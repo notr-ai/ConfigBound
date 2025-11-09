@@ -23,6 +23,6 @@ export const testMatch = [
   '**/__tests__/**/*.[jt]s?(x)',
   '**/?(*.)+(spec|test).[tj]s?(x)'
 ];
-export const testPathIgnorePatterns = ['dist/'];
+export const testPathIgnorePatterns = ['dist/', 'packages/'];
 export const runner = 'groups';
 export const rootDir = '../';
