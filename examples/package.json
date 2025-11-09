@@ -15,9 +15,5 @@
   "private": true,
   "dependencies": {
     "@config-bound/config-bound": "0.0.5"
-  },
-  "devDependencies": {
-    "rimraf": "^5.0.10",
-    "typescript": "^5.9.3"
   }
 }
