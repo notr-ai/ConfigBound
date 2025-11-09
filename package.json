@@ -24,7 +24,7 @@
     "lint:code": "npm run lint:code:ci -- --fix",
     "lint:code:ci": "eslint --config .config/eslint.config.mjs .",
     "lint:markdown": "npm run lint:markdown:ci -- --fix",
-    "lint:markdown:ci": "markdownlint-cli2 --config .config/.markdownlint-cli2.jsonc \"**/*.md\" \"!**/node_modules\" \"!.changeset\" \"!**/CHANGELOG.md\"",
+    "lint:markdown:ci": "markdownlint-cli2 --config .config/.markdownlint-cli2.jsonc",
     "test": "jest --config .config/jest.config.js",
     "test:dev": "TEST_USE_CONSOLE_LOGGER=true npm run test -- --watch",
     "test:coverage": "npm run test -- --coverage",
