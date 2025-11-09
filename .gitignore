@@ -1,33 +1,37 @@
-# JS/TS #
+# Dependencies
 node_modules
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
 
-# Builds
+# Build outputs
 **/dist
-
-# Coverage directory used by testing tools
-coverage
-
-# npm debug logs
-npm-debug.log*
-
-# Turbo build cache
+*.tsbuildinfo
+.cache
 .turbo
 
-# Development files #
+# Coverage and testing
+coverage/
+.nyc_output
 
-# VS Code configuration
-.vscode/
-
-# macOS settings file 
-.DS_Store
-
-# Husky
-.husky/_
-
-# Dependencies
-/node_modules
-
-# Environment variables
+# Environment
 .env
 .env.*
 !.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE and Editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git tools
+.husky/_
