@@ -5,10 +5,10 @@ export {
   type ExportedElement,
   type ExportedSection,
   type ExportedSchema
-} from './schemaExporter';
+} from './schemaExporter.js';
 
 export {
   formatAsJSON,
   formatAsYAML,
   formatAsEnvExample
-} from './schemaFormatters';
+} from './schemaFormatters.js';

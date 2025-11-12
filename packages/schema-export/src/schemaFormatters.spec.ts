@@ -2,8 +2,8 @@ import {
   formatAsJSON,
   formatAsYAML,
   formatAsEnvExample
-} from './schemaFormatters';
-import { ExportedSchema } from './schemaExporter';
+} from './schemaFormatters.js';
+import { ExportedSchema } from './schemaExporter.js';
 
 describe('Schema Formatters', () => {
   const mockSchema: ExportedSchema = {

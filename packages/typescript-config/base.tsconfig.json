@@ -1,21 +1,21 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "module": "NodeNext",
     "target": "ES2024",
+    "lib": ["ES2024"],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
     "declaration": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "declarationMap": true,
+    "sourceMap": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "types": ["jest", "node"]
-  },
-  "include": ["src/**/*"]
+    "noFallthroughCasesInSwitch": true
+  }
 }

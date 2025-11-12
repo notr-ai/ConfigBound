@@ -1,11 +1,21 @@
 import { Bind } from '../bind';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Element } from '../../element/element';
 import { ConfigInvalidException } from '../../utilities/errors';
 
 /**
- * A Bind that retrieves the value of an environment variable.
+ * A @{@link Bind} that retrieves the value of an environment variable.
  */
 export class EnvVarBind extends Bind {
-  private envVarPrefix?: string;
+  /**
+   * The prefix for the environment variable name
+   */
+  readonly envVarPrefix?: string;
+  /**
+   * A custom function to generate the environment variable name
+   * @param elementPath - The path of the {@link Element} in format sectionName.elementName
+   * @returns The name of the environment variable
+   */
   private customEnvVarName?: (elementPath: string) => string;
 
   constructor(options?: {

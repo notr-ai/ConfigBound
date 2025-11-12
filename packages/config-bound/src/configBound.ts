@@ -7,6 +7,17 @@ import {
   SectionExistsException,
   SectionNotFoundException
 } from './utilities/errors';
+import {
+  ConfigLoaderException,
+  ConfigFileNotFoundException,
+  ConfigFileIsDirectoryException,
+  ExportNotFoundException,
+  NoConfigBoundInstancesException,
+  MultipleConfigBoundInstancesException,
+  InvalidConfigBoundInstanceException,
+  ConfigFileParseException,
+  MissingDependencyException
+} from './utilities/configLoaderErrors';
 import { ConsoleLogger, Logger, NullLogger } from './utilities/logger';
 import { sanitizeName } from './utilities/sanitizeNames';
 import Joi from 'joi';
@@ -289,9 +300,12 @@ export class ConfigBound implements ConfigValueProvider {
    * @param sectionName - The name of the section
    * @param elementName - The name of the element
    * @returns The value of the element, or undefined if not found
-   * @throws {SectionNotFoundException} If section doesn't exist
-   * @throws {ElementNotFoundException} If element doesn't exist in section
-   * @throws {ConfigInvalidException} If value fails validation
+   * @throws SectionNotFoundException If section doesn't exist
+   * @throws ElementNotFoundException If element doesn't exist in section
+   * @throws ConfigInvalidException If value fails validation
+   * @see {@link SectionNotFoundException}
+   * @see {@link ElementNotFoundException}
+   * @see {@link ConfigInvalidException}
    */
   public get<T = unknown>(
     sectionName: string,
@@ -365,9 +379,9 @@ export class ConfigBound implements ConfigValueProvider {
    * @param sectionName - The name of the section
    * @param elementName - The name of the element
    * @returns The value of the element (never undefined)
-   * @throws {SectionNotFoundException} If section doesn't exist
-   * @throws {ElementNotFoundException} If element doesn't exist or value is undefined
-   * @throws {ConfigInvalidException} If value fails validation
+   * @throws SectionNotFoundException If section doesn't exist
+   * @throws ElementNotFoundException If element doesn't exist or value is undefined
+   * @throws ConfigInvalidException If value fails validation
    */
   public getOrThrow<T = unknown>(sectionName: string, elementName: string): T {
     const value = this.get<T>(sectionName, elementName);
@@ -381,7 +395,9 @@ export class ConfigBound implements ConfigValueProvider {
    * Validates all configuration values eagerly without retrieving them.
    * This allows you to catch configuration errors at startup rather than at first access.
    *
-   * @throws {ConfigInvalidException} if any value fails validation
+   * @throws ConfigInvalidException if any value fails validation
+   * @see {@link getValidationErrors} for information about how validation errors are returned
+   * @see {@link ConfigInvalidException}
    */
   public validate(): void {
     const errors = this.getValidationErrors();
@@ -524,6 +540,9 @@ class ConfigBoundBuilder {
 
   /**
    * Builds a map of section names to elements from the schema
+   * @param schema - The schema to build the section map from
+   * @param logger - The logger to use for logging
+   * @returns A map of section names to elements
    */
   private static buildSectionMap<T extends ConfigSchema>(
     schema: T,
@@ -600,3 +619,15 @@ class ConfigBoundBuilder {
     );
   }
 }
+
+export {
+  ConfigLoaderException,
+  ConfigFileNotFoundException,
+  ConfigFileIsDirectoryException,
+  ExportNotFoundException,
+  NoConfigBoundInstancesException,
+  MultipleConfigBoundInstancesException,
+  InvalidConfigBoundInstanceException,
+  ConfigFileParseException,
+  MissingDependencyException
+};

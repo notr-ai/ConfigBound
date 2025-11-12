@@ -1,48 +1,48 @@
 {
-  "name": "@config-bound/nestjs",
+  "name": "@config-bound/cli",
   "version": "0.0.1",
-  "description": "NestJS integration for ConfigBound configuration library",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.js"
-    }
+  "description": "CLI tool for ConfigBound schema export and management",
+  "keywords": [
+    "cli",
+    "config",
+    "schema",
+    "export",
+    "configbound"
+  ],
+  "author": "Robert Keyser",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "configbound": "./bin/configbound.js"
   },
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
   "scripts": {
     "build": "tsc",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist coverage .turbo",
+    "dev": "tsx src/main.ts",
     "test": "jest",
+    "test:dev": "jest --watch",
+    "test:coverage": "jest --coverage",
     "lint": "eslint src/**/*.ts --fix",
     "lint:ci": "eslint src/**/*.ts",
     "format": "prettier --write --config ../../.config/.prettierrc --ignore-path ../../.config/.prettierignore src/**/*.ts",
     "format:ci": "prettier --check --config ../../.config/.prettierrc --ignore-path ../../.config/.prettierignore src/**/*.ts"
   },
-  "keywords": [
-    "nestjs",
-    "config",
-    "configuration",
-    "environment",
-    "settings"
-  ],
-  "author": "Robert Keyser",
-  "license": "MIT",
   "dependencies": {
-    "@config-bound/config-bound": "0.0.5"
-  },
-  "peerDependencies": {
-    "@nestjs/common": "^10.0.0 || ^11.0.0",
-    "@nestjs/core": "^10.0.0 || ^11.0.0",
-    "reflect-metadata": "^0.1.13 || ^0.2.0",
-    "rxjs": "^7.0.0"
+    "@config-bound/config-bound": "*",
+    "@config-bound/schema-export": "*",
+    "@nestjs/common": "^10.4.15",
+    "@nestjs/core": "^10.4.15",
+    "chalk": "^4.1.2",
+    "esbuild-register": "^3.6.0",
+    "nest-commander": "^3.15.0",
+    "reflect-metadata": "^0.2.2",
+    "ts-morph": "^24.0.0",
+    "tsx": "^4.20.6"
   },
   "devDependencies": {
     "@config-bound/eslint-config": "*",
-    "@nestjs/common": "^11.1.8",
-    "@nestjs/core": "^11.1.8",
-    "@nestjs/testing": "^11.1.8",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.0",
     "eslint": "^9.39.1",

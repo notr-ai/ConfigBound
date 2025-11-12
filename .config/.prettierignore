@@ -5,3 +5,5 @@ dist
 coverage
 .turbo
 .config
+*.md
+**/*.md

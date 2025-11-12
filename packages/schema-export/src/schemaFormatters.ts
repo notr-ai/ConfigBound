@@ -1,8 +1,11 @@
 import yaml from 'js-yaml';
-import { ExportedSchema, ExportedElement } from './schemaExporter';
+import { ExportedSchema, ExportedElement } from './schemaExporter.js';
 
 /**
  * Formats the schema as JSON string
+ * @param schema - The schema to format
+ * @param pretty - Whether to pretty print the JSON
+ * @returns The configuration schema as a JSON string
  */
 export function formatAsJSON(
   schema: ExportedSchema,
@@ -13,6 +16,8 @@ export function formatAsJSON(
 
 /**
  * Formats the schema as YAML string
+ * @param schema - The schema to format
+ * @returns The configuration schema as a YAML string
  */
 export function formatAsYAML(schema: ExportedSchema): string {
   return yaml.dump(schema, {
@@ -24,6 +29,10 @@ export function formatAsYAML(schema: ExportedSchema): string {
 
 /**
  * Generates an environment variable name from section and element names
+ * @param sectionName - The name of the section
+ * @param elementName - The name of the element
+ * @param prefix - Optional prefix for the environment variable name
+ * @returns The environment variable name
  */
 function generateEnvVarName(
   sectionName: string,
@@ -39,6 +48,8 @@ function generateEnvVarName(
 
 /**
  * Formats a value for display in .env.example file
+ * @param element - The element to format
+ * @returns The formatted value
  */
 function formatEnvValue(element: ExportedElement): string {
   if (element.sensitive) {

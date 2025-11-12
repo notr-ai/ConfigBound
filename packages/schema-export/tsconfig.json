@@ -1,31 +1,12 @@
 {
+  "extends": "@config-bound/typescript-config/package.tsconfig.json",
   "compilerOptions": {
     "target": "ES2024",
-    "module": "NodeNext",
     "lib": ["ES2024"],
-    "declaration": true,
-    "declarationMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "resolveJsonModule": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "types": ["jest", "node"]
+    "outDir": "./dist",
+    "rootDir": "./src"
   },
-  "include": ["src/**/*", "src/**/*.spec.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*", "src/**/*.spec.ts"]
 }

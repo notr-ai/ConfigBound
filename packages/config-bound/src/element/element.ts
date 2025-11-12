@@ -128,7 +128,7 @@ export class Element<T> {
   /**
    * Retrieves the value of the element or throws an error if the value isn't found.
    * @param valueProvider - The provider to use for retrieving values
-   * @throws {@link ConfigUnsetException ConfigUnsetException} if the value has not been set
+   * @throws ConfigUnsetException if the value has not been set
    * @returns the value of the Element.
    */
   getOrThrow<R>(valueProvider: ConfigValueProvider): R {

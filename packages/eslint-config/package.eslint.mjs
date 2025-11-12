@@ -1,15 +1,12 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import pluginJest from 'eslint-plugin-jest';
-import turbo from 'eslint-plugin-turbo';
 
-export default defineConfig([
+export default [
   {
-    ignores: ['**/dist/**', 'docs/**', 'examples/**']
+    ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**']
   },
   {
     files: ['**/*.{js,mjs,cjs,ts}'],
@@ -24,13 +21,9 @@ export default defineConfig([
   },
   {
     files: ['**/*.{js,mjs,cjs,ts}'],
-    languageOptions: { globals: globals.browser }
+    languageOptions: { globals: globals.node }
   },
-  {
-    files: ['**/*.{js,mjs,cjs,ts}'],
-    plugins: { js },
-    extends: ['js/recommended']
-  },
+  js.configs.recommended,
   {
     files: ['**/*.spec.{js,ts}', '**/*.test.{js,ts}'],
     plugins: { jest: pluginJest },
@@ -45,23 +38,15 @@ export default defineConfig([
       'jest/valid-expect': 'error'
     }
   },
+  ...tseslint.configs.recommended,
   {
-    plugins: {
-      turbo
-    },
-    files: ['**/*.{js,mjs,cjs,ts}'],
-    ignores: ['**/*.spec.{js,ts}', '**/*.test.{js,ts}'],
-    rules: {
-      'turbo/no-undeclared-env-vars': 'warn'
-    }
-  },
-  tseslint.configs.recommended,
-  {
-    files: ['**/*.spec.ts'],
+    files: ['**/*.spec.ts', '**/*.test.ts'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-explicit-any': 'off'
     }
   },
   eslintConfigPrettier
-]);
+];
+
+

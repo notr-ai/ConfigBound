@@ -1,7 +1,11 @@
 import { Section } from '@config-bound/config-bound/section';
 import { Element } from '@config-bound/config-bound/element';
 import Joi from 'joi';
-import { exportElement, exportSection, exportSchema } from './schemaExporter';
+import {
+  exportElement,
+  exportSection,
+  exportSchema
+} from './schemaExporter.js';
 
 describe('Schema Exporter', () => {
   describe('exportElement', () => {
@@ -173,7 +177,9 @@ describe('Schema Exporter', () => {
       expect(exported.elements).toHaveLength(1);
       expect(exported.elements[0].name).toBe('appName');
       expect(
-        exported.elements.find((e) => e.name === 'internalKey')
+        exported.elements.find(
+          (e: { name: string }) => e.name === 'internalKey'
+        )
       ).toBeUndefined();
     });
 
