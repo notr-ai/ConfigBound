@@ -1,5 +1,5 @@
 ---
-'@config-bound/nestjs': minor
+"@config-bound/nestjs": minor
 ---
 
 Add @config-bound/nestjs package for NestJS integration

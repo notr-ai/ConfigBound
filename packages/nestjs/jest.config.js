@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
-export default {
+module.exports = {
   testEnvironment: 'node',
   rootDir: './src',
   testMatch: ['**/*.spec.ts'],

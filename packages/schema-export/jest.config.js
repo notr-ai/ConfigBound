@@ -5,10 +5,15 @@ export default {
   testEnvironment: 'node',
   rootDir: './src',
   testMatch: ['**/*.spec.ts'],
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  },
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
+        useESM: true,
         tsconfig: {
           isolatedModules: false
         },

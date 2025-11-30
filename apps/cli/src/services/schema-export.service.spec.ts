@@ -82,7 +82,7 @@ describe('SchemaExportService', () => {
       );
 
       expect(result).toContain('name: TestConfig');
-      expect(result).toContain('database:');
+      expect(result).toContain('- name: database');
     });
 
     it('should export to env format', () => {
