@@ -3,8 +3,14 @@ import {
   configItem,
   configEnum,
   configSection
-} from '../src/configBound';
-import { EnvVarBind } from '../src/bind/binds/envVar';
+} from '@config-bound/config-bound';
+import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+import {
+  exportSchema,
+  formatAsEnvExample,
+  formatAsJSON,
+  formatAsYAML
+} from '@config-bound/schema-export';
 import Joi from 'joi';
 
 /**
@@ -26,19 +32,21 @@ import Joi from 'joi';
 const format = process.argv[2] || 'all';
 
 // Show help if invalid format
-const validFormats = ['json', 'yaml', 'all'];
+const validFormats = ['json', 'yaml', 'env', 'all'];
 if (!validFormats.includes(format)) {
   console.log('Usage: npm run examples:export [format]');
-  console.log('Formats: json, yaml, all (default)');
+  console.log('Formats: json, yaml, env, all (default)');
   console.log();
   console.log('Examples:');
   console.log('  npm run examples:export json     # JSON format only');
   console.log('  npm run examples:export yaml     # YAML format only');
+  console.log('  npm run examples:export env      # .env.example format only');
   console.log('  npm run examples:export all      # Both formats (default)');
   console.log();
   console.log('Or use individual scripts:');
   console.log('  npm run examples:export:json     # JSON format only');
   console.log('  npm run examples:export:yaml     # YAML format only');
+  console.log('  npm run examples:export:env      # .env.example format only');
   process.exit(1);
 }
 
@@ -147,13 +155,13 @@ console.log('='.repeat(48));
 console.log();
 
 // Get the schema for inspection
-const schema = config.exportSchema();
+const schema = exportSchema(config.name, config.sections);
 
 // Handle different format outputs
 if (format === 'all' || format === 'json') {
   console.log('JSON EXPORT');
   console.log('-'.repeat(48));
-  const json = config.toJSON();
+  const json = formatAsJSON(schema);
   console.log(json);
   console.log();
 }
@@ -161,29 +169,17 @@ if (format === 'all' || format === 'json') {
 if (format === 'all' || format === 'yaml') {
   console.log('YAML EXPORT');
   console.log('-'.repeat(48));
-  try {
-    const yaml = config.toYAML();
-    console.log(yaml);
-  } catch (error) {
-    console.log(
-      'YAML export requires js-yaml to be installed: npm install js-yaml'
-    );
-  }
+  const yaml = formatAsYAML(schema);
+  console.log(yaml);
   console.log();
 }
-
-console.log('ENVIRONMENT VARIABLE MAPPING');
-console.log('-'.repeat(48));
-console.log('Environment variables that can be set (with MYAPP prefix):');
-schema.sections.forEach((section) => {
-  section.elements.forEach((element) => {
-    const envVarName = `MYAPP_${section.name.toUpperCase()}_${element.name.toUpperCase()}`;
-    const required = element.required && element.default === undefined;
-    console.log(`  ${envVarName}${required ? ' *' : ''}`);
-  });
-});
-console.log('\n* = Required (no default value)');
-console.log();
+if (format === 'all' || format === 'env') {
+  console.log('.ENV.EXAMPLE EXPORT');
+  console.log('-'.repeat(48));
+  const envExample = formatAsEnvExample(schema, 'MYAPP');
+  console.log(envExample);
+  console.log();
+}
 
 console.log('='.repeat(48));
 console.log('Export completed successfully!');

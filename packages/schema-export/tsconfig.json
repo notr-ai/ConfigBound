@@ -1,14 +1,12 @@
 {
   "extends": "@config-bound/typescript-config/package.tsconfig.json",
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
     "target": "ES2024",
     "lib": ["ES2024"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "outDir": "./dist",
-    "rootDir": "./src",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "rootDir": "./src"
   },
   "include": ["src/**/*", "src/**/*.spec.ts"]
 }

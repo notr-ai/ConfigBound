@@ -113,17 +113,27 @@ const port = config.get('app', 'port');
 
 ## Exporting Configuration Schema
 
-ConfigBound can automatically generate documentation in multiple formats:
+ConfigBound provides schema export functionality through the `@config-bound/schema-export` package:
+
+```bash
+npm install @config-bound/schema-export
+```
 
 ```typescript
-// Export as JSON
-const json = config.toJSON();
-
-// Export as YAML (requires js-yaml)
-const yaml = config.toYAML();
+import {
+  exportSchema,
+  formatAsJSON,
+  formatAsYAML
+} from '@config-bound/schema-export';
 
 // Get structured schema object
-const schema = config.exportSchema();
+const schema = exportSchema(config.name, config.sections);
+
+// Export as JSON
+const json = formatAsJSON(schema);
+
+// Export as YAML
+const yaml = formatAsYAML(schema);
 ```
 
 This is useful for:

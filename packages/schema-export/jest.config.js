@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
-module.exports = {
+export default {
   testEnvironment: 'node',
   rootDir: './src',
   testMatch: ['**/*.spec.ts'],
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  },
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
+        useESM: true,
         tsconfig: {
-          experimentalDecorators: true,
-          emitDecoratorMetadata: true,
           isolatedModules: false
         },
         diagnostics: {

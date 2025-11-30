@@ -1,34 +1,35 @@
 {
-  "name": "@config-bound/config-bound",
-  "version": "0.0.5",
+  "name": "config-bound-monorepo",
+  "version": "0.0.0",
+  "private": true,
   "packageManager": "npm@10.5.0",
   "workspaces": [
-    ".",
     "examples",
-    "packages/nestjs"
+    "apps/cli",
+    "packages/config-bound",
+    "packages/eslint-config",
+    "packages/nestjs",
+    "packages/schema-export",
+    "packages/typescript-config"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/notr-ai/ConfigBound"
   },
   "scripts": {
-    "build": "tsc",
-    "build:all": "turbo run build",
-    "clean": "rimraf dist coverage .turbo",
+    "build": "turbo run build",
+    "clean": "rimraf .turbo",
     "clean:all": "turbo run clean",
     "check": "npm run format:ci && npm run lint:ci && npm run test",
-    "format": "prettier --write --config .config/.prettierrc --ignore-path .config/.prettierignore .",
-    "format:ci": "prettier --check --config .config/.prettierrc --ignore-path .config/.prettierignore .",
-    "lint": "npm run lint:code && npm run lint:markdown",
-    "lint:ci": "npm run lint:code:ci && npm run lint:markdown:ci",
-    "lint:code": "npm run lint:code:ci -- --fix",
-    "lint:code:ci": "eslint --config .config/eslint.config.mjs .",
-    "lint:markdown": "npm run lint:markdown:ci -- --fix",
+    "format": "turbo run format && npm run lint:markdown",
+    "format:ci": "turbo run format:ci && npm run lint:markdown:ci",
+    "lint": "turbo run lint && npm run lint:markdown",
+    "lint:ci": "turbo run lint:ci && npm run lint:markdown:ci",
+    "lint:markdown": "markdownlint-cli2 --fix --config .config/.markdownlint-cli2.jsonc",
     "lint:markdown:ci": "markdownlint-cli2 --config .config/.markdownlint-cli2.jsonc",
-    "test": "jest --config .config/jest.config.js",
-    "test:dev": "TEST_USE_CONSOLE_LOGGER=true npm run test -- --watch",
-    "test:coverage": "npm run test -- --coverage",
-    "test:verbose": "TEST_USE_CONSOLE_LOGGER=true npm run test -- --verbose",
+    "test": "turbo run test",
+    "test:dev": "turbo run test:dev",
+    "test:coverage": "turbo run test:coverage",
     "examples:envVar": "turbo run examples:envVar --filter=examples",
     "examples:export": "turbo run examples:export --filter=examples",
     "examples:export:json": "turbo run examples:export:json --filter=examples",
@@ -38,57 +39,10 @@
     "release": "changeset publish",
     "prepare": "husky"
   },
-  "main": "./dist/configBound.js",
-  "types": "./dist/configBound.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/configBound.d.ts",
-      "require": "./dist/configBound.js",
-      "import": "./dist/configBound.js"
-    },
-    "./createConfig": {
-      "types": "./dist/createConfig.d.ts",
-      "require": "./dist/createConfig.js",
-      "import": "./dist/createConfig.js"
-    },
-    "./section": {
-      "types": "./dist/section/section.d.ts",
-      "require": "./dist/section/section.js",
-      "import": "./dist/section/section.js"
-    },
-    "./element": {
-      "types": "./dist/element/element.d.ts",
-      "require": "./dist/element/element.js",
-      "import": "./dist/element/element.js"
-    },
-    "./bind": {
-      "types": "./dist/bind/bind.d.ts",
-      "require": "./dist/bind/bind.js",
-      "import": "./dist/bind/bind.js"
-    },
-    "./bind/configValueProvider": {
-      "types": "./dist/bind/configValueProvider.d.ts",
-      "require": "./dist/bind/configValueProvider.js",
-      "import": "./dist/bind/configValueProvider.js"
-    },
-    "./bind/binds/envVar": {
-      "types": "./dist/bind/binds/envVar.d.ts",
-      "require": "./dist/bind/binds/envVar.js",
-      "import": "./dist/bind/binds/envVar.js"
-    }
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org"
-  },
-  "author": "Robert Keyser",
-  "license": "MIT",
-  "description": "A config registration library",
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
     "@eslint/js": "^9.39.1",
     "@types/jest": "^30.0.0",
-    "@types/js-yaml": "^4.0.9",
     "@typescript-eslint/eslint-plugin": "^8.46.3",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
@@ -104,11 +58,5 @@
     "turbo": "2.5.3",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.3"
-  },
-  "dependencies": {
-    "joi": "^18.0.1"
-  },
-  "optionalDependencies": {
-    "js-yaml": "^4.1.0"
   }
 }

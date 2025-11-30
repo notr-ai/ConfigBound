@@ -16,14 +16,14 @@ npm list --depth=0 >/dev/null 2>&1 || {
 }
 
 echo "📝 Checking Formatting..."
-npx turbo format:ci || {
+npm run format:ci || {
   echo "💡 To fix formatting issues, run: "
   echo "      npm run format"
   exit 1
 }
 
 echo "🔎 Checking Linting..."
-npx turbo lint:ci || {
+npm run lint:ci || {
   echo "💡 To fix linting issues, run: "
   echo "      npm run lint"
   exit 1

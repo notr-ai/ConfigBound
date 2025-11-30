@@ -1,9 +1,10 @@
 {
-  "name": "@config-bound/nestjs",
+  "name": "@config-bound/schema-export",
   "version": "0.0.1",
-  "description": "NestJS integration for ConfigBound configuration library",
+  "description": "Schema export utilities for ConfigBound configuration library",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -21,29 +22,24 @@
     "format:ci": "prettier --check --config ../../.config/.prettierrc --ignore-path ../../.config/.prettierignore src/**/*.ts"
   },
   "keywords": [
-    "nestjs",
     "config",
     "configuration",
-    "environment",
-    "settings"
+    "schema",
+    "export",
+    "json",
+    "yaml",
+    "documentation"
   ],
   "author": "Robert Keyser",
   "license": "MIT",
   "dependencies": {
-    "@config-bound/config-bound": "0.0.5"
-  },
-  "peerDependencies": {
-    "@nestjs/common": "^10.0.0 || ^11.0.0",
-    "@nestjs/core": "^10.0.0 || ^11.0.0",
-    "reflect-metadata": "^0.1.13 || ^0.2.0",
-    "rxjs": "^7.0.0"
+    "@config-bound/config-bound": "0.0.5",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@config-bound/eslint-config": "*",
-    "@nestjs/common": "^11.1.8",
-    "@nestjs/core": "^11.1.8",
-    "@nestjs/testing": "^11.1.8",
     "@types/jest": "^30.0.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.10.0",
     "eslint": "^9.39.1",
     "jest": "^30.2.0",

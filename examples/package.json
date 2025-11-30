@@ -4,16 +4,18 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
-    "examples:envVar": "EXAMPLE_SERVER_PORT=8080 EXAMPLE_DATABASE_PASSWORD=supersecret123 EXAMPLE_API_KEY=abc1234xyz node dist/examples/createConfigExample.js",
-    "examples:export": "node dist/examples/exportExample.js",
-    "examples:export:json": "node dist/examples/exportExample.js json",
-    "examples:export:yaml": "node dist/examples/exportExample.js yaml"
+    "examples:envVar": "EXAMPLE_SERVER_PORT=8080 EXAMPLE_DATABASE_PASSWORD=supersecret123 EXAMPLE_API_KEY=abc1234xyz node dist/createConfigExample.js",
+    "examples:export": "node dist/exportExample.js",
+    "examples:export:json": "node dist/exportExample.js json",
+    "examples:export:yaml": "node dist/exportExample.js yaml",
+    "examples:export:env": "node dist/exportExample.js env"
   },
   "author": "Robert Keyser",
   "license": "MIT",
   "description": "Examples for ConfigBound",
   "private": true,
   "dependencies": {
-    "@config-bound/config-bound": "0.0.5"
+    "@config-bound/config-bound": "file:../packages/config-bound",
+    "@config-bound/schema-export": "file:../packages/schema-export"
   }
 }

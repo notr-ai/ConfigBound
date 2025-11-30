@@ -1,5 +1,5 @@
 ---
-'@config-bound/nestjs': minor
+"@config-bound/nestjs": minor
 ---
 
 Add @config-bound/nestjs package for NestJS integration
@@ -9,3 +9,5 @@ Add @config-bound/nestjs package for NestJS integration
 - Support for both synchronous and asynchronous configuration
 - Full TypeScript type safety and inference
 - Integration with NestJS dependency injection system
+
+
