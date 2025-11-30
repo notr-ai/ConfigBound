@@ -1,6 +1,6 @@
 {
   "name": "@config-bound/nestjs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "NestJS integration for ConfigBound configuration library",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -30,7 +30,7 @@
   "author": "Robert Keyser",
   "license": "MIT",
   "dependencies": {
-    "@config-bound/config-bound": "0.0.5"
+    "@config-bound/config-bound": "0.1.0"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.0.0 || ^11.0.0",

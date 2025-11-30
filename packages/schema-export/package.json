@@ -1,6 +1,6 @@
 {
   "name": "@config-bound/schema-export",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Schema export utilities for ConfigBound configuration library",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -33,7 +33,7 @@
   "author": "Robert Keyser",
   "license": "MIT",
   "dependencies": {
-    "@config-bound/config-bound": "0.0.5",
+    "@config-bound/config-bound": "0.1.0",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
