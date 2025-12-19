@@ -34,9 +34,9 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: './package-lock.json'
+          node-version-file: ".nvmrc"
+          cache: "npm"
+          cache-dependency-path: "./package-lock.json"
 
       - name: Install npm packages
         run: npm ci --no-fund
@@ -56,19 +56,24 @@ jobs:
       - name: Security Scan
         uses: aquasecurity/trivy-action@0.30.0
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          scanners: 'vuln,license,secret'
-          severity: 'HIGH,CRITICAL'
-          exit-code: '1'
+          scan-type: "fs"
+          scan-ref: "."
+          scanners: "vuln,license,secret"
+          severity: "HIGH,CRITICAL"
+          exit-code: "1"
+
+      - name: Get package version
+        id: package_version
+        run: echo "version=$(jq -r '.version' ./packages/config-bound/package.json)" >> $GITHUB_OUTPUT
 
       - name: Create Release Pull Request or Publish to npm
+        id: changesets
         uses: changesets/action@v1
         with:
           publish: npm run release
           version: npm run version-packages
-          commit: 'chore: version packages'
-          title: 'chore: version packages'
+          commit: "chore: version packages"
+          title: "Release - v${{ steps.package_version.outputs.version }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
