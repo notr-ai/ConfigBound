@@ -77,3 +77,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Label Release PR
+        if: steps.changesets.outputs.pullRequestNumber
+        continue-on-error: true
+        run: |
+          gh pr edit ${{ steps.changesets.outputs.pullRequestNumber }} --add-label "release"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
