@@ -1,6 +1,6 @@
 {
   "name": "@config-bound/eslint-config",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "Shared ESLint configuration for ConfigBound projects",

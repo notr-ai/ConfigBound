@@ -1,6 +1,6 @@
 {
   "name": "@config-bound/cli",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "CLI tool for ConfigBound schema export and management",
   "keywords": [
     "cli",
