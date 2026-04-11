@@ -56,6 +56,25 @@ const config = ConfigBound.createConfig(
 );
 ```
 
+## Defaults vs StaticBind
+
+`configItem({ default })` and `StaticBind` solve different problems:
+
+- Use `default` for a schema-level fallback that applies everywhere
+- Use `StaticBind` for runtime, programmatic overrides (for example, values derived from CLI args or test setup)
+- `default` is only used when no bind provides a value
+- `StaticBind` participates in bind priority and can be overridden by higher-priority binds
+
+If your value is a simple constant fallback, prefer `default`.
+
+## Sensitive Values
+
+Avoid hardcoding secrets directly in `StaticBind` literals that live in source files.
+
+- Prefer `EnvVarBind` or another runtime secret source for sensitive values
+- Use `StaticBind` for non-sensitive defaults and programmatic overrides
+- If you must pass sensitive values to `StaticBind`, inject them at runtime (for example, from a secret manager), not from committed code
+
 ## When to Use
 
 - Inject CLI-derived values after argument parsing

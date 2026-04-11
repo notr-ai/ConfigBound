@@ -32,12 +32,17 @@ export interface FileBindOptions {
  * Maps file extensions to their corresponding parse format.
  * Extend this when adding new formats.
  */
-const EXTENSION_FORMATS: Readonly<Record<string, FileFormat>> = {
-  '.json': 'json',
-  '.jsonc': 'jsonc',
-  '.yml': 'yaml',
-  '.yaml': 'yaml'
-};
+const EXTENSION_FORMAT_ENTRIES: ReadonlyArray<readonly [string, FileFormat]> = [
+  ['.json', 'json'],
+  ['.jsonc', 'jsonc'],
+  ['.hujson', 'jsonc'],
+  ['.yml', 'yaml'],
+  ['.yaml', 'yaml']
+];
+
+const EXTENSION_FORMATS: ReadonlyMap<string, FileFormat> = new Map(
+  EXTENSION_FORMAT_ENTRIES
+);
 
 /**
  * Each parser normalizes its library's calling convention into a single
@@ -214,10 +219,10 @@ function scopeToRootKey(
  */
 function detectFormat(filePath: string): FileFormat {
   const ext = path.extname(filePath).toLowerCase();
-  const format = EXTENSION_FORMATS[ext];
+  const format = EXTENSION_FORMATS.get(ext);
 
   if (!format) {
-    const supported = Object.keys(EXTENSION_FORMATS).join(', ');
+    const supported = EXTENSION_FORMAT_ENTRIES.map(([extension]) => extension).join(', ');
     throw new ConfigInvalidException(
       'FileBind',
       `Unsupported file extension "${ext}". Supported: ${supported}. ` +

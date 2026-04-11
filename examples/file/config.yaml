@@ -1,0 +1,17 @@
+app:
+  port: 7001
+  host: 127.0.0.1
+  environment: staging
+database:
+  host: file-db.internal
+  port: 5432
+  name: app_from_file
+  username: file_user
+  password: example_not_really_a_password
+logging:
+  level: warn
+  format: text
+api:
+  key: file_api_key
+  timeout: 3000
+  retries: 5

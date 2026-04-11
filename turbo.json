@@ -48,6 +48,16 @@
       "outputs": [],
       "cache": false
     },
+    "examples:file": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "examples:static": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
     "examples:export": {
       "dependsOn": ["build"],
       "outputs": [],

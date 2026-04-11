@@ -4,7 +4,7 @@ This directory contains comprehensive examples demonstrating the ConfigBound lib
 
 ## Examples
 
-### `createConfigExample.ts` - Comprehensive Configuration Example
+### `envVar/envVarBindExample.ts` - EnvVar Bind Configuration Example
 
 A comprehensive example showing how to:
 
@@ -23,6 +23,25 @@ The example demonstrates a typical application configuration with:
 - **Database Section**: Database connection settings with sensitive data
 - **API Section**: External API configuration with timeouts and retries
 - **Logging Section**: Logging configuration with array support
+
+### `file/fileBindExample.ts` - File Bind Configuration Example
+
+A file-based example showing how to:
+
+- Load values from a YAML config file using `FileBind`
+- Keep schema validation and type safety with `createConfig`
+- Layer binds so environment variables override file values
+- Use a checked-in file (`file/config.yaml`) as a baseline config
+
+### `static/staticBindExample.ts` - Static Bind Configuration Example
+
+An in-memory object example showing how to:
+
+- Provide baseline config values using `StaticBind`
+- Keep schema validation and type safety with `createConfig`
+- Layer binds so environment variables override static values
+- Use deterministic values without relying on external files
+- Keep sensitive values out of source literals and inject them at runtime
 
 ### `exportExample.ts` - Schema Export Example
 
@@ -51,6 +70,12 @@ You can run the example in several ways:
 # Run the basic configuration example
 npm run examples:envVar
 
+# Run the file bind example
+npm run examples:file
+
+# Run the static bind example
+npm run examples:static
+
 # Run the export example
 npm run examples:export
 ```
@@ -61,8 +86,10 @@ npm run examples:export
 # Build the project first
 npm run build
 
-# Run the example
-node dist/examples/createConfigExample.js
+# Run examples directly
+node dist/envVar/envVarBindExample.js
+node dist/file/fileBindExample.js
+node dist/static/staticBindExample.js
 ```
 
 ## Environment Variable Usage
@@ -71,10 +98,10 @@ The example shows how environment variables automatically override configuration
 
 ```bash
 # Override specific values
-PORT=8080                    # Override app port
-DB_HOST=prod-db.example.com # Override database host
-API_KEY=your-secret-key     # Override API key
-LOG_LEVEL=debug             # Override log level
+EXAMPLE_APP_PORT=8080                    # Override app port
+EXAMPLE_DATABASE_HOST=prod-db.example.com # Override database host
+EXAMPLE_API_KEY=your-secret-key          # Override API key
+EXAMPLE_LOGGING_LEVEL=debug              # Override log level
 ```
 
 ## Turbo Integration
