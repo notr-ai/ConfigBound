@@ -1,10 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import yaml from 'js-yaml';
-import { parse as parseJsonc, printParseErrorCode } from 'jsonc-parser';
-import type { ParseError } from 'jsonc-parser';
+import {
+  parse as parseJsonc,
+  printParseErrorCode,
+  type ParseError
+} from 'jsonc-parser';
 import { Bind } from '../bind';
 import { ConfigInvalidException } from '../../utilities/errors';
+import { ensureError } from '../../utilities/ensureError';
 
 /**
  * Supported file formats for configuration files.
@@ -133,7 +137,7 @@ export class FileBind extends Bind {
     } catch (error) {
       throw new ConfigInvalidException(
         'FileBind',
-        `Cannot read "${this.resolvedPath}": ${errorMessage(error)}`
+        `Cannot read "${this.resolvedPath}": ${ensureError(error).message}`
       );
     }
   }
@@ -153,7 +157,7 @@ export class FileBind extends Bind {
     } catch (error) {
       throw new ConfigInvalidException(
         'FileBind',
-        `Failed to parse "${this.resolvedPath}" as ${this.format}: ${errorMessage(error)}`
+        `Failed to parse "${this.resolvedPath}" as ${this.format}: ${ensureError(error).message}`
       );
     }
 
@@ -243,14 +247,4 @@ function detectFormat(filePath: string): FileFormat {
   }
 
   return format;
-}
-
-/**
- * Converts an error to a string message.
- *
- * @param error The error.
- * @returns The error message.
- */
-function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
 }
