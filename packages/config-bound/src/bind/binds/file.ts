@@ -1,0 +1,214 @@
+import * as fs from 'fs';
+import * as path from 'path';
+import yaml from 'js-yaml';
+import { parse as parseJsonc, printParseErrorCode } from 'jsonc-parser';
+import type { ParseError } from 'jsonc-parser';
+import { Bind } from '../bind';
+import { ConfigInvalidException } from '../../utilities/errors';
+
+/**
+ * Supported file formats for configuration files.
+ */
+export type FileFormat = 'json' | 'jsonc' | 'yaml';
+
+/**
+ * Options for creating a {@link FileBind} instance.
+ */
+export interface FileBindOptions {
+  /** Path to the configuration file. Resolved to absolute via `path.resolve()`. */
+  filePath: string;
+  /** Explicit format override. When omitted, format is detected from the file extension. */
+  format?: FileFormat;
+  /** Dot-separated path to scope into a subtree of the parsed file. */
+  rootKey?: string;
+}
+
+/**
+ * Maps file extensions to their corresponding parse format.
+ * Extend this when adding new formats (TOML, INI, etc.).
+ */
+const EXTENSION_FORMATS: Readonly<Record<string, FileFormat>> = {
+  '.json': 'json',
+  '.jsonc': 'jsonc',
+  '.yml': 'yaml',
+  '.yaml': 'yaml'
+};
+
+/**
+ * Each parser normalizes its library's calling convention into a single
+ * `(content: string) => unknown` signature. Parse failures throw.
+ */
+const PARSERS: Readonly<Record<FileFormat, (content: string) => unknown>> = {
+  json: (content) => JSON.parse(content),
+
+  jsonc: (content) => {
+    const errors: ParseError[] = [];
+    const result = parseJsonc(content, errors, { allowTrailingComma: true });
+    if (errors.length > 0) {
+      const first = errors[0];
+      throw new Error(
+        `${printParseErrorCode(first.error)} at offset ${first.offset}`
+      );
+    }
+    return result;
+  },
+
+  // JSON_SCHEMA restricts types to JSON primitives (string, number, boolean, null).
+  // Prevents the default schema's surprises: yes/no → boolean, date strings → Date objects.
+  yaml: (content) => yaml.load(content, { schema: yaml.JSON_SCHEMA })
+};
+
+/**
+ * A {@link Bind} that reads configuration values from a JSON, JSONC, or YAML file.
+ *
+ * The file is read and parsed once at construction time. Values are cached
+ * in memory and served from the cache on every `retrieve()` call. Call
+ * {@link reload} to re-read the file when its contents have changed.
+ *
+ * Key resolution follows a nested-first strategy: the element path
+ * `"database.host"` first tries `data.database.host`, then falls back
+ * to `data["database.host"]` for flat-keyed files.
+ *
+ * Explicit `null` values in the file are treated as "not set" and
+ * return `undefined`, allowing the next bind or element default to
+ * take over.
+ */
+export class FileBind extends Bind {
+  readonly resolvedPath: string;
+  readonly format: FileFormat;
+  private readonly rootKey?: string;
+  private data: Record<string, unknown>;
+
+  constructor(options: FileBindOptions) {
+    super('File');
+
+    this.resolvedPath = path.resolve(options.filePath);
+    this.format = options.format ?? detectFormat(this.resolvedPath);
+    this.rootKey = options.rootKey;
+    this.data = this.loadAndParse();
+  }
+
+  retrieve<T>(elementPath: string): T | undefined {
+    // Nested path is tried first. If it returns null OR undefined (key absent or
+    // explicit null at the leaf), ?? falls through to the flat key lookup.
+    // This means { "a": { "b": null }, "a.b": "flat" } → "flat" for "a.b".
+    // Only after both paths are exhausted (or both null) does this return undefined,
+    // signalling ConfigBound to try the next bind or fall back to the element default.
+    const value =
+      resolveNested(this.data, elementPath) ?? this.data[elementPath];
+
+    return value != null ? (value as T) : undefined;
+  }
+
+  /**
+   * Re-reads and re-parses the configuration file, replacing the cached data.
+   */
+  reload(): void {
+    this.data = this.loadAndParse();
+  }
+
+  // -- Private plumbing --------------------------------------------------
+
+  private loadAndParse(): Record<string, unknown> {
+    const content = this.readFile();
+    const parsed = this.parseContent(content);
+    return this.rootKey
+      ? scopeToRootKey(parsed, this.rootKey, this.resolvedPath)
+      : parsed;
+  }
+
+  private readFile(): string {
+    try {
+      return fs.readFileSync(this.resolvedPath, 'utf-8');
+    } catch (error) {
+      throw new ConfigInvalidException(
+        'FileBind',
+        `Cannot read "${this.resolvedPath}": ${errorMessage(error)}`
+      );
+    }
+  }
+
+  private parseContent(content: string): Record<string, unknown> {
+    let parsed: unknown;
+
+    try {
+      parsed = PARSERS[this.format](content);
+    } catch (error) {
+      throw new ConfigInvalidException(
+        'FileBind',
+        `Failed to parse "${this.resolvedPath}" as ${this.format}: ${errorMessage(error)}`
+      );
+    }
+
+    // Empty files (e.g., blank YAML) produce null/undefined — treat as empty config
+    if (parsed == null) return {};
+
+    if (typeof parsed !== 'object' || Array.isArray(parsed)) {
+      const actual = Array.isArray(parsed) ? 'array' : typeof parsed;
+      throw new ConfigInvalidException(
+        'FileBind',
+        `Config file "${this.resolvedPath}" must contain an object at the top level, found ${actual}`
+      );
+    }
+
+    return parsed as Record<string, unknown>;
+  }
+}
+
+// -- Pure helpers (no instance state, easily testable in isolation) --------
+
+/**
+ * Walks a dot-separated path through a nested object.
+ * Returns `undefined` at the first segment that can't be traversed.
+ */
+function resolveNested(
+  data: Record<string, unknown>,
+  dotPath: string
+): unknown {
+  const segments = dotPath.split('.');
+  let current: unknown = data;
+
+  for (const segment of segments) {
+    if (current == null || typeof current !== 'object') return undefined;
+    current = (current as Record<string, unknown>)[segment];
+  }
+
+  return current;
+}
+
+function scopeToRootKey(
+  data: Record<string, unknown>,
+  rootKey: string,
+  filePath: string
+): Record<string, unknown> {
+  const scoped = resolveNested(data, rootKey);
+
+  if (scoped == null || typeof scoped !== 'object' || Array.isArray(scoped)) {
+    throw new ConfigInvalidException(
+      'FileBind',
+      `Root key "${rootKey}" does not resolve to an object in "${filePath}"`
+    );
+  }
+
+  return scoped as Record<string, unknown>;
+}
+
+function detectFormat(filePath: string): FileFormat {
+  const ext = path.extname(filePath).toLowerCase();
+  const format = EXTENSION_FORMATS[ext];
+
+  if (!format) {
+    const supported = Object.keys(EXTENSION_FORMATS).join(', ');
+    throw new ConfigInvalidException(
+      'FileBind',
+      `Unsupported file extension "${ext}". Supported: ${supported}. ` +
+        `Use the "format" option to specify explicitly.`
+    );
+  }
+
+  return format;
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}

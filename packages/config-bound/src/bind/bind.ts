@@ -34,4 +34,4 @@ export abstract class Bind {
 /**
  * Kinds of Binds.
  */
-export type BindName = 'EnvironmentVariable';
+export type BindName = 'EnvironmentVariable' | 'File';

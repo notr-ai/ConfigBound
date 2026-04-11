@@ -4,4 +4,5 @@ Retrieves configuration values from external sources.
 
 ## Available Binds
 
-- [EnvVarBind](./binds/envVar.md) - Environment variables
+- [EnvVarBind](./binds/0%20-%20envVar.md) - Environment variables
+- [FileBind](./binds/1%20-%20file.md) - JSON, JSONC, and YAML files
