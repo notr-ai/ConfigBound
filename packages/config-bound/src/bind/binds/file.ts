@@ -98,12 +98,17 @@ export class FileBind extends Bind {
     this.data = this.loadAndParse();
   }
 
+  /**
+   * Retrieves a value for the given element path from the cached file data.
+   *
+   * Resolution is nested-first (e.g. `a.b` -> `data.a.b`) with a fallback to
+   * flat keys (e.g. `data["a.b"]`). `null` and `undefined` are treated as unset
+   * and return `undefined` so downstream binds/defaults can take over.
+   *
+   * @param elementPath Dot-separated element path to resolve.
+   * @returns The resolved value when present, otherwise `undefined`.
+   */
   retrieve<T>(elementPath: string): T | undefined {
-    // Nested path is tried first. If it returns null OR undefined (key absent or
-    // explicit null at the leaf), ?? falls through to the flat key lookup.
-    // This means { "a": { "b": null }, "a.b": "flat" } → "flat" for "a.b".
-    // Only after both paths are exhausted (or both null) does this return undefined,
-    // signalling ConfigBound to try the next bind or fall back to the element default.
     const value =
       resolveNested(this.data, elementPath) ?? this.data[elementPath];
 
