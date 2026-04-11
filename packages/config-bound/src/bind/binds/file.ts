@@ -25,7 +25,7 @@ export interface FileBindOptions {
 
 /**
  * Maps file extensions to their corresponding parse format.
- * Extend this when adding new formats (TOML, INI, etc.).
+ * Extend this when adding new formats.
  */
 const EXTENSION_FORMATS: Readonly<Record<string, FileFormat>> = {
   '.json': 'json',
@@ -107,8 +107,12 @@ export class FileBind extends Bind {
     this.data = this.loadAndParse();
   }
 
-  // -- Private plumbing --------------------------------------------------
-
+  /**
+   * Reads and parses the configuration file.
+   *
+   * @private
+   * @returns The parsed configuration data.
+   */
   private loadAndParse(): Record<string, unknown> {
     const content = this.readFile();
     const parsed = this.parseContent(content);
@@ -117,6 +121,12 @@ export class FileBind extends Bind {
       : parsed;
   }
 
+  /**
+   * Reads the configuration file.
+   *
+   * @private
+   * @returns The file content.
+   */
   private readFile(): string {
     try {
       return fs.readFileSync(this.resolvedPath, 'utf-8');
@@ -128,6 +138,13 @@ export class FileBind extends Bind {
     }
   }
 
+  /**
+   * Parses the configuration file content into a record
+   *
+   * @private
+   * @param content The file content.
+   * @returns The parsed configuration data.
+   */
   private parseContent(content: string): Record<string, unknown> {
     let parsed: unknown;
 
@@ -155,11 +172,12 @@ export class FileBind extends Bind {
   }
 }
 
-// -- Pure helpers (no instance state, easily testable in isolation) --------
-
 /**
  * Walks a dot-separated path through a nested object.
- * Returns `undefined` at the first segment that can't be traversed.
+ *
+ * @param data The nested object.
+ * @param dotPath The dot-separated path.
+ * @returns The value at the path, or `undefined` if the path is invalid.
  */
 function resolveNested(
   data: Record<string, unknown>,
@@ -176,6 +194,18 @@ function resolveNested(
   return current;
 }
 
+/**
+ * Narrows the config to a subtree of the parsed file.
+ *
+ * Walks `rootKey` (a dot-separated path) through `data` and returns the
+ * object found there. All subsequent key lookups are resolved relative to
+ * that object rather than the file's top level.
+ *
+ * @param data The full parsed file contents.
+ * @param rootKey Dot-separated path to the subtree to use as the config root.
+ * @param filePath Path to the source file, used in error messages.
+ * @returns The object at `rootKey`.
+ */
 function scopeToRootKey(
   data: Record<string, unknown>,
   rootKey: string,
@@ -193,6 +223,12 @@ function scopeToRootKey(
   return scoped as Record<string, unknown>;
 }
 
+/**
+ * Detects the format of a file based on its extension.
+ *
+ * @param filePath The path to the file.
+ * @returns The format of the file.
+ */
 function detectFormat(filePath: string): FileFormat {
   const ext = path.extname(filePath).toLowerCase();
   const format = EXTENSION_FORMATS[ext];
@@ -209,6 +245,12 @@ function detectFormat(filePath: string): FileFormat {
   return format;
 }
 
+/**
+ * Converts an error to a string message.
+ *
+ * @param error The error.
+ * @returns The error message.
+ */
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
