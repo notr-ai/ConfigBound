@@ -15,112 +15,113 @@ import Joi from 'joi';
  */
 
 // Define configuration schema with proper typing
-const config = ConfigBound.createConfig({
-  // Top-level properties go into 'app' section
-  port: configItem<number>({
-    default: 3000,
-    validator: Joi.number().port(),
-    description: 'Application server port'
-  }),
-  environment: configEnum<'development' | 'staging' | 'production'>({
-    values: ['development', 'staging', 'production'],
-    default: 'development',
-    description: 'Runtime environment'
-  }),
-  host: configItem<string>({
-    default: '0.0.0.0',
-    validator: Joi.string(),
-    description: 'Application server host'
-  }),
-  ssl: configItem<boolean>({
-    default: false,
-    validator: Joi.boolean(),
-    description: 'Enable SSL'
-  }),
-  database: configSection(
-    {
-      host: configItem<string>({
-        default: 'localhost',
-        validator: Joi.string().hostname(),
-        description: 'Database host'
-      }),
-      port: configItem<number>({
-        default: 5432,
-        validator: Joi.number().port(),
-        description: 'Database port'
-      }),
-      name: configItem<string>({
-        default: 'myapp',
-        validator: Joi.string(),
-        description: 'Database name'
-      }),
-      username: configItem<string>({
-        default: 'postgres',
-        validator: Joi.string(),
-        description: 'Database username'
-      }),
-      password: configItem<string>({
-        validator: Joi.string(),
-        description: 'Database password',
-        sensitive: true
-      }),
-      ssl: configItem<boolean>({
-        default: false,
-        validator: Joi.boolean(),
-        description: 'Enable SSL for database connection'
-      }),
-      maxConnections: configItem<number>({
-        default: 10,
-        validator: Joi.number().min(1).max(100),
-        description: 'Maximum database connections'
-      })
-    },
-    'Database configuration'
-  ),
+const config = ConfigBound.createConfig(
+  {
+    // Top-level properties go into 'app' section
+    port: configItem({
+      default: 3000,
+      validator: Joi.number().port(),
+      description: 'Application server port'
+    }),
+    environment: configEnum({
+      values: ['development', 'staging', 'production'],
+      default: 'development',
+      description: 'Runtime environment'
+    }),
+    host: configItem({
+      default: '0.0.0.0',
+      validator: Joi.string().ip(),
+      description: 'Application server host'
+    }),
+    ssl: configItem({
+      default: false,
+      validator: Joi.boolean(),
+      description: 'Enable SSL'
+    }),
+    database: configSection(
+      {
+        host: configItem({
+          default: 'localhost',
+          validator: Joi.string().hostname(),
+          description: 'Database host'
+        }),
+        port: configItem({
+          default: 5432,
+          validator: Joi.number().port(),
+          description: 'Database port'
+        }),
+        name: configItem({
+          default: 'myapp',
+          validator: Joi.string(),
+          description: 'Database name'
+        }),
+        username: configItem({
+          default: 'postgres',
+          validator: Joi.string(),
+          description: 'Database username'
+        }),
+        password: configItem({
+          validator: Joi.string(),
+          description: 'Database password',
+          sensitive: true
+        }),
+        ssl: configItem({
+          default: false,
+          validator: Joi.boolean(),
+          description: 'Enable SSL for database connection'
+        }),
+        maxConnections: configItem({
+          default: 10,
+          validator: Joi.number().min(1).max(100),
+          description: 'Maximum database connections'
+        })
+      },
+      'Database configuration'
+    ),
 
-  logging: configSection(
-    {
-      level: configEnum<'trace' | 'debug' | 'info' | 'warn' | 'error'>({
-        values: ['trace', 'debug', 'info', 'warn', 'error'],
-        default: 'info',
-        description: 'Log level'
-        // The validator is automatically generated from the values array
-      }),
-      format: configEnum<'json' | 'text'>({
-        values: ['json', 'text'],
-        default: 'json',
-        description: 'Log format'
-      })
-    },
-    'Logging configuration'
-  ),
+    logging: configSection(
+      {
+        level: configEnum({
+          values: ['trace', 'debug', 'info', 'warn', 'error'],
+          default: 'info',
+          description: 'Log level'
+          // The validator is automatically generated from the values array
+        }),
+        format: configEnum({
+          values: ['json', 'text'],
+          default: 'json',
+          description: 'Log format'
+        })
+      },
+      'Logging configuration'
+    ),
 
-  api: configSection(
-    {
-      key: configItem<string>({
-        validator: Joi.string(),
-        description: 'API key for external services',
-        sensitive: true
-      }),
-      timeout: configItem<number>({
-        default: 5000,
-        validator: Joi.number().min(0),
-        description: 'API timeout in milliseconds'
-      }),
-      retries: configItem<number>({
-        default: 3,
-        validator: Joi.number().min(0).max(10),
-        description: 'Number of API retries'
-      })
-    },
-    'API configuration'
-  )
-});
-
-// Add binds
-// This is where you specify HOW to get the data, not WHAT the data looks like
-
-config.addBind(new EnvVarBind({ prefix: 'EXAMPLE' }));
+    api: configSection(
+      {
+        key: configItem({
+          validator: Joi.string(),
+          description: 'API key for external services',
+          sensitive: true
+        }),
+        timeout: configItem({
+          default: 5000,
+          validator: Joi.number().min(0),
+          description: 'API timeout in milliseconds'
+        }),
+        retries: configItem({
+          default: 3,
+          validator: Joi.number().min(0).max(10),
+          description: 'Number of API retries'
+        })
+      },
+      'API configuration'
+    )
+  },
+  {
+    // This is where you specify HOW to get the data, not WHAT the data looks like
+    binds: [new EnvVarBind({ prefix: 'EXAMPLE' })]
+  }
+);
 
 // Access configuration values with full type safety and autocomplete!
 console.log('=== Application Configuration ===\n');

@@ -452,21 +452,25 @@ export class ConfigBound implements ConfigValueProvider {
    *
    * @example
    * ```typescript
-   * const config = ConfigBound.createConfig({
-   *   port: {
-   *     default: 3000,
-   *     validator: Joi.number(),
-   *     description: 'Server port'
-   *   },
-   *   database: {
-   *     properties: {
-   *       host: { default: 'localhost', validator: Joi.string() },
-   *       port: { default: 5432, validator: Joi.number() }
+   * const config = ConfigBound.createConfig(
+   *   {
+   *     port: {
+   *       default: 3000,
+   *       validator: Joi.number(),
+   *       description: 'Server port'
+   *     },
+   *     database: {
+   *       properties: {
+   *         host: { default: 'localhost', validator: Joi.string() },
+   *         port: { default: 5432, validator: Joi.number() }
+   *       }
    *     }
+   *   },
+   *   {
+   *     binds: [new EnvVarBind()]
    *   }
-   * });
+   * );
    *
-   * config.addBind(new EnvVarBind());
    * const port = config.get('app', 'port'); // Fully type-safe with autocomplete!
    * ```
    */
