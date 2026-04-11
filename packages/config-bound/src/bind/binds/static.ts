@@ -1,4 +1,5 @@
 import { Bind } from '../bind';
+import { resolveNested } from '../utilities/resolveNested';
 
 export type StaticBindValues = Record<string, unknown>;
 
@@ -21,20 +22,6 @@ export class StaticBind extends Bind {
   retrieve<T>(elementPath: string): T | undefined {
     const value =
       resolveNested(this.values, elementPath) ?? this.values[elementPath];
-    return value === undefined ? undefined : (value as T);
+    return value != null ? (value as T) : undefined;
   }
-}
-
-function resolveNested(data: Record<string, unknown>, dotPath: string): unknown {
-  const segments = dotPath.split('.');
-  let current: unknown = data;
-
-  for (const segment of segments) {
-    if (current == null || typeof current !== 'object') {
-      return undefined;
-    }
-    current = (current as Record<string, unknown>)[segment];
-  }
-
-  return current;
 }

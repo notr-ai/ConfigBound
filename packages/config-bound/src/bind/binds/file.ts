@@ -9,6 +9,7 @@ import {
 import { Bind } from '../bind';
 import { ConfigInvalidException } from '../../utilities/errors';
 import { ensureError } from '../../utilities/ensureError';
+import { resolveNested } from '../utilities/resolveNested';
 
 /**
  * Supported file formats for configuration files.
@@ -174,28 +175,6 @@ export class FileBind extends Bind {
 
     return parsed as Record<string, unknown>;
   }
-}
-
-/**
- * Walks a dot-separated path through a nested object.
- *
- * @param data The nested object.
- * @param dotPath The dot-separated path.
- * @returns The value at the path, or `undefined` if the path is invalid.
- */
-function resolveNested(
-  data: Record<string, unknown>,
-  dotPath: string
-): unknown {
-  const segments = dotPath.split('.');
-  let current: unknown = data;
-
-  for (const segment of segments) {
-    if (current == null || typeof current !== 'object') return undefined;
-    current = (current as Record<string, unknown>)[segment];
-  }
-
-  return current;
 }
 
 /**

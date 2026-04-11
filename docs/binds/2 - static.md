@@ -22,6 +22,8 @@ new StaticBind({
 - `"app.port"` resolves from nested traversal
 - `"database.host"` resolves from the flat key
 - When both nested and flat values exist for the same path, nested wins
+- `null` is treated as unset and returns `undefined`
+- If a nested value is `null`, resolution falls back to the flat key for that path
 
 ## Usage with ConfigBound
 
