@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@config-bound/eslint-config": "*",
+    "@nestjs/testing": "^11.1.18",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
     "eslint": "^9.39.1",
