@@ -291,12 +291,6 @@ export class ConfigBound implements ConfigValueProvider {
   /**
    * Gets the value of an Element using the first available Bind.
    *
-   * **Error Handling:**
-   * - Throws `SectionNotFoundException` if the section doesn't exist
-   * - Throws `ElementNotFoundException` if the element doesn't exist in the section
-   * - Throws `ConfigInvalidException` if the value fails validation
-   * - Returns `undefined` if no value is found in any bind and no default exists
-   *
    * @param sectionName - The name of the section
    * @param elementName - The name of the element
    * @returns The value of the element, or undefined if not found
