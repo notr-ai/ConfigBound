@@ -102,7 +102,7 @@ const config = ConfigBound.createConfig(
       description: 'Application server port',
       example: 8080
     }),
-    environment: configEnum<'development' | 'production'>({
+    environment: configEnum({
       values: ['development', 'production'],
       default: 'development',
       description: 'Runtime environment'

@@ -2,6 +2,7 @@ import { Bind } from '../bind';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Element } from '../../element/element';
 import { ConfigInvalidException } from '../../utilities/errors';
+import { ensureError } from '../../utilities/ensureError';
 
 /**
  * A @{@link Bind} that retrieves the value of an environment variable.
@@ -90,7 +91,7 @@ export class EnvVarBind extends Bind {
       } catch (error) {
         throw new ConfigInvalidException(
           'EnvVarBind',
-          `Failed to parse JSON value "${value}": ${error instanceof Error ? error.message : String(error)}. JSON arrays and objects must use double quotes for strings.`
+          `Failed to parse JSON value "${value}": ${ensureError(error).message}. JSON arrays and objects must use double quotes for strings.`
         );
       }
     }

@@ -53,6 +53,16 @@
       "require": "./dist/bind/binds/envVar.js",
       "import": "./dist/bind/binds/envVar.js"
     },
+    "./bind/binds/file": {
+      "types": "./dist/bind/binds/file.d.ts",
+      "require": "./dist/bind/binds/file.js",
+      "import": "./dist/bind/binds/file.js"
+    },
+    "./bind/binds/static": {
+      "types": "./dist/bind/binds/static.d.ts",
+      "require": "./dist/bind/binds/static.js",
+      "import": "./dist/bind/binds/static.js"
+    },
     "./utilities": {
       "types": "./dist/utilities/index.d.ts",
       "require": "./dist/utilities/index.js",
@@ -76,6 +86,7 @@
     "@config-bound/eslint-config": "*",
     "@eslint/js": "^9.39.1",
     "@types/jest": "^30.0.0",
+    "@types/js-yaml": "^4.0.9",
     "@typescript-eslint/eslint-plugin": "^8.46.3",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
@@ -94,6 +105,8 @@
     "typescript-eslint": "^8.46.3"
   },
   "dependencies": {
-    "joi": "^18.0.1"
+    "joi": "^18.0.1",
+    "js-yaml": "^4.1.0",
+    "jsonc-parser": "^3.3.1"
   }
 }

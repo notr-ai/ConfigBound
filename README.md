@@ -36,7 +36,7 @@ const config = ConfigBound.createConfig(
       validator: Joi.number().port(),
       description: 'Application port'
     }),
-    environment: configEnum<'development' | 'production'>({
+    environment: configEnum({
       values: ['development', 'production'],
       default: 'development',
       description: 'Runtime environment'
@@ -174,6 +174,35 @@ MYAPP_APP_PORT=8080
 MYAPP_DATABASE_HOST=prod-db.example.com
 MYAPP_API_APIKEY=your-secret-key
 ```
+
+## Static Values
+
+Use `StaticBind` to inject values directly in code while still participating in bind priority order.
+
+```typescript
+import { ConfigBound, configItem } from '@config-bound/config-bound';
+import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+import { StaticBind } from '@config-bound/config-bound/bind/binds/static';
+import Joi from 'joi';
+
+const config = ConfigBound.createConfig(
+  {
+    port: configItem<number>({
+      default: 3000,
+      validator: Joi.number().port()
+    })
+  },
+  {
+    // Earlier bind wins: StaticBind overrides EnvVarBind here.
+    binds: [
+      new StaticBind({ 'app.port': 8080 }),
+      new EnvVarBind({ prefix: 'MYAPP' })
+    ]
+  }
+);
+```
+
+`StaticBind` accepts either nested values (`{ app: { port: 8080 } }`) or flat dot-path keys (`{ 'app.port': 8080 }`).
 
 ## Documentation
 

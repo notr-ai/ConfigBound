@@ -40,7 +40,7 @@ jobs:
       - name: Run Unit Tests
         id: test
         run: npx turbo test
-  compliance-checks:
+  security-checks:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -54,29 +54,21 @@ jobs:
       - name: Install npm packages
         run: npm ci --no-fund
 
-      - name: Cache Trivy DB
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/trivy
-          key: ${{ runner.os }}-trivy-db-${{ github.run_id }}
-          restore-keys: |
-            ${{ runner.os }}-trivy-db-
-
       - name: Security Scan
-        uses: aquasecurity/trivy-action@0.30.0
+        id: scan
+        uses: anchore/scan-action@v7
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          scanners: 'vuln,license,secret,config'
-          severity: 'MEDIUM,HIGH,CRITICAL'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          path: '.'
+          fail-build: true
+          severity-cutoff: medium
+          output-format: sarif
+          cache-db: true
 
       - name: Upload SARIF to GitHub
         uses: github/codeql-action/upload-sarif@v3
         if: success() || failure()
         with:
-          sarif_file: trivy-results.sarif
+          sarif_file: ${{ steps.scan.outputs.sarif }}
   documentation-checks:
     runs-on: ubuntu-latest
     steps:

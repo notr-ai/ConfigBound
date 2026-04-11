@@ -58,7 +58,7 @@ const config = ConfigBound.createConfig(
       description: 'Application server port',
       example: 8080
     }),
-    environment: configEnum<'development' | 'staging' | 'production'>({
+    environment: configEnum({
       values: ['development', 'staging', 'production'],
       default: 'development',
       description: 'Runtime environment for the application'
@@ -68,7 +68,7 @@ const config = ConfigBound.createConfig(
       validator: Joi.string(),
       description: 'Application server host address'
     }),
-    logLevel: configEnum<'debug' | 'info' | 'warn' | 'error'>({
+    logLevel: configEnum({
       values: ['debug', 'info', 'warn', 'error'],
       default: 'info',
       description: 'Logging verbosity level'

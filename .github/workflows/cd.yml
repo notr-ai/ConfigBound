@@ -54,13 +54,12 @@ jobs:
         run: npx turbo test
 
       - name: Security Scan
-        uses: aquasecurity/trivy-action@0.30.0
+        uses: anchore/scan-action@v7
         with:
-          scan-type: "fs"
-          scan-ref: "."
-          scanners: "vuln,license,secret"
-          severity: "HIGH,CRITICAL"
-          exit-code: "1"
+          path: "."
+          fail-build: true
+          severity-cutoff: high
+          cache-db: true
 
       - name: Get package version
         id: package_version

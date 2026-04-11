@@ -111,7 +111,7 @@ export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
  * @example
  * ```typescript
  * const config = ConfigBound.createConfig({
- *   environment: configEnum<'development' | 'staging' | 'production'>({
+ *   environment: configEnum({
  *     values: ['development', 'staging', 'production'],
  *     default: 'development',
  *     description: 'Runtime environment'
@@ -119,13 +119,13 @@ export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
  * });
  * ```
  */
-export function configEnum<T extends string>(options: {
-  values: readonly T[];
-  default?: T;
+export function configEnum<const Values extends readonly string[]>(options: {
+  values: Values;
+  default?: Values[number];
   description?: string;
-  example?: T;
+  example?: Values[number];
   sensitive?: boolean;
-}): ConfigItem<T> {
+}): ConfigItem<Values[number]> {
   return {
     default: options.default,
     description: options.description,
@@ -133,7 +133,7 @@ export function configEnum<T extends string>(options: {
     sensitive: options.sensitive,
     validator: Joi.string().valid(
       ...options.values
-    ) as unknown as Joi.AnySchema<T>
+    ) as unknown as Joi.AnySchema<Values[number]>
   };
 }
 
@@ -290,12 +290,6 @@ export class ConfigBound implements ConfigValueProvider {
 
   /**
    * Gets the value of an Element using the first available Bind.
-   *
-   * **Error Handling:**
-   * - Throws `SectionNotFoundException` if the section doesn't exist
-   * - Throws `ElementNotFoundException` if the element doesn't exist in the section
-   * - Throws `ConfigInvalidException` if the value fails validation
-   * - Returns `undefined` if no value is found in any bind and no default exists
    *
    * @param sectionName - The name of the section
    * @param elementName - The name of the element
@@ -458,21 +452,25 @@ export class ConfigBound implements ConfigValueProvider {
    *
    * @example
    * ```typescript
-   * const config = ConfigBound.createConfig({
-   *   port: {
-   *     default: 3000,
-   *     validator: Joi.number(),
-   *     description: 'Server port'
-   *   },
-   *   database: {
-   *     properties: {
-   *       host: { default: 'localhost', validator: Joi.string() },
-   *       port: { default: 5432, validator: Joi.number() }
+   * const config = ConfigBound.createConfig(
+   *   {
+   *     port: {
+   *       default: 3000,
+   *       validator: Joi.number(),
+   *       description: 'Server port'
+   *     },
+   *     database: {
+   *       properties: {
+   *         host: { default: 'localhost', validator: Joi.string() },
+   *         port: { default: 5432, validator: Joi.number() }
+   *       }
    *     }
+   *   },
+   *   {
+   *     binds: [new EnvVarBind()]
    *   }
-   * });
+   * );
    *
-   * config.addBind(new EnvVarBind());
    * const port = config.get('app', 'port'); // Fully type-safe with autocomplete!
    * ```
    */
