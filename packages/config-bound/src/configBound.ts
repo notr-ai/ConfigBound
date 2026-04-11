@@ -111,7 +111,7 @@ export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
  * @example
  * ```typescript
  * const config = ConfigBound.createConfig({
- *   environment: configEnum<'development' | 'staging' | 'production'>({
+ *   environment: configEnum({
  *     values: ['development', 'staging', 'production'],
  *     default: 'development',
  *     description: 'Runtime environment'
@@ -119,13 +119,13 @@ export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
  * });
  * ```
  */
-export function configEnum<T extends string>(options: {
-  values: readonly T[];
-  default?: T;
+export function configEnum<const Values extends readonly string[]>(options: {
+  values: Values;
+  default?: Values[number];
   description?: string;
-  example?: T;
+  example?: Values[number];
   sensitive?: boolean;
-}): ConfigItem<T> {
+}): ConfigItem<Values[number]> {
   return {
     default: options.default,
     description: options.description,
@@ -133,7 +133,7 @@ export function configEnum<T extends string>(options: {
     sensitive: options.sensitive,
     validator: Joi.string().valid(
       ...options.values
-    ) as unknown as Joi.AnySchema<T>
+    ) as unknown as Joi.AnySchema<Values[number]>
   };
 }
 

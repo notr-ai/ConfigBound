@@ -36,7 +36,7 @@ const config = ConfigBound.createConfig(
       validator: Joi.number().port(),
       description: 'Application port'
     }),
-    environment: configEnum<'development' | 'production'>({
+    environment: configEnum({
       values: ['development', 'production'],
       default: 'development',
       description: 'Runtime environment'
