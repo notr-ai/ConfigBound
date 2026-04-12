@@ -57,6 +57,8 @@ jobs:
       - name: Security Scan
         id: scan
         uses: anchore/scan-action@v7
+        env:
+          GRYPE_CONFIG: .config/.grype.yaml
         with:
           path: '.'
           fail-build: true
@@ -88,7 +90,7 @@ jobs:
       - name: Build docs
         run: npx turbo run docs:build --filter=@config-bound/docs
       - name: Check links
-        uses: lycheeverse/lychee-action@v2
+        uses: lycheeverse/lychee-action@v2.8.0
         with:
           args: --config .config/lychee.toml --root-dir ${{ github.workspace }}/apps/docs ./apps/docs/**/*.md
           fail: true
