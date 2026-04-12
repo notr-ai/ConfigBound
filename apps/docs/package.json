@@ -11,6 +11,8 @@
     "clean": "rimraf .vitepress/dist reference/api .turbo"
   },
   "devDependencies": {
+    "@config-bound/config-bound": "*",
+    "@config-bound/schema-export": "*",
     "@config-bound/typescript-config": "*",
     "@shikijs/twoslash": "2.5.0",
     "@shikijs/vitepress-twoslash": "^2.5.0",
