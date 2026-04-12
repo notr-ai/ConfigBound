@@ -1,6 +1,6 @@
 # How-to Guides
 
-How-to guides help you complete specific tasks with ConfigBound.
+Complete specific tasks with ConfigBound.
 
 ## Binds
 

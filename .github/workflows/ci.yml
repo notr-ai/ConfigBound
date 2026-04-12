@@ -81,7 +81,7 @@ jobs:
           cache-dependency-path: './package-lock.json'
       - name: Install npm packages
         run: npm ci --no-fund
-      - uses: DavidAnson/markdownlint-cli2-action@v19
+      - uses: DavidAnson/markdownlint-cli2-action@v23.0.0
         with:
           globs: '**/*.md'
           config: '.config/.markdownlint-cli2.jsonc'
