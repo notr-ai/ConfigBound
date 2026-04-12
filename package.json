@@ -46,7 +46,8 @@
     "version-packages": "changeset version",
     "release": "changeset publish",
     "prepare": "husky",
-    "scan": "grype dir:. --fail-on medium --config .config/.grype.yaml"
+    "scan": "grype dir:. --fail-on medium --config .config/.grype.yaml",
+    "new:bind": "node scripts/new-bind.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
