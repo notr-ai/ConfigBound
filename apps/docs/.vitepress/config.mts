@@ -1,3 +1,4 @@
+import { transformerTwoslash } from "@shikijs/vitepress-twoslash";
 import { defineConfig } from "vitepress";
 import llmstxt, { copyOrDownloadAsMarkdownButtons } from "vitepress-plugin-llms";
 
@@ -10,6 +11,14 @@ export default defineConfig({
     plugins: [llmstxt({})],
   },
   markdown: {
+    codeTransformers: [transformerTwoslash({
+      processHoverDocs(docs: string) {
+        return docs.replace(
+          /\s*\{@link\s+([\s\S]*?)\}\s*/g,
+          (_, content) => ` ${content.replace(/\s+/g, " ").trim()} `,
+        ).trim();
+      },
+    })],
     config(md) {
       md.use(copyOrDownloadAsMarkdownButtons);
     },
