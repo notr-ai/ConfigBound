@@ -51,11 +51,11 @@ describe('FileBind format detection', () => {
     expect(() => new FileBind({ filePath })).toThrow(/Unsupported file extension/);
   });
 
-  it('uses explicit format override regardless of extension', () => {
+  it('uses explicit format override regardless of extension', async () => {
     const filePath = tmpFile('settings.conf', '{ "x": 1 }');
     const bind = new FileBind({ filePath, format: 'json' });
     expect(bind.format).toBe('json');
-    expect(bind.retrieve('x')).toBe(1);
+    await expect(bind.retrieve('x')).resolves.toBe(1);
   });
 });
 
@@ -101,19 +101,19 @@ describe('FileBind file reading', () => {
     );
   });
 
-  it('treats an empty JSON object as valid empty config', () => {
+  it('treats an empty JSON object as valid empty config', async () => {
     const filePath = tmpFile('empty.json', '{}');
     const bind = new FileBind({ filePath });
-    expect(bind.retrieve('anything')).toBeUndefined();
+    await expect(bind.retrieve('anything')).resolves.toBeUndefined();
   });
 
-  it('treats an empty YAML file as valid empty config', () => {
+  it('treats an empty YAML file as valid empty config', async () => {
     const filePath = tmpFile('empty.yaml', '');
     const bind = new FileBind({ filePath });
-    expect(bind.retrieve('anything')).toBeUndefined();
+    await expect(bind.retrieve('anything')).resolves.toBeUndefined();
   });
 
-  it('parses JSONC with comments and trailing commas', () => {
+  it('parses JSONC with comments and trailing commas', async () => {
     const content = `{
       // server config
       "server": {
@@ -123,7 +123,7 @@ describe('FileBind file reading', () => {
     }`;
     const filePath = tmpFile('config.jsonc', content);
     const bind = new FileBind({ filePath });
-    expect(bind.retrieve('server.host')).toBe('localhost');
+    await expect(bind.retrieve('server.host')).resolves.toBe('localhost');
   });
 });
 
@@ -146,37 +146,37 @@ describe('FileBind retrieve', () => {
     bind = new FileBind({ filePath });
   });
 
-  it('resolves nested paths', () => {
-    expect(bind.retrieve('database.host')).toBe('db.local');
-    expect(bind.retrieve('database.port')).toBe(5432);
+  it('resolves nested paths', async () => {
+    await expect(bind.retrieve('database.host')).resolves.toBe('db.local');
+    await expect(bind.retrieve('database.port')).resolves.toBe(5432);
   });
 
-  it('falls back to flat key when nested path does not exist', () => {
-    expect(bind.retrieve('flat.key')).toBe('flat-value');
+  it('falls back to flat key when nested path does not exist', async () => {
+    await expect(bind.retrieve('flat.key')).resolves.toBe('flat-value');
   });
 
-  it('prefers nested over flat when both exist', () => {
-    expect(bind.retrieve('overlap.key')).toBe('from-nested');
+  it('prefers nested over flat when both exist', async () => {
+    await expect(bind.retrieve('overlap.key')).resolves.toBe('from-nested');
   });
 
-  it('traverses beyond two segments', () => {
-    expect(bind.retrieve('nested.deep.value')).toBe(42);
+  it('traverses beyond two segments', async () => {
+    await expect(bind.retrieve('nested.deep.value')).resolves.toBe(42);
   });
 
-  it('returns undefined for a non-existent path', () => {
-    expect(bind.retrieve('no.such.key')).toBeUndefined();
+  it('returns undefined for a non-existent path', async () => {
+    await expect(bind.retrieve('no.such.key')).resolves.toBeUndefined();
   });
 
-  it('returns undefined for explicit null values', () => {
+  it('returns undefined for explicit null values', async () => {
     const filePath = tmpFile(
       'nulls.json',
       JSON.stringify({ section: { key: null } })
     );
     const nullBind = new FileBind({ filePath });
-    expect(nullBind.retrieve('section.key')).toBeUndefined();
+    await expect(nullBind.retrieve('section.key')).resolves.toBeUndefined();
   });
 
-  it('falls back to flat key when nested key is explicitly null', () => {
+  it('falls back to flat key when nested key is explicitly null', async () => {
     // null at the nested path triggers the ?? fallback to the flat key,
     // so the flat key wins rather than surfacing undefined.
     const filePath = tmpFile(
@@ -184,10 +184,10 @@ describe('FileBind retrieve', () => {
       JSON.stringify({ section: { key: null }, 'section.key': 'flat-value' })
     );
     const nullFlatBind = new FileBind({ filePath });
-    expect(nullFlatBind.retrieve('section.key')).toBe('flat-value');
+    await expect(nullFlatBind.retrieve('section.key')).resolves.toBe('flat-value');
   });
 
-  it('preserves falsy non-null values', () => {
+  it('preserves falsy non-null values', async () => {
     const filePath = tmpFile(
       'falsy.json',
       JSON.stringify({
@@ -195,12 +195,12 @@ describe('FileBind retrieve', () => {
       })
     );
     const falsyBind = new FileBind({ filePath });
-    expect(falsyBind.retrieve('section.zero')).toBe(0);
-    expect(falsyBind.retrieve('section.empty')).toBe('');
-    expect(falsyBind.retrieve('section.no')).toBe(false);
+    await expect(falsyBind.retrieve('section.zero')).resolves.toBe(0);
+    await expect(falsyBind.retrieve('section.empty')).resolves.toBe('');
+    await expect(falsyBind.retrieve('section.no')).resolves.toBe(false);
   });
 
-  it('does not coerce YAML-specific values (JSON_SCHEMA is enforced)', () => {
+  it('does not coerce YAML-specific values (JSON_SCHEMA is enforced)', async () => {
     // Without JSON_SCHEMA, js-yaml would convert "yes" → true and date strings → Date.
     // This test ensures our schema choice prevents that surprise.
     const yamlContent = [
@@ -210,11 +210,11 @@ describe('FileBind retrieve', () => {
     ].join('\n');
     const filePath = tmpFile('coerce.yaml', yamlContent);
     const bind = new FileBind({ filePath });
-    expect(bind.retrieve('section.toggle')).toBe('yes');
-    expect(bind.retrieve('section.date')).toBe('2024-01-15');
+    await expect(bind.retrieve('section.toggle')).resolves.toBe('yes');
+    await expect(bind.retrieve('section.date')).resolves.toBe('2024-01-15');
   });
 
-  it('returns arrays and objects as-is', () => {
+  it('returns arrays and objects as-is', async () => {
     const filePath = tmpFile(
       'complex.json',
       JSON.stringify({
@@ -225,15 +225,15 @@ describe('FileBind retrieve', () => {
       })
     );
     const complexBind = new FileBind({ filePath });
-    expect(complexBind.retrieve('section.hosts')).toEqual(['a', 'b']);
-    expect(complexBind.retrieve('section.meta')).toEqual({ nested: true });
+    await expect(complexBind.retrieve('section.hosts')).resolves.toEqual(['a', 'b']);
+    await expect(complexBind.retrieve('section.meta')).resolves.toEqual({ nested: true });
   });
 });
 
 // -- rootKey scoping ------------------------------------------------------
 
 describe('FileBind rootKey', () => {
-  it('scopes into a subtree', () => {
+  it('scopes into a subtree', async () => {
     const filePath = tmpFile(
       'rooted.json',
       JSON.stringify({
@@ -241,10 +241,10 @@ describe('FileBind rootKey', () => {
       })
     );
     const bind = new FileBind({ filePath, rootKey: 'wrapper' });
-    expect(bind.retrieve('database.host')).toBe('scoped.local');
+    await expect(bind.retrieve('database.host')).resolves.toBe('scoped.local');
   });
 
-  it('supports multi-segment rootKey', () => {
+  it('supports multi-segment rootKey', async () => {
     const filePath = tmpFile(
       'deep-root.json',
       JSON.stringify({
@@ -252,7 +252,7 @@ describe('FileBind rootKey', () => {
       })
     );
     const bind = new FileBind({ filePath, rootKey: 'a.b' });
-    expect(bind.retrieve('server.port')).toBe(9090);
+    await expect(bind.retrieve('server.port')).resolves.toBe(9090);
   });
 
   it('throws when rootKey path does not exist', () => {
@@ -279,13 +279,13 @@ describe('FileBind rootKey', () => {
 // -- reload ---------------------------------------------------------------
 
 describe('FileBind reload', () => {
-  it('picks up file changes', () => {
+  it('picks up file changes', async () => {
     const filePath = tmpFile(
       'live.json',
       JSON.stringify({ section: { val: 'original' } })
     );
     const bind = new FileBind({ filePath });
-    expect(bind.retrieve('section.val')).toBe('original');
+    await expect(bind.retrieve('section.val')).resolves.toBe('original');
 
     fs.writeFileSync(
       filePath,
@@ -293,7 +293,7 @@ describe('FileBind reload', () => {
       'utf-8'
     );
     bind.reload();
-    expect(bind.retrieve('section.val')).toBe('updated');
+    await expect(bind.retrieve('section.val')).resolves.toBe('updated');
   });
 
   it('throws when the file has been deleted', () => {
@@ -305,13 +305,13 @@ describe('FileBind reload', () => {
     expect(() => bind.reload()).toThrow(/Cannot read/);
   });
 
-  it('throws when rootKey subtree disappears after reload', () => {
+  it('throws when rootKey subtree disappears after reload', async () => {
     const filePath = tmpFile(
       'rooted-live.json',
       JSON.stringify({ wrapper: { val: 'original' } })
     );
     const bind = new FileBind({ filePath, rootKey: 'wrapper' });
-    expect(bind.retrieve('val')).toBe('original');
+    await expect(bind.retrieve('val')).resolves.toBe('original');
 
     fs.writeFileSync(filePath, JSON.stringify({ other: {} }), 'utf-8');
     expect(() => bind.reload()).toThrow(ConfigInvalidException);
@@ -322,7 +322,7 @@ describe('FileBind reload', () => {
 // -- ConfigBound integration ----------------------------------------------
 
 describe('FileBind integration with ConfigBound', () => {
-  it('provides values to ConfigBound that pass Joi validation', () => {
+  it('provides values to ConfigBound that pass Joi validation', async () => {
     const filePath = tmpFile(
       'app.json',
       JSON.stringify({ app: { port: 3000, host: 'localhost' } })
@@ -350,11 +350,11 @@ describe('FileBind integration with ConfigBound', () => {
     const section = new Section('app', [portElement, hostElement]);
     const config = new ConfigBound('myapp', [fileBind], [section]);
 
-    expect(config.get('app', 'port')).toBe(3000);
-    expect(config.get('app', 'host')).toBe('localhost');
+    await expect(config.get('app', 'port')).resolves.toBe(3000);
+    await expect(config.get('app', 'host')).resolves.toBe('localhost');
   });
 
-  it('respects bind priority — earlier binds win', () => {
+  it('respects bind priority — earlier binds win', async () => {
     const filePath = tmpFile(
       'low-priority.json',
       JSON.stringify({ app: { port: 3000 } })
@@ -377,13 +377,13 @@ describe('FileBind integration with ConfigBound', () => {
     process.env.FILEBIND_TEST_APP_PORT = '9999';
     try {
       const config = new ConfigBound('myapp', [envBind, fileBind], [section]);
-      expect(config.get('app', 'port')).toBe(9999);
+      await expect(config.get('app', 'port')).resolves.toBe(9999);
     } finally {
       delete process.env.FILEBIND_TEST_APP_PORT;
     }
   });
 
-  it('falls back to element default when key is missing from file', () => {
+  it('falls back to element default when key is missing from file', async () => {
     const filePath = tmpFile('sparse.json', JSON.stringify({ app: {} }));
     const fileBind = new FileBind({ filePath });
 
@@ -399,10 +399,10 @@ describe('FileBind integration with ConfigBound', () => {
     const section = new Section('app', [portElement]);
     const config = new ConfigBound('myapp', [fileBind], [section]);
 
-    expect(config.get('app', 'port')).toBe(8080);
+    await expect(config.get('app', 'port')).resolves.toBe(8080);
   });
 
-  it('works with the declarative createConfig API', () => {
+  it('works with the declarative createConfig API', async () => {
     const filePath = tmpFile(
       'declarative.json',
       JSON.stringify({
@@ -412,7 +412,7 @@ describe('FileBind integration with ConfigBound', () => {
     );
     const fileBind = new FileBind({ filePath });
 
-    const config = ConfigBound.createConfig(
+    const config = await ConfigBound.createConfig(
       {
         port: configItem<number>({
           default: 3000,
@@ -431,7 +431,7 @@ describe('FileBind integration with ConfigBound', () => {
       { binds: [fileBind] }
     );
 
-    expect(config.get('app', 'port')).toBe(4000);
-    expect(config.get('database', 'host')).toBe('db.example.com');
+    await expect(config.get('app', 'port')).resolves.toBe(4000);
+    await expect(config.get('database', 'host')).resolves.toBe('db.example.com');
   });
 });

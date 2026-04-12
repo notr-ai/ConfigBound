@@ -108,7 +108,7 @@ export class FileBind extends Bind {
    * @param elementPath Dot-separated element path to resolve.
    * @returns The resolved value when present, otherwise `undefined`.
    */
-  retrieve<T>(elementPath: string): T | undefined {
+  async retrieve<T>(elementPath: string): Promise<T | undefined> {
     const value =
       resolveNested(this.data, elementPath) ?? this.data[elementPath];
 

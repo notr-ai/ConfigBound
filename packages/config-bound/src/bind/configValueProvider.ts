@@ -3,5 +3,5 @@
  * Implemented by ConfigBound and allows elements to retrieve their values.
  */
 export interface ConfigValueProvider {
-  get<T>(sectionName: string, elementName: string): T | undefined;
+  get<T>(sectionName: string, elementName: string): Promise<T | undefined>;
 }

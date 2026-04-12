@@ -78,11 +78,11 @@ describe('envVarBindIntegration', () => {
     expect(config).toBeDefined();
   });
 
-  it('should get the port from the env var', () => {
-    expect(config.get<number>('server', 'port')).toBe(8081);
+  it('should get the port from the env var', async () => {
+    await expect(config.get<number>('server', 'port')).resolves.toBe(8081);
   });
 
-  it('should get the api key from the env var', () => {
-    expect(config.get<string>('api', 'apiKey')).toBe('abc123');
+  it('should get the api key from the env var', async () => {
+    await expect(config.get<string>('api', 'apiKey')).resolves.toBe('abc123');
   });
 });

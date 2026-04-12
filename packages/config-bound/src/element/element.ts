@@ -108,7 +108,7 @@ export class Element<T> {
    * @param valueProvider - The provider to use for retrieving values
    * @returns the value of the Element. If it's unset, then it returns undefined.
    */
-  get<R>(valueProvider: ConfigValueProvider): R | undefined {
+  async get<R>(valueProvider: ConfigValueProvider): Promise<R | undefined> {
     if (!this.sectionName) {
       const error = new Error(
         `${this.name} is not associated with any section`
@@ -131,8 +131,8 @@ export class Element<T> {
    * @throws ConfigUnsetException if the value has not been set
    * @returns the value of the Element.
    */
-  getOrThrow<R>(valueProvider: ConfigValueProvider): R {
-    const value = this.get<R>(valueProvider);
+  async getOrThrow<R>(valueProvider: ConfigValueProvider): Promise<R> {
+    const value = await this.get<R>(valueProvider);
     if (typeof value === 'undefined') {
       throw new ConfigUnsetException(this.name);
     }
