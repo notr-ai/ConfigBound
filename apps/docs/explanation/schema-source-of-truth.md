@@ -1,3 +1,7 @@
+---
+description: Why the ConfigBound schema is the single authoritative source for configuration documentation.
+---
+
 # Schema as the Source of Truth
 
 This page describes how ConfigBound applies the [Docs as Code](./docs-as-code.md) principle to configuration management.
@@ -19,13 +23,18 @@ The schema puts everything needed to describe a config item in one place, in cod
 - **Sensitive flag** — whether the value should be masked in logs and exports
 - **Description** — human-readable intent, co-located with the definition
 
-```typescript
-port: configItem<number>({
-  default: 3000,
-  validator: Joi.number().port(),
-  example: 8080,
-  description: 'The port the server listens on'
-})
+```typescript twoslash
+import { configItem } from "@config-bound/config-bound";
+import Joi from "joi";
+// ---cut---
+const schema = {
+  port: configItem<number>({
+    default: 3000,
+    validator: Joi.number().port(),
+    example: 8080,
+    description: 'The port the server listens on'
+  })
+};
 ```
 
 There is no separate place to maintain these pieces of information. They live together, or they don't exist.

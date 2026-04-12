@@ -1,3 +1,7 @@
+---
+description: Install ConfigBound and create your first type-safe configuration in a TypeScript app.
+---
+
 # Getting Started
 
 This tutorial gets a minimal ConfigBound setup running in a TypeScript app.
@@ -10,7 +14,7 @@ npm install @config-bound/config-bound
 
 ## Create a config
 
-```typescript
+```typescript twoslash
 import {
   ConfigBound,
   configItem,

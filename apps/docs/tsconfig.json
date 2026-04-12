@@ -2,10 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "@config-bound/typescript-config/base.tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "noEmit": true
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": [".vitepress/**/*"],
-  "exclude": ["node_modules", "reference"]
+  "include": [".vitepress/**/*.ts", ".vitepress/**/*.mts"]
 }

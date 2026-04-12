@@ -629,3 +629,7 @@ export {
   ConfigFileParseException,
   MissingDependencyException
 };
+
+export { EnvVarBind } from './bind/binds/envVar';
+export { FileBind, type FileBindOptions, type FileFormat } from './bind/binds/file';
+export { StaticBind, type StaticBindValues } from './bind/binds/static';

@@ -21,5 +21,11 @@
   "entryFileName": "index",
   "validation": {
     "notExported": false
+  },
+  "packageOptions": {
+    "intentionallyNotExported": [
+      "ExtractSections",
+      "ExtractTopLevelItems"
+    ]
   }
 }

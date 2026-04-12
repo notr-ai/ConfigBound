@@ -1,3 +1,7 @@
+---
+description: Map environment variables to ConfigBound config elements using EnvVarBind.
+---
+
 # Read configuration from environment variables
 
 `EnvVarBind` maps environment variables to config elements. It translates element
@@ -8,7 +12,7 @@ paths to uppercase environment variable names: `section.element` becomes
 
 **1. Create the bind and pass it to `ConfigBound.createConfig`:**
 
-```typescript
+```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
 import { EnvVarBind } from "@config-bound/config-bound";
 import Joi from "joi";
@@ -36,8 +40,10 @@ With this config, `PORT` sets `port` and `DATABASE_HOST` sets `database.host`.
 
 **2. To avoid collisions with other applications' environment variables, use a prefix:**
 
-```typescript
-binds: [new EnvVarBind("MYAPP")]
+```typescript twoslash
+import { EnvVarBind } from "@config-bound/config-bound";
+// ---cut---
+const binds = [new EnvVarBind({ prefix: "MYAPP" })];
 ```
 
 With the prefix `MYAPP`, `MYAPP_PORT` sets `port` and `MYAPP_DATABASE_HOST` sets

@@ -1,3 +1,7 @@
+---
+description: Concepts and design rationale behind ConfigBound.
+---
+
 # Explanation
 
 The why behind the what.

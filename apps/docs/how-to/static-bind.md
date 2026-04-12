@@ -1,3 +1,7 @@
+---
+description: Inject in-memory configuration values at runtime using StaticBind.
+---
+
 # Supply configuration values directly in code
 
 `StaticBind` injects configuration values from an in-memory object. Use it when
@@ -8,7 +12,7 @@ startup, or values derived from other runtime state.
 
 **1. Pass a `StaticBind` to `ConfigBound.createConfig`:**
 
-```typescript
+```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
 import { StaticBind } from "@config-bound/config-bound";
 import Joi from "joi";
@@ -37,7 +41,9 @@ const config = ConfigBound.createConfig(
 
 **2. Values can be nested objects or flat dot-path keys. Both work:**
 
-```typescript
+```typescript twoslash
+import { StaticBind } from "@config-bound/config-bound";
+// ---cut---
 new StaticBind({
   port: 8080,                  // nested key
   "database.host": "db.local"  // flat dot-path key

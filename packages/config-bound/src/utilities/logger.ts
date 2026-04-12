@@ -141,8 +141,8 @@ export class NullLogger implements Logger {
 
   /**
    * Don't log anything at the trace level
-   * @param message - The message to log
-   * @param meta - Additional metadata to log
+   * @param _message - The message to log
+   * @param _meta - Additional metadata to log
    */
   trace(_message: string, ..._meta: any[]): void {
     // noop
@@ -150,8 +150,8 @@ export class NullLogger implements Logger {
 
   /**
    * Don't log anything at the debug level
-   * @param message - The message to log
-   * @param meta - Additional metadata to log
+   * @param _message - The message to log
+   * @param _meta - Additional metadata to log
    */
   debug(_message: string, ..._meta: any[]): void {
     // noop
@@ -159,8 +159,8 @@ export class NullLogger implements Logger {
 
   /**
    * Don't log anything at the info level
-   * @param message - The message to log
-   * @param meta - Additional metadata to log
+   * @param _message - The message to log
+   * @param _meta - Additional metadata to log
    */
   info(_message: string, ..._meta: any[]): void {
     // noop
@@ -168,8 +168,8 @@ export class NullLogger implements Logger {
 
   /**
    * Don't log anything at the warn level
-   * @param message - The message to log
-   * @param meta - Additional metadata to log
+   * @param _message - The message to log
+   * @param _meta - Additional metadata to log
    */
   warn(_message: string, ..._meta: any[]): void {
     // noop
@@ -177,8 +177,8 @@ export class NullLogger implements Logger {
 
   /**
    * Don't log anything at the error level
-   * @param message - The message to log
-   * @param meta - Additional metadata to log
+   * @param _message - The message to log
+   * @param _meta - Additional metadata to log
    */
   error(_message: string, ..._meta: any[]): void {
     // noop

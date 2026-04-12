@@ -5,7 +5,7 @@ import { ConfigInvalidException } from '../../utilities/errors';
 import { ensureError } from '../../utilities/ensureError';
 
 /**
- * A @{@link Bind} that retrieves the value of an environment variable.
+ * A {@link Bind} that retrieves the value of an environment variable.
  */
 export class EnvVarBind extends Bind {
   /**

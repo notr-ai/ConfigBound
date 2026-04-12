@@ -1,3 +1,7 @@
+---
+description: Task-focused guides for working with ConfigBound binds and schema tools.
+---
+
 # How-to Guides
 
 Complete specific tasks with ConfigBound.

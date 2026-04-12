@@ -1,10 +1,28 @@
+import { transformerTwoslash } from "@shikijs/vitepress-twoslash";
 import { defineConfig } from "vitepress";
+import llmstxt, { copyOrDownloadAsMarkdownButtons } from "vitepress-plugin-llms";
 
 export default defineConfig({
   title: "ConfigBound",
   description: "Type-safe configuration management for TypeScript.",
   base: "/ConfigBound/",
   cleanUrls: true,
+  vite: {
+    plugins: [llmstxt({})],
+  },
+  markdown: {
+    codeTransformers: [transformerTwoslash({
+      processHoverDocs(docs: string) {
+        return docs.replace(
+          /\s*\{@link\s+([\s\S]*?)\}\s*/g,
+          (_, content) => ` ${content.replace(/\s+/g, " ").trim()} `,
+        ).trim();
+      },
+    })],
+    config(md) {
+      md.use(copyOrDownloadAsMarkdownButtons);
+    },
+  },
   themeConfig: {
     nav: [
       { text: "Tutorials", link: "/tutorials/" },
