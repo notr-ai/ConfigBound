@@ -1,3 +1,7 @@
+---
+description: Why the ConfigBound schema is the single authoritative source for configuration documentation.
+---
+
 # Schema as the Source of Truth
 
 This page describes how ConfigBound applies the [Docs as Code](./docs-as-code.md) principle to configuration management.

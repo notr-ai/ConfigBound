@@ -1,3 +1,7 @@
+---
+description: Inject in-memory configuration values at runtime using StaticBind.
+---
+
 # Supply configuration values directly in code
 
 `StaticBind` injects configuration values from an in-memory object. Use it when

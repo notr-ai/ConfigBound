@@ -1,3 +1,7 @@
+---
+description: Install ConfigBound and create your first type-safe configuration in a TypeScript app.
+---
+
 # Getting Started
 
 This tutorial gets a minimal ConfigBound setup running in a TypeScript app.

@@ -1,3 +1,7 @@
+---
+description: Map environment variables to ConfigBound config elements using EnvVarBind.
+---
+
 # Read configuration from environment variables
 
 `EnvVarBind` maps environment variables to config elements. It translates element

@@ -1,3 +1,7 @@
+---
+description: How ConfigBound applies the Docs as Code principle to keep configuration documentation accurate.
+---
+
 # Docs as Code
 
 ## What "Docs as Code" means

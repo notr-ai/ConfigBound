@@ -1,3 +1,7 @@
+---
+description: Load configuration values from a JSON, JSONC, or YAML file using FileBind.
+---
+
 # Read configuration from a file
 
 `FileBind` reads configuration values from a JSON, JSONC, or YAML file. The file

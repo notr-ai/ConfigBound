@@ -1,3 +1,7 @@
+---
+description: Serialize your ConfigBound schema to JSON or YAML for use in documentation, CI, or tooling.
+---
+
 # Export your configuration schema
 
 The config schema already contains everything needed to describe your

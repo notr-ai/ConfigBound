@@ -1,10 +1,19 @@
 import { defineConfig } from "vitepress";
+import llmstxt, { copyOrDownloadAsMarkdownButtons } from "vitepress-plugin-llms";
 
 export default defineConfig({
   title: "ConfigBound",
   description: "Type-safe configuration management for TypeScript.",
   base: "/ConfigBound/",
   cleanUrls: true,
+  vite: {
+    plugins: [llmstxt({})],
+  },
+  markdown: {
+    config(md) {
+      md.use(copyOrDownloadAsMarkdownButtons);
+    },
+  },
   themeConfig: {
     nav: [
       { text: "Tutorials", link: "/tutorials/" },
