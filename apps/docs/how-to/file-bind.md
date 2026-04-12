@@ -18,7 +18,7 @@ npm install @config-bound/config-bound
 
 **2. Pass a `FileBind` to `ConfigBound.createConfig`:**
 
-```typescript
+```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
 import { FileBind } from "@config-bound/config-bound";
 import Joi from "joi";
@@ -60,7 +60,9 @@ bind is constructed.
 The format is inferred from the file extension. If your file uses a non-standard
 extension, pass `format` explicitly:
 
-```typescript
+```typescript twoslash
+import { FileBind } from "@config-bound/config-bound";
+// ---cut---
 new FileBind({ filePath: "./settings.conf", format: "json" })
 ```
 
@@ -84,7 +86,9 @@ wrapper:
     host: db.local
 ```
 
-```typescript
+```typescript twoslash
+import { FileBind } from "@config-bound/config-bound";
+// ---cut---
 new FileBind({ filePath: "./config.yaml", rootKey: "wrapper" })
 // "app.port"       -> 3000
 // "database.host"  -> "db.local"
@@ -95,7 +99,9 @@ new FileBind({ filePath: "./config.yaml", rootKey: "wrapper" })
 The file is read once at construction. Call `reload()` to re-read it — useful
 when the file changes while the process is running:
 
-```typescript
+```typescript twoslash
+import { FileBind } from "@config-bound/config-bound";
+// ---cut---
 const bind = new FileBind({ filePath: "./config.yaml" });
 // ...later, after the file changes:
 bind.reload();

@@ -21,7 +21,8 @@ npm install @config-bound/schema-export
 
 **2. Export the schema and write it to disk:**
 
-```typescript
+```typescript twoslash
+// @types: node
 import {
   ConfigBound,
   configItem,
@@ -90,7 +91,14 @@ with the code.
 By default, `exportSchema` excludes elements marked `omitFromSchema: true`. Pass
 `true` as the third argument to include them:
 
-```typescript
+```typescript twoslash
+import { ConfigBound, configItem } from "@config-bound/config-bound";
+import { exportSchema } from "@config-bound/schema-export";
+import Joi from "joi";
+const config = ConfigBound.createConfig(
+  { port: configItem<number>({ default: 3000, validator: Joi.number() }) },
+);
+// ---cut---
 const publicSchema = exportSchema(config.name, config.sections);
 const fullSchema = exportSchema(config.name, config.sections, true);
 ```
@@ -111,7 +119,15 @@ internalKey: configItem<string>({
 `formatAsJSON` produces pretty-printed JSON by default. Pass `false` to produce
 compact output:
 
-```typescript
+```typescript twoslash
+import { ConfigBound, configItem } from "@config-bound/config-bound";
+import { exportSchema, formatAsJSON } from "@config-bound/schema-export";
+import Joi from "joi";
+const config = ConfigBound.createConfig(
+  { port: configItem<number>({ default: 3000, validator: Joi.number() }) },
+);
+const schema = exportSchema(config.name, config.sections);
+// ---cut---
 const pretty = formatAsJSON(schema);         // indented
 const compact = formatAsJSON(schema, false); // minified
 ```

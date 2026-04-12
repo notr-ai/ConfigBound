@@ -14,7 +14,7 @@ npm install @config-bound/config-bound
 
 ## Create a config
 
-```typescript
+```typescript twoslash
 import {
   ConfigBound,
   configItem,

@@ -6,7 +6,7 @@ ConfigBound is written by engineers, for engineers. The reader is smart. They ca
 
 Write with quiet authority. Not "this approach may help with drift"—"this approach eliminates drift." Not "you might want to consider"—"do this."
 
-Earnestness over irony. If we think something is the right approach, we say so and explain why.
+If we think something is the right approach, we say so and explain why.
 
 ## Theory before procedure
 
