@@ -38,7 +38,7 @@ import {
 import Joi from "joi";
 import { writeFileSync } from "fs";
 
-const config = ConfigBound.createConfig(
+const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
@@ -95,7 +95,7 @@ By default, `exportSchema` excludes elements marked `omitFromSchema: true`. Pass
 import { ConfigBound, configItem } from "@config-bound/config-bound";
 import { exportSchema } from "@config-bound/schema-export";
 import Joi from "joi";
-const config = ConfigBound.createConfig(
+const config = await ConfigBound.createConfig(
   { port: configItem<number>({ default: 3000, validator: Joi.number() }) },
 );
 // ---cut---
@@ -123,7 +123,7 @@ compact output:
 import { ConfigBound, configItem } from "@config-bound/config-bound";
 import { exportSchema, formatAsJSON } from "@config-bound/schema-export";
 import Joi from "joi";
-const config = ConfigBound.createConfig(
+const config = await ConfigBound.createConfig(
   { port: configItem<number>({ default: 3000, validator: Joi.number() }) },
 );
 const schema = exportSchema(config.name, config.sections);

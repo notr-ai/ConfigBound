@@ -45,9 +45,9 @@ export default defineConfig({
         {
           text: "Binds",
           items: [
-            { text: "EnvVarBind", link: "/how-to/env-var-bind" },
-            { text: "FileBind", link: "/how-to/file-bind" },
-            { text: "StaticBind", link: "/how-to/static-bind" }
+            { text: "EnvVarBind", link: "/how-to/env-var-bind", badge: { type: "tip", text: "Core" } },
+            { text: "FileBind", link: "/how-to/file-bind", badge: { type: "tip", text: "Core" } },
+            { text: "StaticBind", link: "/how-to/static-bind", badge: { type: "tip", text: "Core" } }
           ]
         },
         {
