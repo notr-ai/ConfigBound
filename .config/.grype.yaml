@@ -1,2 +1,11 @@
 exclude:
   - "**/node_modules/**"
+
+ignore:
+  # No upstream fix available: esbuild dev server CORS bypass via vitepress -> vite -> esbuild
+  # https://github.com/advisories/GHSA-67mh-4wv8-2f99
+  - vulnerability: GHSA-67mh-4wv8-2f99
+
+  # No fix available in markdownlint-cli2@0.22.0 (latest): smol-toml DoS in dev tooling only
+  # https://github.com/advisories/GHSA-v3rj-xjv7-4jmq
+  - vulnerability: GHSA-v3rj-xjv7-4jmq

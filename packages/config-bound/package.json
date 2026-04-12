@@ -110,7 +110,6 @@
     "globals": "^16.5.0",
     "husky": "^9.1.7",
     "jest-runner-groups": "^2.2.0",
-    "markdownlint-cli2": "^0.18.1",
     "prettier": "3.6.2",
     "rimraf": "^6.1.0",
     "ts-jest": "^29.4.5",
