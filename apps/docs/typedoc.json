@@ -1,0 +1,25 @@
+{
+  "plugin": ["typedoc-plugin-markdown"],
+  "entryPoints": ["../../packages/config-bound"],
+  "entryPointStrategy": "packages",
+  "out": "reference/api",
+  "outputFileStrategy": "members",
+  "flattenOutputFiles": true,
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "useCodeBlocks": true,
+  "parametersFormat": "table",
+  "propertiesFormat": "table",
+  "enumMembersFormat": "table",
+  "typeDeclarationFormat": "table",
+  "indexFormat": "table",
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "excludeExternals": true,
+  "readme": "none",
+  "entryFileName": "index",
+  "validation": {
+    "notExported": false
+  }
+}

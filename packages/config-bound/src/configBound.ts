@@ -52,13 +52,14 @@ export type ConfigSchema<T = Record<string, unknown>> = {
     : ConfigItem<T[K]>;
 };
 
-// Helper type to separate sections from top-level items
+/** @internal */
 type ExtractSections<T> = {
   [K in keyof T as T[K] extends ConfigSection<unknown>
     ? K
     : never]: T[K] extends ConfigSection<infer U> ? U : never;
 };
 
+/** @internal */
 type ExtractTopLevelItems<T> = {
   [K in keyof T as T[K] extends ConfigItem<unknown>
     ? K
@@ -229,7 +230,6 @@ export class TypedConfigBound<T extends ConfigSchema> {
 /**
  * A ConfigBound is the top level object that contains all the {@link Section}s and {@link Bind}s.
  * It is used to retrieve the values of the {@link Element Elements} from its binds.
- * @see {@link docs 'docs/project/configBound.md'} for more information.
  */
 export class ConfigBound implements ConfigValueProvider {
   readonly name: string;

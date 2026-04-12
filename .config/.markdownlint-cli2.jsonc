@@ -26,5 +26,5 @@
     }
   },
   "globs": ["**/*.md"],
-  "ignores": [".changeset", "**/CHANGELOG.md", "**/node_modules"]
+  "ignores": [".changeset", "**/CHANGELOG.md", "**/node_modules", "apps/docs/reference/api"]
 }

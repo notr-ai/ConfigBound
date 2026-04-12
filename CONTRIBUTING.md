@@ -83,7 +83,9 @@ Note: Please avoid skipping hooks unless absolutely necessary.
 
 ## Documentation
 
-Documentation is in the [/docs](./docs) directory. Make sure to keep it up to date with your latest changes.
+Documentation is in the [apps/docs](./apps/docs) directory and is built with [VitePress](https://vitepress.dev). Make sure to keep it up to date with your latest changes. This project follows the [Diátaxis](https://diataxis.fr) framework for structuring documentation.
+
+The API reference documentation under `reference/api/` is generated automatically from TSDoc comments using [TypeDoc](https://typedoc.org) — do not edit those files directly. Instead, update the TSDoc comments in the source code.
 
 ## Questions?
 

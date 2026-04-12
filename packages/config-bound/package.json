@@ -69,6 +69,21 @@
       "import": "./dist/utilities/index.js"
     }
   },
+  "typedocOptions": {
+    "entryPoints": [
+      "./src/configBound.ts",
+      "./src/section/section.ts",
+      "./src/element/element.ts",
+      "./src/bind/bind.ts",
+      "./src/bind/configValueProvider.ts",
+      "./src/bind/binds/envVar.ts",
+      "./src/bind/binds/file.ts",
+      "./src/bind/binds/static.ts",
+      "./src/utilities/errors.ts",
+      "./src/utilities/logger.ts"
+    ],
+    "tsconfig": "./tsconfig.json"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"

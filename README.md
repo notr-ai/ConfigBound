@@ -144,7 +144,7 @@ This is useful for:
 - Building configuration UIs
 - API documentation
 
-See the [Export Documentation](./docs/5%20-%20exporting-schema.md) for detailed usage and examples.
+See the [Export Documentation](https://notr-ai.github.io/ConfigBound/how-to/schema-export) for detailed usage and examples.
 
 ## Environment Variables
 
@@ -206,7 +206,7 @@ const config = ConfigBound.createConfig(
 
 ## Documentation
 
-See the [docs](./docs).
+See the [documentation site](https://notr-ai.github.io/ConfigBound/).
 
 ## Examples
 
@@ -262,4 +262,4 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for de
 
 ## License
 
-MIT License - see [LICENSE](../LICENSE) for details.
+MIT License - see [LICENSE](LICENSE) for details.

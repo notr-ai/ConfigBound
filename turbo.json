@@ -6,6 +6,20 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "docs:build": {
+      "dependsOn": ["^build"],
+      "outputs": [".vitepress/dist/**"],
+      "inputs": ["**/*.md", ".vitepress/**", "typedoc.json", "package.json"]
+    },
+    "docs:dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "docs:preview": {
+      "cache": false,
+      "persistent": true
+    },
     "clean": {
       "cache": false
     },

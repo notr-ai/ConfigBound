@@ -1,0 +1,16 @@
+no_progress = true
+
+scheme = ["https", "http", "file"]
+
+exclude_all_private = true
+
+exclude = []
+
+index_files = ["index.md", "README.md"]
+
+fallback_extensions = ["md"]
+
+exclude_path = [
+  "apps/docs/reference/api",
+  "node_modules",
+]

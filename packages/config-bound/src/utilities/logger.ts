@@ -134,6 +134,7 @@ export class ConsoleLogger implements Logger {
 
 /**
  * A logger that does nothing
+ * @internal
  */
 export class NullLogger implements Logger {
   logLevels: LogLevel[] = [];
