@@ -6,6 +6,7 @@
   "workspaces": [
     "examples",
     "apps/cli",
+    "apps/docs",
     "packages/config-bound",
     "packages/eslint-config",
     "packages/nestjs",
@@ -18,6 +19,9 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "docs:build": "turbo run docs:build --filter=@config-bound/docs",
+    "docs:dev": "turbo run docs:dev --filter=@config-bound/docs",
+    "docs:preview": "turbo run docs:preview --filter=@config-bound/docs",
     "clean": "rimraf .turbo",
     "clean:all": "turbo run clean",
     "check": "npm run format:ci && npm run lint:ci && npm run test",
@@ -27,6 +31,8 @@
     "lint:ci": "turbo run lint:ci && npm run lint:markdown:ci",
     "lint:markdown": "markdownlint-cli2 --fix --config .config/.markdownlint-cli2.jsonc",
     "lint:markdown:ci": "markdownlint-cli2 --config .config/.markdownlint-cli2.jsonc",
+    "docs:check": "npm run lint:markdown && npm run docs:build && npm run docs:links",
+    "docs:links": "lychee --config .config/lychee.toml --root-dir \"$(pwd)/apps/docs\" './apps/docs/**/*.md'",
     "test": "turbo run test",
     "test:dev": "turbo run test:dev",
     "test:coverage": "turbo run test:coverage",
@@ -39,10 +45,11 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "changeset publish",
-    "prepare": "husky"
+    "prepare": "husky",
+    "scan": "grype dir:. --fail-on medium --config .config/.grype.yaml"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.7",
+    "@changesets/cli": "^2.30.0",
     "@eslint/js": "^9.39.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.6.0",
@@ -54,12 +61,12 @@
     "globals": "^16.5.0",
     "husky": "^9.1.7",
     "jest-runner-groups": "^2.2.0",
-    "markdownlint-cli2": "^0.18.1",
-    "prettier": "3.6.2",
+    "markdownlint-cli2": "^0.22.0",
+    "prettier": "3.8.2",
     "rimraf": "^6.1.0",
     "ts-jest": "^29.4.5",
-    "turbo": "2.5.3",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.3"
+    "turbo": "^2.9.6",
+    "typescript": "^6.0.0",
+    "typescript-eslint": "^8.51.8"
   }
 }

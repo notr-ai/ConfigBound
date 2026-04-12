@@ -1,0 +1,20 @@
+{
+  "name": "@config-bound/docs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "ConfigBound documentation site",
+  "scripts": {
+    "docs:api": "typedoc",
+    "docs:build": "npm run docs:api && vitepress build",
+    "docs:dev": "npm run docs:api && vitepress dev --host",
+    "docs:preview": "vitepress preview --host",
+    "clean": "rimraf .vitepress/dist reference/api .turbo"
+  },
+  "devDependencies": {
+    "@config-bound/typescript-config": "*",
+    "rimraf": "^6.1.3",
+    "typedoc": "^0.28.19",
+    "typedoc-plugin-markdown": "^4.11.0",
+    "vitepress": "^1.6.4"
+  }
+}
