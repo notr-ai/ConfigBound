@@ -57,14 +57,13 @@ jobs:
       - name: Security Scan
         id: scan
         uses: anchore/scan-action@v7
-        env:
-          GRYPE_CONFIG: .config/.grype.yaml
         with:
           path: '.'
           fail-build: true
           severity-cutoff: medium
           output-format: sarif
           cache-db: true
+          config: .config/.grype.yaml
 
       - name: Upload SARIF to GitHub
         uses: github/codeql-action/upload-sarif@v3

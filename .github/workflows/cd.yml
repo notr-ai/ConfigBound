@@ -60,6 +60,7 @@ jobs:
           fail-build: true
           severity-cutoff: high
           cache-db: true
+          config: .config/.grype.yaml
 
       - name: Get package version
         id: package_version
