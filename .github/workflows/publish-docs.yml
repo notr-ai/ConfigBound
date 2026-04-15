@@ -20,7 +20,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
+
+      - name: Cache turbo build setup
+        uses: actions/cache@v4
+        with:
+          path: ./.turbo
+          key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-turbo-
 
       - name: Setup Node
         uses: actions/setup-node@v6

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Cache turbo build setup
         uses: actions/cache@v4
         with:
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - uses: actions/setup-node@v6
         with:
@@ -57,14 +57,13 @@ jobs:
       - name: Security Scan
         id: scan
         uses: anchore/scan-action@v7
-        env:
-          GRYPE_CONFIG: .config/.grype.yaml
         with:
           path: '.'
           fail-build: true
           severity-cutoff: medium
           output-format: sarif
           cache-db: true
+          config: .config/.grype.yaml
 
       - name: Upload SARIF to GitHub
         uses: github/codeql-action/upload-sarif@v3
@@ -75,7 +74,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+      - name: Cache turbo build setup
+        uses: actions/cache@v4
+        with:
+          path: ./.turbo
+          key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-turbo-
       - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
