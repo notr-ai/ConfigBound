@@ -20,7 +20,7 @@ export class ConfigBoundModule {
   ): DynamicModule {
     const configBoundProvider: Provider = {
       provide: CONFIG_BOUND_INSTANCE,
-      useFactory: (): TypedConfigBound<T> => {
+      useFactory: async (): Promise<TypedConfigBound<T>> => {
         return ConfigBound.createConfig(options.schema, {
           name: options.name,
           binds: options.binds,

@@ -16,6 +16,7 @@
       "persistent": true
     },
     "docs:preview": {
+      "dependsOn": ["docs:build"],
       "cache": false,
       "persistent": true
     },

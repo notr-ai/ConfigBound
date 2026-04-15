@@ -38,4 +38,5 @@ Thumbs.db
 
 # Generated API docs (built by TypeDoc before docs:build)
 apps/docs/reference/api/
+apps/docs/reference/cli/
 apps/docs/.vitepress/cache/

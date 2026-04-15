@@ -113,9 +113,9 @@ export interface ${names.pascal}BindOptions {
 /**
  * A {@link Bind} that retrieves values from ${names.pascal}.
  *
- * Uses a static factory method ({@link ${names.pascal}Bind.create}) to pre-load values
- * at startup into a synchronous cache, satisfying the {@link Bind} contract without
- * requiring changes to the core library.
+ * Uses a static factory method ({@link ${names.pascal}Bind.create}) to pre-load all values
+ * into an in-memory map at startup, so that {@link ${names.pascal}Bind.retrieve} reads
+ * from memory without making additional network calls.
  *
  * @example
  * \`\`\`typescript
@@ -124,11 +124,11 @@ export interface ${names.pascal}BindOptions {
  * \`\`\`
  */
 export class ${names.pascal}Bind extends Bind {
-  private readonly cache: Map<string, unknown>;
+  private readonly values: Map<string, unknown>;
 
-  private constructor(cache: Map<string, unknown>) {
+  private constructor(values: Map<string, unknown>) {
     super('${names.pascal}');
-    this.cache = cache;
+    this.values = values;
   }
 
   /**
@@ -138,22 +138,22 @@ export class ${names.pascal}Bind extends Bind {
    * \`ConfigBound.createConfig\`.
    */
   static async create(_options: ${names.pascal}BindOptions): Promise<${names.pascal}Bind> {
-    const cache = new Map<string, unknown>();
+    const values = new Map<string, unknown>();
 
     // TODO: Initialize the SDK client using \`options\`, fetch values, and
-    // populate \`cache\` with entries keyed by the full element path
+    // populate \`values\` with entries keyed by the full element path
     // (format: "sectionName.elementName"). For example:
     //
     //   const client = new SdkClient(options);
-    //   const values = await client.listValues();
-    //   for (const value of values) {
-    //     cache.set(value.path, value.data);
+    //   const secrets = await client.listValues();
+    //   for (const secret of secrets) {
+    //     values.set(secret.path, secret.data);
     //   }
-    return new ${names.pascal}Bind(cache);
+    return new ${names.pascal}Bind(values);
   }
 
-  retrieve<T>(elementName: string): T | undefined {
-    return this.cache.get(elementName) as T | undefined;
+  async retrieve<T>(elementName: string): Promise<T | undefined> {
+    return this.values.get(elementName) as T | undefined;
   }
 }
 `;

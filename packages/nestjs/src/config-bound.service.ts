@@ -44,25 +44,25 @@ export class ConfigBoundService<T extends ConfigSchema = ConfigSchema> {
     return this.configBound.getSections();
   }
 
-  get<
+  async get<
     K extends keyof InferConfigType<T>,
     E extends keyof InferConfigType<T>[K]
-  >(sectionName: K, elementName: E): InferConfigType<T>[K][E] | undefined {
+  >(sectionName: K, elementName: E): Promise<InferConfigType<T>[K][E] | undefined> {
     return this.configBound.get(sectionName, elementName);
   }
 
-  getOrThrow<
+  async getOrThrow<
     K extends keyof InferConfigType<T>,
     E extends keyof InferConfigType<T>[K]
-  >(sectionName: K, elementName: E): InferConfigType<T>[K][E] {
+  >(sectionName: K, elementName: E): Promise<InferConfigType<T>[K][E]> {
     return this.configBound.getOrThrow(sectionName, elementName);
   }
 
-  validate(): void {
-    this.configBound.validate();
+  async validate(): Promise<void> {
+    return this.configBound.validate();
   }
 
-  getValidationErrors(): Array<{ path: string; message: string }> {
+  async getValidationErrors(): Promise<Array<{ path: string; message: string }>> {
     return this.configBound.getValidationErrors();
   }
 }
