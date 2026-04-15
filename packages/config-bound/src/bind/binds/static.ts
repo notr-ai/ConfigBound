@@ -19,7 +19,7 @@ export class StaticBind extends Bind {
     this.values = values;
   }
 
-  retrieve<T>(elementPath: string): T | undefined {
+  async retrieve<T>(elementPath: string): Promise<T | undefined> {
     const value =
       resolveNested(this.values, elementPath) ?? this.values[elementPath];
     return value != null ? (value as T) : undefined;

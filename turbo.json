@@ -7,7 +7,7 @@
     },
     "docs:build": {
       "dependsOn": ["^build"],
-      "outputs": [".vitepress/dist/**"],
+      "outputs": [".vitepress/dist/**", "reference/api/**", "reference/cli/**"],
       "inputs": ["**/*.md", ".vitepress/**", "typedoc.json", "package.json"]
     },
     "docs:dev": {
@@ -16,6 +16,7 @@
       "persistent": true
     },
     "docs:preview": {
+      "dependsOn": ["docs:build"],
       "cache": false,
       "persistent": true
     },

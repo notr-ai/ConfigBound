@@ -80,7 +80,7 @@ export type InferConfigType<T> = ExtractSections<T> &
  *
  * @example
  * ```typescript
- * const config = ConfigBound.createConfig({
+ * const config = await ConfigBound.createConfig({
  *   port: configItem<number>({
  *     default: 3000,
  *     validator: Joi.number().port(),
@@ -111,7 +111,7 @@ export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
  *
  * @example
  * ```typescript
- * const config = ConfigBound.createConfig({
+ * const config = await ConfigBound.createConfig({
  *   environment: configEnum({
  *     values: ['development', 'staging', 'production'],
  *     default: 'development',
@@ -144,7 +144,7 @@ export function configEnum<const Values extends readonly string[]>(options: {
  *
  * @example
  * ```typescript
- * const config = ConfigBound.createConfig({
+ * const config = await ConfigBound.createConfig({
  *   database: configSection({
  *     host: configItem<string>({ default: 'localhost', validator: Joi.string() }),
  *     port: configItem<number>({ default: 5432, validator: Joi.number() })
@@ -198,31 +198,31 @@ export class TypedConfigBound<T extends ConfigSchema> {
     return this.configBound.getSections();
   }
 
-  get<
+  async get<
     K extends keyof InferConfigType<T>,
     E extends keyof InferConfigType<T>[K]
-  >(sectionName: K, elementName: E): InferConfigType<T>[K][E] | undefined {
+  >(sectionName: K, elementName: E): Promise<InferConfigType<T>[K][E] | undefined> {
     return this.configBound.get<InferConfigType<T>[K][E]>(
       sectionName as string,
       elementName as string
     );
   }
 
-  getOrThrow<
+  async getOrThrow<
     K extends keyof InferConfigType<T>,
     E extends keyof InferConfigType<T>[K]
-  >(sectionName: K, elementName: E): InferConfigType<T>[K][E] {
+  >(sectionName: K, elementName: E): Promise<InferConfigType<T>[K][E]> {
     return this.configBound.getOrThrow<InferConfigType<T>[K][E]>(
       sectionName as string,
       elementName as string
     );
   }
 
-  validate(): void {
-    this.configBound.validate();
+  async validate(): Promise<void> {
+    return this.configBound.validate();
   }
 
-  getValidationErrors(): Array<{ path: string; message: string }> {
+  async getValidationErrors(): Promise<Array<{ path: string; message: string }>> {
     return this.configBound.getValidationErrors();
   }
 }
@@ -301,10 +301,10 @@ export class ConfigBound implements ConfigValueProvider {
    * @see {@link ElementNotFoundException}
    * @see {@link ConfigInvalidException}
    */
-  public get<T = unknown>(
+  public async get<T = unknown>(
     sectionName: string,
     elementName: string
-  ): T | undefined {
+  ): Promise<T | undefined> {
     this.logger.debug(`Getting value for ${sectionName}.${elementName}`);
 
     // Check if section exists
@@ -321,7 +321,7 @@ export class ConfigBound implements ConfigValueProvider {
 
     // Try to get value from each Bind until one returns a value
     for (const bind of this.binds) {
-      const value = bind.get<T>(sectionName, elementName);
+      const value = await bind.get<T>(sectionName, elementName);
       if (value !== undefined) {
         this.logger.trace?.(
           `Found value for ${sectionName}.${elementName} in ${bind.name}: ${element.sensitive ? '[MASKED]' : value}`
@@ -377,8 +377,8 @@ export class ConfigBound implements ConfigValueProvider {
    * @throws ElementNotFoundException If element doesn't exist or value is undefined
    * @throws ConfigInvalidException If value fails validation
    */
-  public getOrThrow<T = unknown>(sectionName: string, elementName: string): T {
-    const value = this.get<T>(sectionName, elementName);
+  public async getOrThrow<T = unknown>(sectionName: string, elementName: string): Promise<T> {
+    const value = await this.get<T>(sectionName, elementName);
     if (value === undefined) {
       throw new ElementNotFoundException(elementName);
     }
@@ -393,8 +393,8 @@ export class ConfigBound implements ConfigValueProvider {
    * @see {@link getValidationErrors} for information about how validation errors are returned
    * @see {@link ConfigInvalidException}
    */
-  public validate(): void {
-    const errors = this.getValidationErrors();
+  public async validate(): Promise<void> {
+    const errors = await this.getValidationErrors();
     if (errors.length > 0) {
       const errorMessages = errors
         .map((e) => `  - ${e.path}: ${e.message}`)
@@ -412,14 +412,14 @@ export class ConfigBound implements ConfigValueProvider {
    *
    * @returns Array of validation errors with path and message
    */
-  public getValidationErrors(): Array<{ path: string; message: string }> {
+  public async getValidationErrors(): Promise<Array<{ path: string; message: string }>> {
     const errors: Array<{ path: string; message: string }> = [];
 
     for (const section of this.sections) {
       for (const element of section.getElements()) {
         try {
           // Try to get the value - this will trigger validation
-          const value = this.get(section.name, element.name);
+          const value = await this.get(section.name, element.name);
 
           // If element is required and value is undefined, that's an error
           if (element.isRequired() && value === undefined) {
@@ -452,7 +452,7 @@ export class ConfigBound implements ConfigValueProvider {
    *
    * @example
    * ```typescript
-   * const config = ConfigBound.createConfig(
+   * const config = await ConfigBound.createConfig(
    *   {
    *     port: {
    *       default: 3000,
@@ -471,10 +471,10 @@ export class ConfigBound implements ConfigValueProvider {
    *   }
    * );
    *
-   * const port = config.get('app', 'port'); // Fully type-safe with autocomplete!
+   * const port = await config.get('app', 'port'); // Fully type-safe with autocomplete!
    * ```
    */
-  public static createConfig<T extends ConfigSchema>(
+  public static async createConfig<T extends ConfigSchema>(
     schema: T,
     options?: {
       name?: string;
@@ -482,7 +482,7 @@ export class ConfigBound implements ConfigValueProvider {
       logger?: Logger;
       validateOnInit?: boolean;
     }
-  ): TypedConfigBound<T> {
+  ): Promise<TypedConfigBound<T>> {
     return ConfigBoundBuilder.build(schema, options);
   }
 }
@@ -495,7 +495,7 @@ class ConfigBoundBuilder {
   /**
    * Builds a ConfigBound instance from a schema
    */
-  public static build<T extends ConfigSchema>(
+  public static async build<T extends ConfigSchema>(
     schema: T,
     options?: {
       name?: string;
@@ -503,7 +503,7 @@ class ConfigBoundBuilder {
       logger?: Logger;
       validateOnInit?: boolean;
     }
-  ): TypedConfigBound<T> {
+  ): Promise<TypedConfigBound<T>> {
     const configName = options?.name ?? 'app';
     const logger = options?.logger ?? new NullLogger();
     const binds = options?.binds ?? [];
@@ -530,7 +530,7 @@ class ConfigBoundBuilder {
 
     // Step 4: Validate if requested
     if (options?.validateOnInit) {
-      configBound.validate();
+      await configBound.validate();
     }
 
     return new TypedConfigBound<T>(configBound);

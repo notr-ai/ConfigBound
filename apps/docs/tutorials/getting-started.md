@@ -23,7 +23,7 @@ import {
 import { EnvVarBind } from "@config-bound/config-bound";
 import Joi from "joi";
 
-const config = ConfigBound.createConfig(
+const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
@@ -42,8 +42,8 @@ const config = ConfigBound.createConfig(
   }
 );
 
-const port = config.get("app", "port");
-const host = config.get("server", "host");
+const port = await config.get("app", "port");
+const host = await config.get("server", "host");
 ```
 
 ## What to read next

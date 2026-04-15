@@ -63,23 +63,23 @@ describe('ConfigBoundService', () => {
     expect(service.name).toBe('app');
   });
 
-  it('should get default values', () => {
-    const port = service.get('app', 'port');
+  it('should get default values', async () => {
+    const port = await service.get('app', 'port');
     expect(port).toBe(3000);
   });
 
-  it('should get database configuration', () => {
-    const host = service.get('database', 'host');
-    const port = service.get('database', 'port');
+  it('should get database configuration', async () => {
+    const host = await service.get('database', 'host');
+    const port = await service.get('database', 'port');
 
     expect(host).toBe('localhost');
     expect(port).toBe(5432);
   });
 
-  it('should throw when getting non-existent value with getOrThrow', () => {
-    expect(() => {
-      service.getOrThrow('app', 'nonExistent' as never);
-    }).toThrow();
+  it('should throw when getting non-existent value with getOrThrow', async () => {
+    await expect(
+      service.getOrThrow('app', 'nonExistent' as never)
+    ).rejects.toThrow();
   });
 
   it('should have sections', () => {
@@ -90,8 +90,8 @@ describe('ConfigBoundService', () => {
     expect(sectionNames).toContain('database');
   });
 
-  it('should validate configuration', () => {
-    expect(() => service.validate()).not.toThrow();
+  it('should validate configuration', async () => {
+    await expect(service.validate()).resolves.not.toThrow();
   });
 });
 
@@ -136,8 +136,8 @@ describe('ConfigBoundModule - forRootAsync', () => {
     expect(service).toBeDefined();
   });
 
-  it('should get values from async config', () => {
-    const apiKey = service.get('app', 'apiKey');
+  it('should get values from async config', async () => {
+    const apiKey = await service.get('app', 'apiKey');
     expect(apiKey).toBe('test-key');
   });
 });

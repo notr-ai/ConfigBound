@@ -2,7 +2,7 @@
 description: Map environment variables to ConfigBound config elements using EnvVarBind.
 ---
 
-# Read configuration from environment variables
+# Read configuration from environment variables <Badge type="tip" text="Core" />
 
 `EnvVarBind` maps environment variables to config elements. It translates element
 paths to uppercase environment variable names: `section.element` becomes
@@ -17,7 +17,7 @@ import { ConfigBound, configItem, configSection } from "@config-bound/config-bou
 import { EnvVarBind } from "@config-bound/config-bound";
 import Joi from "joi";
 
-const config = ConfigBound.createConfig(
+const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,

@@ -18,7 +18,7 @@ export abstract class Bind {
    * @param elementName - The name of the {@link Element}
    * @returns The value of the element
    */
-  abstract retrieve<T>(elementName: string): T | undefined;
+  abstract retrieve<T>(elementName: string): Promise<T | undefined>;
 
   /**
    * Gets the value from the bind for a specific element
@@ -26,12 +26,21 @@ export abstract class Bind {
    * @param elementName - The name of the {@link Element}
    * @returns The value of the element
    */
-  get<T>(sectionName: string, elementName: string): T | undefined {
+  async get<T>(
+    sectionName: string,
+    elementName: string
+  ): Promise<T | undefined> {
     return this.retrieve<T>(`${sectionName}.${elementName}`);
   }
 }
 
 /**
- * Kinds of Binds.
+ * The core Bind kinds shipped with ConfigBound.
  */
-export type BindName = 'EnvironmentVariable' | 'File' | 'Static';
+export type CoreBindName = 'EnvironmentVariable' | 'File' | 'Static';
+
+/**
+ * The name of a Bind. Accepts the core kinds or any custom string for
+ * third-party bind packages.
+ */
+export type BindName = CoreBindName | (string & {});

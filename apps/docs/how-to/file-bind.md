@@ -2,7 +2,7 @@
 description: Load configuration values from a JSON, JSONC, or YAML file using FileBind.
 ---
 
-# Read configuration from a file
+# Read configuration from a file <Badge type="tip" text="Core" />
 
 `FileBind` reads configuration values from a JSON, JSONC, or YAML file. The file
 is read once at construction. Element paths are resolved against the parsed file
@@ -23,7 +23,7 @@ import { ConfigBound, configItem, configSection } from "@config-bound/config-bou
 import { FileBind } from "@config-bound/config-bound";
 import Joi from "joi";
 
-const config = ConfigBound.createConfig(
+const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,

@@ -2,7 +2,7 @@
 description: Inject in-memory configuration values at runtime using StaticBind.
 ---
 
-# Supply configuration values directly in code
+# Supply configuration values directly in code <Badge type="tip" text="Core" />
 
 `StaticBind` injects configuration values from an in-memory object. Use it when
 you need programmatic overrides — test fixtures, feature flags resolved at
@@ -17,7 +17,7 @@ import { ConfigBound, configItem, configSection } from "@config-bound/config-bou
 import { StaticBind } from "@config-bound/config-bound";
 import Joi from "joi";
 
-const config = ConfigBound.createConfig(
+const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       validator: Joi.number().port()

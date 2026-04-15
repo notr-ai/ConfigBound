@@ -23,6 +23,10 @@
     // MD050: Strong style
     "MD050": {
       "style": "asterisk"
+    },
+    // MD033: Allow VitePress components
+    "MD033": {
+      "allowed_elements": ["Badge"]
     }
   },
   "globs": ["**/*.md"],

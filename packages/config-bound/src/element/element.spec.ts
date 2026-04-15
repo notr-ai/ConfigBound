@@ -75,33 +75,33 @@ describe('Element', () => {
     }).toThrow(ConfigInvalidException);
   });
 
-  test('get method should return the value from value provider', () => {
+  test('get method should return the value from value provider', async () => {
     // This test verifies that get() delegates to the value provider
     // The actual value comes from the ConfigBound's get() method
-    expect(element.get(configBound)).toBe('defaultValue');
+    await expect(element.get(configBound)).resolves.toBe('defaultValue');
   });
 
-  test('get method should return default if value is not set and default exists', () => {
+  test('get method should return default if value is not set and default exists', async () => {
     // Element with default should return default
-    expect(element.get(configBound)).toBe('defaultValue');
+    await expect(element.get(configBound)).resolves.toBe('defaultValue');
   });
 
-  test('get method should return undefined if value is not set and no default exists', () => {
+  test('get method should return undefined if value is not set and no default exists', async () => {
     // Element without default should return undefined
-    expect(elementNoDefault.get(configBound)).toBeUndefined();
+    await expect(elementNoDefault.get(configBound)).resolves.toBeUndefined();
   });
 
-  test('getOrThrow method should return the value from value provider', () => {
+  test('getOrThrow method should return the value from value provider', async () => {
     // This test verifies that getOrThrow() delegates to the value provider
-    expect(element.getOrThrow(configBound)).toBe('defaultValue');
+    await expect(element.getOrThrow(configBound)).resolves.toBe('defaultValue');
   });
 
-  test('getOrThrow method should return default if value is not set but default exists', () => {
-    expect(element.getOrThrow(configBound)).toBe('defaultValue');
+  test('getOrThrow method should return default if value is not set but default exists', async () => {
+    await expect(element.getOrThrow(configBound)).resolves.toBe('defaultValue');
   });
 
-  test('getOrThrow method should throw ConfigUnsetException if value is not set and no default exists', () => {
-    expect(() => elementNoDefault.getOrThrow(configBound)).toThrow(
+  test('getOrThrow method should throw ConfigUnsetException if value is not set and no default exists', async () => {
+    await expect(elementNoDefault.getOrThrow(configBound)).rejects.toThrow(
       ConfigUnsetException
     );
   });

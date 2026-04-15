@@ -164,7 +164,7 @@ export class Section {
    * @param elementName - The name of the element to get the value for
    * @returns The value or undefined if not found or no value provider set
    */
-  public getValue<T>(elementName: string): T | undefined {
+  public async getValue<T>(elementName: string): Promise<T | undefined> {
     if (!this.valueProvider) {
       this.logger?.warn(
         `Cannot get value for ${this.name}.${elementName}: No value provider set`

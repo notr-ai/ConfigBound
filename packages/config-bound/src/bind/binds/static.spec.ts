@@ -4,25 +4,25 @@ import { ConfigBound, configItem } from '../../configBound';
 import Joi from 'joi';
 
 describe('StaticBind', () => {
-  it('retrieves flat dot-path values', () => {
+  it('retrieves flat dot-path values', async () => {
     const bind = new StaticBind({
       'app.port': 3000
     });
 
-    expect(bind.retrieve('app.port')).toBe(3000);
+    await expect(bind.retrieve('app.port')).resolves.toBe(3000);
   });
 
-  it('retrieves nested values', () => {
+  it('retrieves nested values', async () => {
     const bind = new StaticBind({
       app: {
         host: 'localhost'
       }
     });
 
-    expect(bind.retrieve('app.host')).toBe('localhost');
+    await expect(bind.retrieve('app.host')).resolves.toBe('localhost');
   });
 
-  it('prefers nested values over flat values when both exist', () => {
+  it('prefers nested values over flat values when both exist', async () => {
     const bind = new StaticBind({
       app: {
         mode: 'nested'
@@ -30,38 +30,38 @@ describe('StaticBind', () => {
       'app.mode': 'flat'
     });
 
-    expect(bind.retrieve('app.mode')).toBe('nested');
+    await expect(bind.retrieve('app.mode')).resolves.toBe('nested');
   });
 
-  it('returns undefined when no value exists for the path', () => {
+  it('returns undefined when no value exists for the path', async () => {
     const bind = new StaticBind({
       app: {
         host: 'localhost'
       }
     });
 
-    expect(bind.retrieve('app.port')).toBeUndefined();
+    await expect(bind.retrieve('app.port')).resolves.toBeUndefined();
   });
 
-  it('treats flat null values as undefined', () => {
+  it('treats flat null values as undefined', async () => {
     const bind = new StaticBind({
       'app.port': null
     });
 
-    expect(bind.retrieve('app.port')).toBeUndefined();
+    await expect(bind.retrieve('app.port')).resolves.toBeUndefined();
   });
 
-  it('treats nested null values as undefined', () => {
+  it('treats nested null values as undefined', async () => {
     const bind = new StaticBind({
       app: {
         port: null
       }
     });
 
-    expect(bind.retrieve('app.port')).toBeUndefined();
+    await expect(bind.retrieve('app.port')).resolves.toBeUndefined();
   });
 
-  it('falls back to flat value when nested value is null', () => {
+  it('falls back to flat value when nested value is null', async () => {
     const bind = new StaticBind({
       app: {
         mode: null
@@ -69,12 +69,12 @@ describe('StaticBind', () => {
       'app.mode': 'flat'
     });
 
-    expect(bind.retrieve('app.mode')).toBe('flat');
+    await expect(bind.retrieve('app.mode')).resolves.toBe('flat');
   });
 });
 
 describe('StaticBind integration with ConfigBound', () => {
-  it('can override lower-priority binds when placed earlier', () => {
+  it('can override lower-priority binds when placed earlier', async () => {
     process.env.STATIC_BIND_TEST_APP_PORT = '9999';
 
     try {
@@ -83,7 +83,7 @@ describe('StaticBind integration with ConfigBound', () => {
       });
       const envBind = new EnvVarBind({ prefix: 'STATIC_BIND_TEST' });
 
-      const config = ConfigBound.createConfig(
+      const config = await ConfigBound.createConfig(
         {
           port: configItem<number>({
             validator: Joi.number().port()
@@ -92,13 +92,13 @@ describe('StaticBind integration with ConfigBound', () => {
         { binds: [staticBind, envBind] }
       );
 
-      expect(config.get('app', 'port')).toBe(8080);
+      await expect(config.get('app', 'port')).resolves.toBe(8080);
     } finally {
       delete process.env.STATIC_BIND_TEST_APP_PORT;
     }
   });
 
-  it('acts as fallback when placed after other binds', () => {
+  it('acts as fallback when placed after other binds', async () => {
     delete process.env.STATIC_BIND_TEST_APP_PORT;
 
     const staticBind = new StaticBind({
@@ -106,7 +106,7 @@ describe('StaticBind integration with ConfigBound', () => {
     });
     const envBind = new EnvVarBind({ prefix: 'STATIC_BIND_TEST' });
 
-    const config = ConfigBound.createConfig(
+    const config = await ConfigBound.createConfig(
       {
         port: configItem<number>({
           validator: Joi.number().port()
@@ -115,10 +115,10 @@ describe('StaticBind integration with ConfigBound', () => {
       { binds: [envBind, staticBind] }
     );
 
-    expect(config.get('app', 'port')).toBe(7000);
+    await expect(config.get('app', 'port')).resolves.toBe(7000);
   });
 
-  it('allows lower-priority binds to provide values when static value is null', () => {
+  it('allows lower-priority binds to provide values when static value is null', async () => {
     process.env.STATIC_BIND_TEST_APP_PORT = '9090';
 
     try {
@@ -127,7 +127,7 @@ describe('StaticBind integration with ConfigBound', () => {
       });
       const envBind = new EnvVarBind({ prefix: 'STATIC_BIND_TEST' });
 
-      const config = ConfigBound.createConfig(
+      const config = await ConfigBound.createConfig(
         {
           port: configItem<number>({
             validator: Joi.number().port()
@@ -136,7 +136,7 @@ describe('StaticBind integration with ConfigBound', () => {
         { binds: [staticBind, envBind] }
       );
 
-      expect(config.get('app', 'port')).toBe(9090);
+      await expect(config.get('app', 'port')).resolves.toBe(9090);
     } finally {
       delete process.env.STATIC_BIND_TEST_APP_PORT;
     }

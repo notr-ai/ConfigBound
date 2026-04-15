@@ -108,8 +108,8 @@ describe('ConfigBound', () => {
   });
 
   describe('createConfig', () => {
-    it('should create a ConfigBound instance from a simple schema', () => {
-      const config = ConfigBound.createConfig({
+    it('should create a ConfigBound instance from a simple schema', async () => {
+      const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
           validator: Joi.number(),
@@ -123,12 +123,12 @@ describe('ConfigBound', () => {
       });
 
       expect(config).toBeDefined();
-      expect(config.get('app', 'port')).toBe(3000);
-      expect(config.get('app', 'host')).toBe('localhost');
+      await expect(config.get('app', 'port')).resolves.toBe(3000);
+      await expect(config.get('app', 'host')).resolves.toBe('localhost');
     });
 
-    it('should create sections for nested objects', () => {
-      const config = ConfigBound.createConfig({
+    it('should create sections for nested objects', async () => {
+      const config = await ConfigBound.createConfig({
         database: configSection({
           host: configItem({
             default: 'localhost',
@@ -141,15 +141,15 @@ describe('ConfigBound', () => {
         })
       });
 
-      expect(config.get('database', 'host')).toBe('localhost');
-      expect(config.get('database', 'port')).toBe(5432);
+      await expect(config.get('database', 'host')).resolves.toBe('localhost');
+      await expect(config.get('database', 'port')).resolves.toBe(5432);
     });
 
-    it('should support environment variables through EnvVarBind', () => {
+    it('should support environment variables through EnvVarBind', async () => {
       process.env.APP_PORT = '8080';
       process.env.DATABASE_HOST = 'db.example.com';
 
-      const config = ConfigBound.createConfig({
+      const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
           validator: Joi.number()
@@ -164,25 +164,25 @@ describe('ConfigBound', () => {
 
       config.addBind(new EnvVarBind());
 
-      expect(config.get('app', 'port')).toBe(8080);
-      expect(config.get('database', 'host')).toBe('db.example.com');
+      await expect(config.get('app', 'port')).resolves.toBe(8080);
+      await expect(config.get('database', 'host')).resolves.toBe('db.example.com');
     });
 
-    it('should validate values using Joi', () => {
-      const config = ConfigBound.createConfig({
+    it('should validate values using Joi', async () => {
+      const config = await ConfigBound.createConfig({
         port: {
           default: 3000,
           validator: Joi.number().min(1).max(65535)
         }
       });
 
-      expect(config.get('app', 'port')).toBe(3000);
+      await expect(config.get('app', 'port')).resolves.toBe(3000);
     });
 
-    it('should throw error for invalid values', () => {
+    it('should throw error for invalid values', async () => {
       process.env.APP_PORT = 'not-a-number';
 
-      const config = ConfigBound.createConfig({
+      const config = await ConfigBound.createConfig({
         port: {
           default: 3000,
           validator: Joi.number()
@@ -191,11 +191,11 @@ describe('ConfigBound', () => {
 
       config.addBind(new EnvVarBind());
 
-      expect(() => config.get('app', 'port')).toThrow();
+      await expect(config.get('app', 'port')).rejects.toThrow();
     });
 
-    it('should support sensitive fields', () => {
-      const config = ConfigBound.createConfig({
+    it('should support sensitive fields', async () => {
+      const config = await ConfigBound.createConfig({
         password: {
           default: 'secret123',
           validator: Joi.string(),
@@ -203,11 +203,11 @@ describe('ConfigBound', () => {
         }
       });
 
-      expect(config.get('app', 'password')).toBe('secret123');
+      await expect(config.get('app', 'password')).resolves.toBe('secret123');
     });
 
-    it('should support custom config name', () => {
-      const config = ConfigBound.createConfig(
+    it('should support custom config name', async () => {
+      const config = await ConfigBound.createConfig(
         {
           port: {
             default: 3000,
@@ -222,8 +222,8 @@ describe('ConfigBound', () => {
       expect(config.name).toBe('myapp');
     });
 
-    it('should support custom binds', () => {
-      const config = ConfigBound.createConfig(
+    it('should support custom binds', async () => {
+      const config = await ConfigBound.createConfig(
         {
           port: {
             default: 3000,
@@ -239,10 +239,10 @@ describe('ConfigBound', () => {
       expect(config.binds[0]).toBeInstanceOf(EnvVarBind);
     });
 
-    it('should use getOrThrow for required values', () => {
+    it('should use getOrThrow for required values', async () => {
       process.env.APP_PORT = '8080';
 
-      const config = ConfigBound.createConfig({
+      const config = await ConfigBound.createConfig({
         port: {
           validator: Joi.number()
         }
@@ -250,11 +250,11 @@ describe('ConfigBound', () => {
 
       config.addBind(new EnvVarBind());
 
-      expect(config.getOrThrow('app', 'port')).toBe(8080);
+      await expect(config.getOrThrow('app', 'port')).resolves.toBe(8080);
     });
 
-    it('should get sections', () => {
-      const config = ConfigBound.createConfig({
+    it('should get sections', async () => {
+      const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
           validator: Joi.number()
@@ -274,8 +274,8 @@ describe('ConfigBound', () => {
   });
 
   describe('validate', () => {
-    it('should validate all config values without throwing when valid', () => {
-      const config = ConfigBound.createConfig({
+    it('should validate all config values without throwing when valid', async () => {
+      const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
           validator: Joi.number()
@@ -286,13 +286,13 @@ describe('ConfigBound', () => {
         })
       });
 
-      expect(() => config.validate()).not.toThrow();
+      await expect(config.validate()).resolves.not.toThrow();
     });
 
-    it('should throw ConfigInvalidException when validation fails', () => {
+    it('should throw ConfigInvalidException when validation fails', async () => {
       process.env.APP_PORT = 'invalid-number';
 
-      const config = ConfigBound.createConfig({
+      const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
           validator: Joi.number()
@@ -301,13 +301,13 @@ describe('ConfigBound', () => {
 
       config.addBind(new EnvVarBind());
 
-      expect(() => config.validate()).toThrow();
+      await expect(config.validate()).rejects.toThrow();
     });
 
-    it('should validate on init when validateOnInit is true', () => {
+    it('should validate on init when validateOnInit is true', async () => {
       process.env.APP_PORT = 'invalid-number';
 
-      expect(() => {
+      await expect(
         ConfigBound.createConfig(
           {
             port: configItem({
@@ -318,14 +318,14 @@ describe('ConfigBound', () => {
             binds: [new EnvVarBind()],
             validateOnInit: true
           }
-        );
-      }).toThrow();
+        )
+      ).rejects.toThrow();
     });
 
-    it('should not validate on init when validateOnInit is false or undefined', () => {
+    it('should not validate on init when validateOnInit is false or undefined', async () => {
       process.env.APP_PORT = 'invalid-number';
 
-      expect(() => {
+      await expect(
         ConfigBound.createConfig(
           {
             port: configItem({
@@ -336,39 +336,38 @@ describe('ConfigBound', () => {
             binds: [new EnvVarBind()],
             validateOnInit: false
           }
-        );
-      }).not.toThrow();
+        )
+      ).resolves.not.toThrow();
     });
 
-    it('should detect required values that are not set', () => {
-      const config = ConfigBound.createConfig({
+    it('should detect required values that are not set', async () => {
+      const config = await ConfigBound.createConfig({
         apiKey: configItem({
           validator: Joi.string().required(),
           description: 'API key'
         })
       });
 
-      expect(() => config.validate()).toThrow();
+      await expect(config.validate()).rejects.toThrow();
     });
   });
 
   describe('getValidationErrors', () => {
-    it('should return empty array when all values are valid', () => {
-      const config = ConfigBound.createConfig({
+    it('should return empty array when all values are valid', async () => {
+      const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
           validator: Joi.number()
         })
       });
 
-      const errors = config.getValidationErrors();
-      expect(errors).toEqual([]);
+      await expect(config.getValidationErrors()).resolves.toEqual([]);
     });
 
-    it('should return array of errors when validation fails', () => {
+    it('should return array of errors when validation fails', async () => {
       process.env.APP_PORT = 'not-a-number';
 
-      const config = ConfigBound.createConfig({
+      const config = await ConfigBound.createConfig({
         port: configItem({
           validator: Joi.number()
         })
@@ -376,18 +375,18 @@ describe('ConfigBound', () => {
 
       config.addBind(new EnvVarBind());
 
-      const errors = config.getValidationErrors();
+      const errors = await config.getValidationErrors();
       expect(errors.length).toBeGreaterThan(0);
       expect(errors[0]).toHaveProperty('path');
       expect(errors[0]).toHaveProperty('message');
       expect(errors[0].path).toBe('app.port');
     });
 
-    it('should detect multiple errors across sections', () => {
+    it('should detect multiple errors across sections', async () => {
       process.env.APP_PORT = 'invalid';
       process.env.DATABASE_PORT = 'also-invalid';
 
-      const config = ConfigBound.createConfig({
+      const config = await ConfigBound.createConfig({
         port: configItem({
           validator: Joi.number()
         }),
@@ -400,7 +399,7 @@ describe('ConfigBound', () => {
 
       config.addBind(new EnvVarBind());
 
-      const errors = config.getValidationErrors();
+      const errors = await config.getValidationErrors();
       expect(errors).toHaveLength(2);
       expect(errors.map((e) => e.path).sort()).toEqual([
         'app.port',
@@ -408,15 +407,15 @@ describe('ConfigBound', () => {
       ]);
     });
 
-    it('should report required values that are missing', () => {
-      const config = ConfigBound.createConfig({
+    it('should report required values that are missing', async () => {
+      const config = await ConfigBound.createConfig({
         apiKey: configItem({
           validator: Joi.string().required(),
           description: 'Required API key'
         })
       });
 
-      const errors = config.getValidationErrors();
+      const errors = await config.getValidationErrors();
       expect(errors).toHaveLength(1);
       expect(errors[0].path).toBe('app.apiKey');
       expect(errors[0].message).toContain('Required');

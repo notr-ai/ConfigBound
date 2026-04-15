@@ -101,43 +101,47 @@ describe('ConfigValueProvider functionality', () => {
     delete process.env.TEST_APP_DATABASE_HOST;
   });
 
-  test('elements can get their values directly from the config value provider', () => {
+  test('elements can get their values directly from the config value provider', async () => {
     // Get the config value provider from the section
     const serverConfigValueProvider = serverSection.getConfigValueProvider();
     expect(serverConfigValueProvider).toBeDefined();
 
     // Elements should be able to get their values from the config value provider
-    const portValue = portElement.get<number>(serverConfigValueProvider!);
-    expect(portValue).toBe(8081);
+    await expect(
+      portElement.get<number>(serverConfigValueProvider!)
+    ).resolves.toBe(8081);
 
     // Host element should use default since not in env
-    const hostValue = hostElement.get<string>(serverConfigValueProvider!);
-    expect(hostValue).toBe('localhost');
+    await expect(
+      hostElement.get<string>(serverConfigValueProvider!)
+    ).resolves.toBe('localhost');
   });
 
-  test('sections can get element values directly with getValue', () => {
+  test('sections can get element values directly with getValue', async () => {
     // Get element values through the section
-    const portValue = serverSection.getValue<number>('port');
-    expect(portValue).toBe(8081);
+    await expect(serverSection.getValue<number>('port')).resolves.toBe(8081);
 
-    const dbHostValue = databaseSection.getValue<string>('host');
-    expect(dbHostValue).toBe('test-db.example.com');
+    await expect(databaseSection.getValue<string>('host')).resolves.toBe(
+      'test-db.example.com'
+    );
 
     // Non-existent element should return undefined
-    const nonExistentValue = serverSection.getValue<string>('nonexistent');
-    expect(nonExistentValue).toBeUndefined();
+    await expect(
+      serverSection.getValue<string>('nonexistent')
+    ).resolves.toBeUndefined();
   });
 
-  test('configBound can get values via get method', () => {
+  test('configBound can get values via get method', async () => {
     // Get values through the configBound
-    const portValue = configBound.get<number>('server', 'port');
-    expect(portValue).toBe(8081);
+    await expect(configBound.get<number>('server', 'port')).resolves.toBe(8081);
 
-    const dbHostValue = configBound.get<string>('database', 'host');
-    expect(dbHostValue).toBe('test-db.example.com');
+    await expect(configBound.get<string>('database', 'host')).resolves.toBe(
+      'test-db.example.com'
+    );
 
     // Element with default value should use default
-    const hostValue = configBound.get<string>('server', 'host');
-    expect(hostValue).toBe('localhost');
+    await expect(configBound.get<string>('server', 'host')).resolves.toBe(
+      'localhost'
+    );
   });
 });

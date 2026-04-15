@@ -41,7 +41,7 @@ export class EnvVarBind extends Bind {
    * @param fullName The full name of the element in format sectionName.elementName
    * @returns The value of the environment variable.
    */
-  retrieve<T>(fullName: string): T | undefined {
+  async retrieve<T>(fullName: string): Promise<T | undefined> {
     // Use custom function if provided, otherwise use default naming convention
     const envVarName = this.customEnvVarName
       ? this.customEnvVarName(fullName)
