@@ -1,5 +1,14 @@
 # @config-bound/nestjs
 
+## 0.2.0
+
+### Patch Changes
+
+- Updated dependencies [02b3369]
+- Updated dependencies [ac54dea]
+- Updated dependencies [0f899ee]
+  - @config-bound/config-bound@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes
