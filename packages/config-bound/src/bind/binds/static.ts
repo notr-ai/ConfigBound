@@ -1,3 +1,8 @@
+/**
+ * Static value bind for hardcoded configuration
+ * @module
+ */
+
 import { Bind } from '../bind';
 import { resolveNested } from '../utilities/resolveNested';
 

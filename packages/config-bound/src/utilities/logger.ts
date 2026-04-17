@@ -1,3 +1,8 @@
+/**
+ * Logging utilities for configuration loading and debugging
+ * @module
+ */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export const MASKED_TOKEN = '[MASKED]';

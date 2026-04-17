@@ -14,6 +14,10 @@ export interface Logger {
   silent?(message: string, ...meta: unknown[]): void;
 }
 
+/**
+ * Configuration options for ConfigBoundModule.
+ * Defines the schema, binds, and behavior for the ConfigBound integration.
+ */
 export interface ConfigBoundModuleOptions<
   T extends ConfigSchema = ConfigSchema
 > {
@@ -25,6 +29,10 @@ export interface ConfigBoundModuleOptions<
   isGlobal?: boolean;
 }
 
+/**
+ * Factory interface for creating ConfigBound options asynchronously.
+ * Implement this interface when using `forRootAsync({ useClass: ... })`.
+ */
 export interface ConfigBoundOptionsFactory<
   T extends ConfigSchema = ConfigSchema
 > {
@@ -33,6 +41,10 @@ export interface ConfigBoundOptionsFactory<
     | ConfigBoundModuleOptions<T>;
 }
 
+/**
+ * Async configuration options for ConfigBoundModule.
+ * Use with `forRootAsync()` to configure the module with dependencies from other modules.
+ */
 export interface ConfigBoundModuleAsyncOptions<
   T extends ConfigSchema = ConfigSchema
 > extends Pick<ModuleMetadata, 'imports'> {

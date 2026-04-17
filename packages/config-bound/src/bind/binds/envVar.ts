@@ -1,3 +1,8 @@
+/**
+ * Environment variable bind implementation
+ * @module
+ */
+
 import { Bind } from '../bind';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Element } from '../../element/element';

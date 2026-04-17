@@ -60,5 +60,5 @@ With the prefix `MYAPP`, `MYAPP_PORT` sets `port` and `MYAPP_DATABASE_HOST` sets
 
 ## Related
 
-- [`EnvVarBind` API reference](/reference/api/bind.binds.envVar.Class.EnvVarBind.md)
+- [`EnvVarBind` API reference](/reference/api/@config-bound.config-bound.bind.binds.envVar.Class.EnvVarBind)
 - [Use FileBind](./file-bind.md) — read config from a file instead

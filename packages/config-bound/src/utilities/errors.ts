@@ -1,10 +1,30 @@
+/**
+ * Custom error classes for configuration operations
+ * @module
+ */
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Element } from '../element/element';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Section } from '../section/section';
 
 /**
- * An abstract error class that occurs when a {@link Element Element} has an invalid value.
+ * Base exception class for configuration value errors.
+ *
+ * Thrown when a {@link Element Element} has an invalid or unset value.
+ *
+ * @example
+ * ```typescript
+ * import { ConfigBound, ConfigValueException } from '@config-bound/config-bound';
+ *
+ * try {
+ *   const value = config.get('database', 'password');
+ * } catch (error) {
+ *   if (error instanceof ConfigValueException) {
+ *     console.error('Configuration value error:', error.message);
+ *   }
+ * }
+ * ```
  */
 export abstract class ConfigValueException extends Error {
   constructor(elementName: string, message?: string) {

@@ -1,6 +1,10 @@
 {
   "plugin": ["typedoc-plugin-markdown"],
-  "entryPoints": ["../../packages/config-bound"],
+  "entryPoints": [
+    "../../packages/config-bound",
+    "../../packages/schema-export",
+    "../../packages/nestjs"
+  ],
   "entryPointStrategy": "packages",
   "out": "reference/api",
   "outputFileStrategy": "members",

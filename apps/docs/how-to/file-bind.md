@@ -114,6 +114,6 @@ priority order, or the element's `default`, takes over.
 
 ## Related
 
-- [`FileBind` API reference](/reference/api/bind.binds.file.Class.FileBind.md)
+- [`FileBind` API reference](/reference/api/@config-bound.config-bound.bind.binds.file.Class.FileBind)
 - [Use EnvVarBind](./env-var-bind.md) — read config from environment variables
 - [Use StaticBind](./static-bind.md) — supply config values directly in code

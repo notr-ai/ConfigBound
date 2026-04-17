@@ -11,6 +11,11 @@ Complete specific tasks with ConfigBound.
 - [Use EnvVarBind](./env-var-bind.md)
 - [Use FileBind](./file-bind.md)
 - [Use StaticBind](./static-bind.md)
+- [Create a custom bind](./custom-bind.md)
+
+## Integrations
+
+- [Use ConfigBound with NestJS](./nestjs.md)
 
 ## Schema
 

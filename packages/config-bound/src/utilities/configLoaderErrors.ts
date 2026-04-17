@@ -1,5 +1,21 @@
 /**
- * An error that occurs when a config file cannot be loaded.
+ * Base exception class for configuration loading errors.
+ *
+ * All ConfigBound configuration loading errors extend this class, making it easy to catch and handle errors.
+ *
+ * @example
+ * ```typescript
+ * import { ConfigBound, ConfigLoaderException } from '@config-bound/config-bound';
+ *
+ * try {
+ *   const config = new ConfigBound([]);
+ *   await config.load();
+ * } catch (error) {
+ *   if (error instanceof ConfigLoaderException) {
+ *     console.error('Failed to load configuration:', error.message);
+ *   }
+ * }
+ * ```
  */
 export class ConfigLoaderException extends Error {
   constructor(message: string) {

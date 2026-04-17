@@ -1,3 +1,8 @@
+/**
+ * Main ConfigBound class and configuration builder functions
+ * @module
+ */
+
 import { ConfigValueProvider } from './bind/configValueProvider';
 import { Bind } from './bind/bind';
 import { Section } from './section/section';

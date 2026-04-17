@@ -4,7 +4,7 @@ description: Implement a custom bind to load ConfigBound configuration values fr
 
 # Create a custom bind
 
-A [bind](/reference/api/bind.bind.Class.Bind.md) is a source adapter: it knows how to retrieve a value for a given element.
+A [bind](/reference/api/@config-bound.config-bound.bind.bind.Class.Bind) is a source adapter: it knows how to retrieve a value for a given element.
 
 The built-in binds ([`EnvVarBind`](./env-var-bind.md), [`FileBind`](./file-bind.md), [`StaticBind`](./static-bind.md)) cover environment variables, files, and in-memory values. When you need a different source that is not yet available, you can create your own.
 
@@ -114,5 +114,5 @@ The `package` scaffold sets `"private": true` in `package.json`. Set it to `fals
 ## Related
 
 - [`configbound generate bind`](/reference/cli/generate-bind) — scaffold the boilerplate
-- [`Bind` API reference](/reference/api/bind.bind.Class.Bind.md)
+- [`Bind` API reference](/reference/api/@config-bound.config-bound.bind.bind.Class.Bind)
 - [EnvVarBind](./env-var-bind.md), [FileBind](./file-bind.md), [StaticBind](./static-bind.md) — built-in binds for reference

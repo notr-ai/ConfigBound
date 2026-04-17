@@ -1,3 +1,8 @@
+/**
+ * File-based bind implementation supporting JSON, JSONC, and YAML
+ * @module
+ */
+
 import * as fs from 'fs';
 import * as path from 'path';
 import yaml from 'js-yaml';
