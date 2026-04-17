@@ -1,3 +1,8 @@
+/**
+ * Configuration element (leaf node) with validation and transformation
+ * @module
+ */
+
 import Joi from 'joi';
 import {
   ConfigInvalidException,

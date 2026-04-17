@@ -1,4 +1,9 @@
 /**
+ * Provider interface for custom value retrieval logic
+ * @module
+ */
+
+/**
  * Interface for objects that can provide configuration values.
  * Implemented by ConfigBound and allows elements to retrieve their values.
  */

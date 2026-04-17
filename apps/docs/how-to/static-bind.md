@@ -72,6 +72,6 @@ that end up in version control.
 
 ## Related
 
-- [`StaticBind` API reference](/reference/api/bind.binds.static.Class.StaticBind.md)
+- [`StaticBind` API reference](/reference/api/@config-bound.config-bound.bind.binds.static.Class.StaticBind)
 - [Use EnvVarBind](./env-var-bind.md) — read config from environment variables
 - [Use FileBind](./file-bind.md) — read config from a file

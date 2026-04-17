@@ -1,3 +1,8 @@
+/**
+ * Core Bind class for retrieving configuration values from sources
+ * @module
+ */
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Element } from '../element/element';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

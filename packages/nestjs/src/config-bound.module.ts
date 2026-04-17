@@ -13,6 +13,11 @@ import {
   CONFIG_BOUND_INSTANCE
 } from './interfaces/config-bound-module-options.interface';
 
+/**
+ * NestJS module for ConfigBound integration.
+ * Provides dependency injection support for ConfigBound in NestJS applications.
+ * Use `forRoot()` for synchronous configuration or `forRootAsync()` for asynchronous configuration.
+ */
 @Module({})
 export class ConfigBoundModule {
   static forRoot<T extends ConfigSchema>(

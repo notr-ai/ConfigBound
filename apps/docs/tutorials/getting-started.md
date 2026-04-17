@@ -49,4 +49,4 @@ const host = await config.get("server", "host");
 ## What to read next
 
 - [Reference overview](/reference/)
-- [Bind API reference](/reference/api/bind.bind.Class.Bind.md)
+- [Bind API reference](/reference/api/@config-bound.config-bound.bind.bind.Class.Bind)

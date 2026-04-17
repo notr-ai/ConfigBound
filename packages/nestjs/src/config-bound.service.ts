@@ -8,6 +8,10 @@ import { Bind } from '@config-bound/config-bound/bind';
 import { Section } from '@config-bound/config-bound/section';
 import { CONFIG_BOUND_INSTANCE } from './interfaces/config-bound-module-options.interface';
 
+/**
+ * Injectable service that provides type-safe access to ConfigBound configuration.
+ * Wraps a TypedConfigBound instance and exposes all configuration operations for use in NestJS controllers and services.
+ */
 @Injectable()
 export class ConfigBoundService<T extends ConfigSchema = ConfigSchema> {
   constructor(

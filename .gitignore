@@ -40,3 +40,4 @@ Thumbs.db
 apps/docs/reference/api/
 apps/docs/reference/cli/
 apps/docs/.vitepress/cache/
+apps/docs/.vitepress/sidebar-*.json

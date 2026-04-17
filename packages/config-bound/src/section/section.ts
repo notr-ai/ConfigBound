@@ -1,3 +1,8 @@
+/**
+ * Configuration section (container) for grouping elements
+ * @module
+ */
+
 import { Element } from '../element/element';
 import { ElementExistsException } from '../utilities/errors';
 import { Logger } from '../utilities/logger';

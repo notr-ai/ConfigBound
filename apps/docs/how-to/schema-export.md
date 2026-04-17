@@ -136,5 +136,5 @@ const compact = formatAsJSON(schema, false); // minified
 
 ## Related
 
-- [`exportSchema` API reference](/reference/api/configBound.md)
+- [`exportSchema` API reference](/reference/api/@config-bound.schema-export.Function.exportSchema)
 - [Schema as the source of truth](/explanation/schema-source-of-truth.md)

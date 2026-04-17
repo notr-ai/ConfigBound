@@ -25,8 +25,11 @@ const tsconfig = resolve(root, 'apps/cli/tsconfig.json');
 const script = resolve(root, 'apps/cli/scripts/generate-docs.ts');
 const outDir = resolve(root, 'apps/docs/reference/cli');
 
-execFileSync(tsx, ['--tsconfig', tsconfig, script, outDir], {
+execFileSync(tsx, ['--no-cache', '--tsconfig', tsconfig, script, outDir], {
   stdio: 'inherit',
   cwd: root,
-  env: { ...process.env, NODE_ENV: 'development' },
+  env: { 
+    ...process.env, 
+    NODE_ENV: 'development'
+  },
 });
