@@ -35,14 +35,14 @@ import {
   formatAsJSON,
   formatAsYAML
 } from "@config-bound/schema-export";
-import Joi from "joi";
+import { z } from "zod";
 import { writeFileSync } from "fs";
 
 const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: Joi.number().port(),
+      validator: z.number().port(),
       description: "Application server port",
       example: 8080
     }),
@@ -55,16 +55,16 @@ const config = await ConfigBound.createConfig(
       {
         host: configItem<string>({
           default: "localhost",
-          validator: Joi.string().hostname(),
+          validator: z.string().hostname(),
           description: "Database host"
         }),
         port: configItem<number>({
           default: 5432,
-          validator: Joi.number().port(),
+          validator: z.number().port(),
           description: "Database port"
         }),
         password: configItem<string>({
-          validator: Joi.string().required(),
+          validator: z.string().required(),
           description: "Database password",
           sensitive: true
         })
@@ -94,9 +94,9 @@ By default, `exportSchema` excludes elements marked `omitFromSchema: true`. Pass
 ```typescript twoslash
 import { ConfigBound, configItem } from "@config-bound/config-bound";
 import { exportSchema } from "@config-bound/schema-export";
-import Joi from "joi";
+import { z } from "zod";
 const config = await ConfigBound.createConfig(
-  { port: configItem<number>({ default: 3000, validator: Joi.number() }) },
+  { port: configItem<number>({ default: 3000, validator: z.number() }) },
 );
 // ---cut---
 const publicSchema = exportSchema(config.name, config.sections);
@@ -122,9 +122,9 @@ compact output:
 ```typescript twoslash
 import { ConfigBound, configItem } from "@config-bound/config-bound";
 import { exportSchema, formatAsJSON } from "@config-bound/schema-export";
-import Joi from "joi";
+import { z } from "zod";
 const config = await ConfigBound.createConfig(
-  { port: configItem<number>({ default: 3000, validator: Joi.number() }) },
+  { port: configItem<number>({ default: 3000, validator: z.number() }) },
 );
 const schema = exportSchema(config.name, config.sections);
 // ---cut---

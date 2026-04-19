@@ -25,7 +25,7 @@ import {
 } from './utilities/configLoaderErrors';
 import { ConsoleLogger, Logger, NullLogger } from './utilities/logger';
 import { sanitizeName } from './utilities/sanitizeNames';
-import Joi from 'joi';
+import { z } from 'zod';
 import { Element } from './element/element';
 
 /**
@@ -37,7 +37,7 @@ export type ConfigItem<T = unknown> = {
   example?: T;
   sensitive?: boolean;
   omitFromSchema?: boolean;
-  validator?: Joi.AnySchema<T>;
+  validator?: z.ZodType<T>;
 };
 
 /**
@@ -88,7 +88,7 @@ export type InferConfigType<T> = ExtractSections<T> &
  * const config = await ConfigBound.createConfig({
  *   port: configItem<number>({
  *     default: 3000,
- *     validator: Joi.number().port(),
+ *     validator: z.number().int().min(0).max(65535),
  *     description: 'Server port',
  *     example: 8080
  *   })
@@ -99,11 +99,12 @@ export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
   // Validate that default matches example if both are provided
   if (options.default !== undefined && options.example !== undefined) {
     if (options.validator) {
-      const defaultResult = options.validator.validate(options.default);
-      if (defaultResult.error) {
-        throw new Error(
-          `Invalid default value for config item: ${defaultResult.error.message}`
-        );
+      const defaultResult = options.validator.safeParse(options.default);
+      if (!defaultResult.success) {
+        const errorMessage = defaultResult.error.errors
+          .map((e) => `${e.path.join('.')}: ${e.message}`)
+          .join('; ');
+        throw new Error(`Invalid default value for config item: ${errorMessage}`);
       }
     }
   }
@@ -112,7 +113,7 @@ export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
 
 /**
  * Helper for creating type-safe enum/union config items.
- * Automatically handles the Joi type casting for string enums.
+ * Automatically handles the Zod type for string enums.
  *
  * @example
  * ```typescript
@@ -137,9 +138,7 @@ export function configEnum<const Values extends readonly string[]>(options: {
     description: options.description,
     example: options.example,
     sensitive: options.sensitive,
-    validator: Joi.string().valid(
-      ...options.values
-    ) as unknown as Joi.AnySchema<Values[number]>
+    validator: z.enum(options.values as unknown as [string, ...string[]]) as z.ZodType<Values[number]>
   };
 }
 
@@ -151,8 +150,8 @@ export function configEnum<const Values extends readonly string[]>(options: {
  * ```typescript
  * const config = await ConfigBound.createConfig({
  *   database: configSection({
- *     host: configItem<string>({ default: 'localhost', validator: Joi.string() }),
- *     port: configItem<number>({ default: 5432, validator: Joi.number() })
+ *     host: configItem<string>({ default: 'localhost', validator: z.string() }),
+ *     port: configItem<number>({ default: 5432, validator: z.number() })
  *   }, 'Database configuration')
  * });
  * ```
@@ -333,19 +332,22 @@ export class ConfigBound implements ConfigValueProvider {
         );
 
         // Validate the value against the element's schema
-        const validationResult = element.validator.validate(value);
-        if (validationResult.error) {
+        const validationResult = element.validator.safeParse(value);
+        if (!validationResult.success) {
+          const errorMessage = validationResult.error.errors
+            .map((e) => `${e.path.join('.')}: ${e.message}`)
+            .join('; ');
           this.logger.error(
-            `Value for ${sectionName}.${elementName} failed validation: ${validationResult.error.message}`
+            `Value for ${sectionName}.${elementName} failed validation: ${errorMessage}`
           );
           throw new ConfigInvalidException(
             `${sectionName}.${elementName}`,
-            validationResult.error.message
+            errorMessage
           );
         }
 
         // Return the validated (and potentially transformed) value
-        return validationResult.value as T;
+        return validationResult.data as T;
       } else {
         this.logger.trace?.(
           `No value found for ${sectionName}.${elementName} in ${bind.name}`
@@ -461,13 +463,13 @@ export class ConfigBound implements ConfigValueProvider {
    *   {
    *     port: {
    *       default: 3000,
-   *       validator: Joi.number(),
+   *       validator: z.number(),
    *       description: 'Server port'
    *     },
    *     database: {
    *       properties: {
-   *         host: { default: 'localhost', validator: Joi.string() },
-   *         port: { default: 5432, validator: Joi.number() }
+   *         host: { default: 'localhost', validator: z.string() },
+   *         port: { default: 5432, validator: z.number() }
    *       }
    *     }
    *   },
@@ -617,7 +619,7 @@ class ConfigBoundBuilder {
       config.example,
       config.sensitive ?? false,
       config.omitFromSchema ?? false,
-      config.validator ?? Joi.any(),
+      config.validator ?? z.any(),
       logger
     );
   }

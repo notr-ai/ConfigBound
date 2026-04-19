@@ -3,7 +3,7 @@
  * @module
  */
 
-import Joi from 'joi';
+import { z } from 'zod';
 import {
   ConfigInvalidException,
   ConfigUnsetException
@@ -41,9 +41,9 @@ export class Element<T> {
    */
   omitFromSchema: boolean;
   /**
-   * The Joi validator of the Element
+   * The Zod validator of the Element
    */
-  validator: Joi.AnySchema<T>;
+  validator: z.ZodType<T>;
   /**
    * The parent section name
    */
@@ -60,7 +60,7 @@ export class Element<T> {
     exampleValue?: T,
     sensitive: boolean = false,
     omitFromSchema: boolean = false,
-    validator: Joi.AnySchema<T> = Joi.any<T>(),
+    validator: z.ZodType<T> = z.any() as z.ZodType<T>,
     logger?: Logger
   ) {
     this.name = sanitizeName(name);
@@ -70,13 +70,13 @@ export class Element<T> {
     this.logger = logger;
 
     // Ensure the default value is valid
-    if (defaultValue) {
-      const defaultValueResult = this.validator.validate(defaultValue);
-      if (defaultValueResult.error) {
-        throw new ConfigInvalidException(
-          this.name,
-          defaultValueResult.error.message
-        );
+    if (defaultValue !== undefined) {
+      const defaultValueResult = this.validator.safeParse(defaultValue);
+      if (!defaultValueResult.success) {
+        const errorMessage = defaultValueResult.error.errors
+          .map((e) => `${e.path.join('.')}: ${e.message}`)
+          .join('; ');
+        throw new ConfigInvalidException(this.name, errorMessage);
       }
     }
     this.sensitive = sensitive;
@@ -105,7 +105,7 @@ export class Element<T> {
    * Returns true if the Element is required
    */
   isRequired(): boolean {
-    return this.validator._flags.presence === 'required';
+    return !this.validator.isOptional();
   }
 
   /**

@@ -14,18 +14,18 @@ Each top-level key is either a `configItem` — a single value — or a `configS
 
 ```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
-import Joi from "joi";
+import { z } from "zod";
 // ---cut---
 const config = await ConfigBound.createConfig({
   port: configItem<number>({
     default: 3000,
-    validator: Joi.number().port(),
+    validator: z.number().port(),
     description: 'The port the server listens on',
     example: 8080
   }),
   database: configSection({
-    host: configItem<string>({ default: 'localhost', validator: Joi.string() }),
-    password: configItem<string>({ validator: Joi.string().required(), sensitive: true })
+    host: configItem<string>({ default: 'localhost', validator: z.string() }),
+    password: configItem<string>({ validator: z.string().required(), sensitive: true })
   })
 });
 ```
@@ -50,7 +50,7 @@ const config = await ConfigBound.createConfig(schema, {
 });
 ```
 
-If no bind returns a value, ConfigBound falls back to the element's `default`. If there is no default and the element is `Joi.required()`, `get()` will return `undefined` and `getOrThrow()` will throw.
+If no bind returns a value, ConfigBound falls back to the element's `default`. If there is no default and the element is required (without `.optional()`), `get()` will return `undefined` and `getOrThrow()` will throw.
 
 The three built-in binds are `EnvVarBind`, `FileBind`, and `StaticBind`. You can also [create your own](/how-to/custom-bind).
 
@@ -79,13 +79,13 @@ const host = await config.get('database', 'host');      // named sections use th
 
 An element is the unit of runtime behaviour for a single configuration value.
 
-**Default validation.** When an element is constructed, its `default` value (if provided) is immediately validated against the Joi schema. This means a bad default is caught at startup, not when the value is first read.
+**Default validation.** When an element is constructed, its `default` value (if provided) is immediately validated against the Zod schema. This means a bad default is caught at startup, not when the value is first read.
 
 **Sensitive masking.** Setting `sensitive: true` on a `configItem` causes the element to be masked in log output and excluded from plaintext exports. Use this for passwords, tokens, and any other secrets.
 
 **Schema export control.** Setting `omitFromSchema: true` excludes the element from generated schema exports (e.g. the output of `configbound export`). This is useful for internal or derived values that consumers of the config schema do not need to know about.
 
-**Required detection.** An element knows whether it is required by inspecting the Joi validator's `presence` flag. This is how `validate()` and `validateOnInit` determine which missing values should cause an error.
+**Required detection.** An element knows whether it is required by checking if the Zod validator is optional. This is how `validate()` and `validateOnInit` determine which missing values should cause an error.
 
 **Value retrieval.** When you call `config.get(section, element)`, the element delegates to the active bind list via its value provider, returns the first non-`undefined` result, validates it, and falls back to its `default` if nothing was found. `getOrThrow` follows the same path but throws a `ConfigUnsetException` instead of returning `undefined`.
 
@@ -96,14 +96,14 @@ An element is the unit of runtime behaviour for a single configuration value.
 - **`get(section, element)`** — returns the value or `undefined` if nothing is set and there is no default.
 - **`getOrThrow(section, element)`** — returns the value or throws if it is `undefined`.
 
-Validation runs when a value is retrieved: the value from the bind is passed through the Joi validator before being returned. You can also validate all values upfront — at startup — using `validate()` or by passing `validateOnInit: true` to `createConfig()`:
+Validation runs when a value is retrieved: the value from the bind is passed through the Zod validator before being returned. You can also validate all values upfront — at startup — using `validate()` or by passing `validateOnInit: true` to `createConfig()`:
 
 ```typescript twoslash
 import { ConfigBound, configItem } from "@config-bound/config-bound";
-import Joi from "joi";
+import { z } from "zod";
 // ---cut---
 const config = await ConfigBound.createConfig(
-  { port: configItem<number>({ validator: Joi.number().port().required() }) },
+  { port: configItem<number>({ validator: z.number().port().required() }) },
   { validateOnInit: true }
 );
 ```

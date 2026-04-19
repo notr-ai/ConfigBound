@@ -4,7 +4,7 @@ import { describe, beforeEach, it, expect } from '@jest/globals';
 import { ConfigBound } from '@config-bound/config-bound';
 import { Section } from '@config-bound/config-bound/section';
 import { Element } from '@config-bound/config-bound/element';
-import Joi from 'joi';
+import { z } from 'zod';
 
 describe('SchemaExportService', () => {
   let service: SchemaExportService;
@@ -25,7 +25,7 @@ describe('SchemaExportService', () => {
       undefined,
       false,
       false,
-      Joi.string()
+      z.string()
     );
 
     const portElement = new Element<number>(
@@ -35,7 +35,7 @@ describe('SchemaExportService', () => {
       undefined,
       false,
       false,
-      Joi.number()
+      z.number()
     );
 
     const databaseSection = new Section(

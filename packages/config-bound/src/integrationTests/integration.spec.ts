@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import { z } from 'zod';
 import { ConfigBound } from '../configBound';
 import { Element } from '../element/element';
 import { Section } from '../section/section';
@@ -24,7 +24,7 @@ describe('envVarBindIntegration', () => {
       8080, // example
       false, // not sensitive
       false, // not omitted from schema
-      Joi.number().port().required()
+      z.number().int().min(0).max(65535)
     );
 
     const apiKeyElement = new Element<string>(
@@ -34,7 +34,7 @@ describe('envVarBindIntegration', () => {
       'abc123', // example
       true, // sensitive
       false, // not omitted from schema
-      Joi.string().required()
+      z.string()
     );
 
     // Create a section
