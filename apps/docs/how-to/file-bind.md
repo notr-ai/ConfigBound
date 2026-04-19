@@ -21,18 +21,18 @@ npm install @config-bound/config-bound
 ```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
 import { FileBind } from "@config-bound/config-bound";
-import Joi from "joi";
+import { z } from "zod";
 
 const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: Joi.number().port()
+      validator: z.number().port()
     }),
     database: configSection({
       host: configItem<string>({
         default: "localhost",
-        validator: Joi.string()
+        validator: z.string()
       })
     })
   },

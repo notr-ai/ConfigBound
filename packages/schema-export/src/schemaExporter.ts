@@ -1,6 +1,7 @@
 import { Section } from '@config-bound/config-bound/section';
 import { Element } from '@config-bound/config-bound/element';
-import Joi from 'joi';
+import { z } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 
 /**
  * Represents a single configuration element in the exported schema
@@ -13,7 +14,7 @@ export interface ExportedElement {
   example?: unknown;
   required: boolean;
   sensitive: boolean;
-  joiValidation: unknown;
+  zodValidation: unknown;
 }
 
 /**
@@ -34,34 +35,64 @@ export interface ExportedSchema {
 }
 
 /**
- * Extracts type information from a Joi schema
+ * Extracts type information from a Zod schema
  */
-function extractJoiType(validator: Joi.AnySchema): string {
-  const describe = validator.describe();
+function extractZodType(validator: z.ZodType): string {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const typeName = (validator as any)._def.typeName;
 
-  if (describe.type === 'alternatives') {
-    const types =
-      describe.matches?.map(
-        (m: Joi.Description) => m.schema?.type || 'unknown'
-      ) || [];
-    return types.join(' | ') || 'any';
+  // Handle ZodOptional and ZodNullable wrappers
+  if (typeName === 'ZodOptional' || typeName === 'ZodNullable') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return extractZodType((validator as any)._def.innerType);
   }
 
-  if (describe.type === 'string' && describe.allow) {
-    const allowed = describe.allow;
-    if (Array.isArray(allowed) && allowed.length > 0) {
-      return allowed.map((v) => `'${v}'`).join(' | ');
+  // Map common Zod type names to readable types
+  switch (typeName) {
+    case 'ZodString':
+      return 'string';
+    case 'ZodNumber':
+      return 'number';
+    case 'ZodBoolean':
+      return 'boolean';
+    case 'ZodEnum': {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const enumValues = (validator as any)._def.values;
+      return enumValues.map((v: string) => `'${v}'`).join(' | ');
     }
+    case 'ZodLiteral':
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return `'${(validator as any)._def.value}'`;
+    case 'ZodArray':
+      return 'array';
+    case 'ZodObject':
+      return 'object';
+    case 'ZodUnion':
+    case 'ZodDiscriminatedUnion': {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const options = (validator as any)._def.options;
+      if (options) {
+        return options.map((opt: z.ZodType) => extractZodType(opt)).join(' | ');
+      }
+      return 'union';
+    }
+    case 'ZodAny':
+      return 'any';
+    case 'ZodUnknown':
+      return 'unknown';
+    default:
+      return typeName?.replace('Zod', '').toLowerCase() || 'unknown';
   }
-
-  return describe.type || 'unknown';
 }
 
 /**
- * Extracts the raw Joi object from a schema
+ * Extracts the validation schema from a Zod validator as JSON Schema
  */
-function extractJoiValidation(validator: Joi.AnySchema): unknown {
-  return validator.describe();
+function extractZodValidation(validator: z.ZodType): unknown {
+  return zodToJsonSchema(validator, {
+    target: 'openApi3',
+    $refStrategy: 'none'
+  });
 }
 
 /**
@@ -71,12 +102,12 @@ export function exportElement(element: Element<unknown>): ExportedElement {
   return {
     name: element.name,
     description: element.description,
-    type: extractJoiType(element.validator),
+    type: extractZodType(element.validator),
     default: element.default,
     example: element.example,
     required: element.isRequired(),
     sensitive: element.sensitive,
-    joiValidation: extractJoiValidation(element.validator)
+    zodValidation: extractZodValidation(element.validator)
   };
 }
 

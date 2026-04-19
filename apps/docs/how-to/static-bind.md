@@ -15,16 +15,16 @@ startup, or values derived from other runtime state.
 ```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
 import { StaticBind } from "@config-bound/config-bound";
-import Joi from "joi";
+import { z } from "zod";
 
 const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
-      validator: Joi.number().port()
+      validator: z.number().port()
     }),
     database: configSection({
       host: configItem<string>({
-        validator: Joi.string()
+        validator: z.string()
       })
     })
   },

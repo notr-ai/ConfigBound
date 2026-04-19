@@ -34,7 +34,8 @@
   "license": "MIT",
   "dependencies": {
     "@config-bound/config-bound": "0.1.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "zod-to-json-schema": "^3.24.1"
   },
   "devDependencies": {
     "@config-bound/eslint-config": "*",

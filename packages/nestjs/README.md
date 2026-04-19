@@ -17,24 +17,24 @@ import { Module } from '@nestjs/common';
 import { ConfigBoundModule } from '@config-bound/nestjs';
 import { configItem, configSection } from '@config-bound/config-bound';
 import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
-import Joi from 'joi';
+import { z } from 'zod';
 
 const appConfig = {
   port: configItem<number>({
     default: 3000,
-    validator: Joi.number().port(),
+    validator: z.number().int().min(0).max(65535),
     description: 'Application port'
   }),
   database: configSection(
     {
       host: configItem<string>({
         default: 'localhost',
-        validator: Joi.string(),
+        validator: z.string(),
         description: 'Database host'
       }),
       port: configItem<number>({
         default: 5432,
-        validator: Joi.number().port(),
+        validator: z.number().int().min(0).max(65535),
         description: 'Database port'
       })
     },

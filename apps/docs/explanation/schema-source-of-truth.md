@@ -17,7 +17,7 @@ Validation logic drifts too: the code checks that a value is a valid port number
 The schema puts everything needed to describe a config item in one place, in code:
 
 - **Structure** — sections and items that mirror your application's logical organization
-- **Type and validator** — what values are acceptable, expressed as a Joi schema
+- **Type and validator** — what values are acceptable, expressed as a Zod schema
 - **Default** — what happens when nothing is set
 - **Example** — a representative value, used in generated output
 - **Sensitive flag** — whether the value should be masked in logs and exports
@@ -25,12 +25,12 @@ The schema puts everything needed to describe a config item in one place, in cod
 
 ```typescript twoslash
 import { configItem } from "@config-bound/config-bound";
-import Joi from "joi";
+import { z } from "zod";
 // ---cut---
 const schema = {
   port: configItem<number>({
     default: 3000,
-    validator: Joi.number().port(),
+    validator: z.number().port(),
     example: 8080,
     description: 'The port the server listens on'
   })

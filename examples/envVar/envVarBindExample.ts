@@ -5,7 +5,7 @@ import {
   configSection
 } from '@config-bound/config-bound';
 import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
-import Joi from 'joi';
+import { z } from 'zod';
 
 /**
  * Example demonstrating ConfigBound.createConfig with type safety
@@ -20,7 +20,7 @@ async function main() {
       // Top-level properties go into 'app' section
       port: configItem({
         default: 3000,
-        validator: Joi.number().port(),
+        validator: z.number().int().min(0).max(65535),
         description: 'Application server port'
       }),
       environment: configEnum({
@@ -30,49 +30,49 @@ async function main() {
       }),
       host: configItem({
         default: '0.0.0.0',
-        validator: Joi.string().ip(),
+        validator: z.string().ip(),
         description: 'Application server host'
       }),
       ssl: configItem({
         default: false,
-        validator: Joi.boolean(),
+        validator: z.boolean(),
         description: 'Enable SSL'
       }),
       database: configSection(
         {
           host: configItem({
             default: 'localhost',
-            validator: Joi.string().hostname(),
+            validator: z.string(),
             description: 'Database host'
           }),
           port: configItem({
             default: 5432,
-            validator: Joi.number().port(),
+            validator: z.number().int().min(0).max(65535),
             description: 'Database port'
           }),
           name: configItem({
             default: 'myapp',
-            validator: Joi.string(),
+            validator: z.string(),
             description: 'Database name'
           }),
           username: configItem({
             default: 'postgres',
-            validator: Joi.string(),
+            validator: z.string(),
             description: 'Database username'
           }),
           password: configItem({
-            validator: Joi.string(),
+            validator: z.string(),
             description: 'Database password',
             sensitive: true
           }),
           ssl: configItem({
             default: false,
-            validator: Joi.boolean(),
+            validator: z.boolean(),
             description: 'Enable SSL for database connection'
           }),
           maxConnections: configItem({
             default: 10,
-            validator: Joi.number().min(1).max(100),
+            validator: z.number().min(1).max(100),
             description: 'Maximum database connections'
           })
         },
@@ -99,18 +99,18 @@ async function main() {
       api: configSection(
         {
           key: configItem({
-            validator: Joi.string(),
+            validator: z.string(),
             description: 'API key for external services',
             sensitive: true
           }),
           timeout: configItem({
             default: 5000,
-            validator: Joi.number().min(0),
+            validator: z.number().min(0),
             description: 'API timeout in milliseconds'
           }),
           retries: configItem({
             default: 3,
-            validator: Joi.number().min(0).max(10),
+            validator: z.number().min(0).max(10),
             description: 'Number of API retries'
           })
         },

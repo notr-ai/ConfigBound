@@ -20,23 +20,23 @@ npm install @config-bound/nestjs
 // config/app.config.ts
 import { ConfigBound, configItem, configSection } from '@config-bound/config-bound';
 import { EnvVarBind } from '@config-bound/config-bound';
-import Joi from 'joi';
+import { z } from 'zod';
 
 export const AppConfig = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: Joi.number().port(),
+      validator: z.number().port(),
       description: 'Application server port'
     }),
     database: configSection({
       host: configItem<string>({
         default: 'localhost',
-        validator: Joi.string().hostname()
+        validator: z.string().hostname()
       }),
       port: configItem<number>({
         default: 5432,
-        validator: Joi.number().port()
+        validator: z.number().port()
       })
     })
   },
