@@ -10,6 +10,11 @@
       "outputs": [".vitepress/dist/**", "reference/api/**", "reference/cli/**"],
       "inputs": ["**/*.md", ".vitepress/**", "typedoc.json", "package.json"]
     },
+    "docs:vale": {
+      "dependsOn": ["docs:build"],
+      "outputs": [],
+      "inputs": ["**/*.md", ".vitepress/dist/**", "package.json"]
+    },
     "docs:dev": {
       "dependsOn": ["^build"],
       "cache": false,
@@ -83,6 +88,41 @@
       "cache": false
     },
     "examples:export:yaml": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "app:env": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "app:files": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "app:static": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "export": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "export:json": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "export:yaml": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "cache": false
+    },
+    "export:env": {
       "dependsOn": ["build"],
       "outputs": [],
       "cache": false

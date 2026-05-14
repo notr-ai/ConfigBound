@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import { z } from 'zod';
 import { ConfigBound } from '../configBound';
 import { Element } from '../element/element';
 import { Section } from '../section/section';
@@ -30,7 +30,7 @@ describe('ConfigValueProvider functionality', () => {
       8080, // example
       false, // not sensitive
       false, // not omitted from schema
-      Joi.number().port().required()
+      z.number().int().min(0).max(65535)
     );
 
     hostElement = new Element<string>(
@@ -40,7 +40,7 @@ describe('ConfigValueProvider functionality', () => {
       '0.0.0.0', // example
       false, // not sensitive
       false, // not omitted from schema
-      Joi.string().required()
+      z.string()
     );
 
     // Create config elements for database
@@ -51,7 +51,7 @@ describe('ConfigValueProvider functionality', () => {
       'db.example.com', // example
       false, // not sensitive
       false, // not omitted from schema
-      Joi.string().required()
+      z.string()
     );
 
     dbPortElement = new Element<number>(
@@ -61,7 +61,7 @@ describe('ConfigValueProvider functionality', () => {
       5432, // example
       false, // not sensitive
       false, // not omitted from schema
-      Joi.number().port().required()
+      z.number().int().min(0).max(65535)
     );
 
     // Create sections

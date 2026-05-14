@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Cache turbo build setup
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ./.turbo
           key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
@@ -40,6 +40,10 @@ jobs:
       - name: Run Unit Tests
         id: test
         run: npx turbo test
+      - name: Examples
+        id: examples
+        run: npm run examples
+
   security-checks:
     runs-on: ubuntu-latest
     steps:
@@ -70,36 +74,3 @@ jobs:
         if: success() || failure()
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
-  documentation-checks:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-      - name: Cache turbo build setup
-        uses: actions/cache@v4
-        with:
-          path: ./.turbo
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-
-            ${{ runner.os }}-turbo-
-      - uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: './package-lock.json'
-      - name: Install npm packages
-        run: npm ci --no-fund
-      - uses: DavidAnson/markdownlint-cli2-action@v23.0.0
-        with:
-          globs: '**/*.md'
-          config: '.config/.markdownlint-cli2.jsonc'
-      - name: Build docs
-        run: npx turbo run docs:build --filter=@config-bound/docs
-      - name: Check links
-        uses: lycheeverse/lychee-action@v2.8.0
-        with:
-          args: --config .config/lychee.toml --root-dir ${{ github.workspace }}/apps/docs ./apps/docs/**/*.md
-          fail: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -7,7 +7,7 @@ import { ConfigBound, configItem, configSection } from '../../configBound';
 import { EnvVarBind } from './envVar';
 import { Element } from '../../element/element';
 import { Section } from '../../section/section';
-import Joi from 'joi';
+import { z } from 'zod';
 
 // -- Helpers --------------------------------------------------------------
 
@@ -322,7 +322,7 @@ describe('FileBind reload', () => {
 // -- ConfigBound integration ----------------------------------------------
 
 describe('FileBind integration with ConfigBound', () => {
-  it('provides values to ConfigBound that pass Joi validation', async () => {
+  it('provides values to ConfigBound that pass Zod validation', async () => {
     const filePath = tmpFile(
       'app.json',
       JSON.stringify({ app: { port: 3000, host: 'localhost' } })
@@ -336,7 +336,7 @@ describe('FileBind integration with ConfigBound', () => {
       undefined,
       false,
       false,
-      Joi.number().port()
+      z.number().int().min(0).max(65535)
     );
     const hostElement = new Element<string>(
       'host',
@@ -345,7 +345,7 @@ describe('FileBind integration with ConfigBound', () => {
       undefined,
       false,
       false,
-      Joi.string()
+      z.string()
     );
     const section = new Section('app', [portElement, hostElement]);
     const config = new ConfigBound('myapp', [fileBind], [section]);
@@ -369,7 +369,7 @@ describe('FileBind integration with ConfigBound', () => {
       undefined,
       false,
       false,
-      Joi.number()
+      z.number()
     );
     const section = new Section('app', [portElement]);
 
@@ -394,7 +394,7 @@ describe('FileBind integration with ConfigBound', () => {
       undefined,
       false,
       false,
-      Joi.number()
+      z.number()
     );
     const section = new Section('app', [portElement]);
     const config = new ConfigBound('myapp', [fileBind], [section]);
@@ -416,13 +416,13 @@ describe('FileBind integration with ConfigBound', () => {
       {
         port: configItem<number>({
           default: 3000,
-          validator: Joi.number()
+          validator: z.number()
         }),
         database: configSection<{ host: string }>(
           {
             host: configItem<string>({
               default: 'localhost',
-              validator: Joi.string()
+              validator: z.string()
             })
           },
           'Database settings'

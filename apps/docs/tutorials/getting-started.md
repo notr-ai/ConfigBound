@@ -2,7 +2,7 @@
 description: Install ConfigBound and create your first type-safe configuration in a TypeScript app.
 ---
 
-# Getting Started
+# Getting started
 
 This tutorial gets a minimal ConfigBound setup running in a TypeScript app.
 
@@ -21,18 +21,18 @@ import {
   configSection
 } from "@config-bound/config-bound";
 import { EnvVarBind } from "@config-bound/config-bound";
-import Joi from "joi";
+import { z } from "zod";
 
 const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: Joi.number().port()
+      validator: z.number().int().min(1).max(65535)
     }),
     server: configSection({
       host: configItem<string>({
         default: "localhost",
-        validator: Joi.string().hostname()
+        validator: z.hostname()
       })
     })
   },

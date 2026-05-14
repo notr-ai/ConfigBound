@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import { z } from 'zod';
 import { ConfigBound, configItem, configSection } from './configBound';
 import { Section } from './section/section';
 import { SectionExistsException } from './utilities/errors';
@@ -112,12 +112,12 @@ describe('ConfigBound', () => {
       const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
-          validator: Joi.number(),
+          validator: z.number(),
           description: 'Server port'
         }),
         host: configItem({
           default: 'localhost',
-          validator: Joi.string(),
+          validator: z.string(),
           description: 'Server host'
         })
       });
@@ -132,11 +132,11 @@ describe('ConfigBound', () => {
         database: configSection({
           host: configItem({
             default: 'localhost',
-            validator: Joi.string()
+            validator: z.string()
           }),
           port: configItem({
             default: 5432,
-            validator: Joi.number()
+            validator: z.number()
           })
         })
       });
@@ -152,12 +152,12 @@ describe('ConfigBound', () => {
       const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
-          validator: Joi.number()
+          validator: z.number()
         }),
         database: configSection({
           host: configItem({
             default: 'localhost',
-            validator: Joi.string()
+            validator: z.string()
           })
         })
       });
@@ -168,11 +168,11 @@ describe('ConfigBound', () => {
       await expect(config.get('database', 'host')).resolves.toBe('db.example.com');
     });
 
-    it('should validate values using Joi', async () => {
+    it('should validate values using Zod', async () => {
       const config = await ConfigBound.createConfig({
         port: {
           default: 3000,
-          validator: Joi.number().min(1).max(65535)
+          validator: z.number().min(1).max(65535)
         }
       });
 
@@ -185,7 +185,7 @@ describe('ConfigBound', () => {
       const config = await ConfigBound.createConfig({
         port: {
           default: 3000,
-          validator: Joi.number()
+          validator: z.number()
         }
       });
 
@@ -198,7 +198,7 @@ describe('ConfigBound', () => {
       const config = await ConfigBound.createConfig({
         password: {
           default: 'secret123',
-          validator: Joi.string(),
+          validator: z.string(),
           sensitive: true
         }
       });
@@ -211,7 +211,7 @@ describe('ConfigBound', () => {
         {
           port: {
             default: 3000,
-            validator: Joi.number()
+            validator: z.number()
           }
         },
         {
@@ -227,7 +227,7 @@ describe('ConfigBound', () => {
         {
           port: {
             default: 3000,
-            validator: Joi.number()
+            validator: z.number()
           }
         },
         {
@@ -244,7 +244,7 @@ describe('ConfigBound', () => {
 
       const config = await ConfigBound.createConfig({
         port: {
-          validator: Joi.number()
+          validator: z.number()
         }
       });
 
@@ -257,12 +257,12 @@ describe('ConfigBound', () => {
       const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
-          validator: Joi.number()
+          validator: z.number()
         }),
         database: configSection({
           host: configItem({
             default: 'localhost',
-            validator: Joi.string()
+            validator: z.string()
           })
         })
       });
@@ -278,11 +278,11 @@ describe('ConfigBound', () => {
       const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
-          validator: Joi.number()
+          validator: z.number()
         }),
         host: configItem({
           default: 'localhost',
-          validator: Joi.string()
+          validator: z.string()
         })
       });
 
@@ -295,7 +295,7 @@ describe('ConfigBound', () => {
       const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
-          validator: Joi.number()
+          validator: z.number()
         })
       });
 
@@ -311,7 +311,7 @@ describe('ConfigBound', () => {
         ConfigBound.createConfig(
           {
             port: configItem({
-              validator: Joi.number()
+              validator: z.number()
             })
           },
           {
@@ -329,7 +329,7 @@ describe('ConfigBound', () => {
         ConfigBound.createConfig(
           {
             port: configItem({
-              validator: Joi.number()
+              validator: z.number()
             })
           },
           {
@@ -343,7 +343,7 @@ describe('ConfigBound', () => {
     it('should detect required values that are not set', async () => {
       const config = await ConfigBound.createConfig({
         apiKey: configItem({
-          validator: Joi.string().required(),
+          validator: z.string(),
           description: 'API key'
         })
       });
@@ -357,7 +357,7 @@ describe('ConfigBound', () => {
       const config = await ConfigBound.createConfig({
         port: configItem({
           default: 3000,
-          validator: Joi.number()
+          validator: z.number()
         })
       });
 
@@ -369,7 +369,7 @@ describe('ConfigBound', () => {
 
       const config = await ConfigBound.createConfig({
         port: configItem({
-          validator: Joi.number()
+          validator: z.number()
         })
       });
 
@@ -388,11 +388,11 @@ describe('ConfigBound', () => {
 
       const config = await ConfigBound.createConfig({
         port: configItem({
-          validator: Joi.number()
+          validator: z.number()
         }),
         database: configSection({
           port: configItem({
-            validator: Joi.number()
+            validator: z.number()
           })
         })
       });
@@ -410,7 +410,7 @@ describe('ConfigBound', () => {
     it('should report required values that are missing', async () => {
       const config = await ConfigBound.createConfig({
         apiKey: configItem({
-          validator: Joi.string().required(),
+          validator: z.string(),
           description: 'Required API key'
         })
       });

@@ -1,6 +1,6 @@
 import { Section } from '@config-bound/config-bound/section';
 import { Element } from '@config-bound/config-bound/element';
-import Joi from 'joi';
+import { z } from 'zod';
 import {
   exportElement,
   exportSection,
@@ -17,7 +17,7 @@ describe('Schema Exporter', () => {
         'example-value',
         false,
         false,
-        Joi.string()
+        z.string()
       );
 
       const exported = exportElement(element);
@@ -27,7 +27,7 @@ describe('Schema Exporter', () => {
       expect(exported.type).toBe('string');
       expect(exported.default).toBe('default-value');
       expect(exported.example).toBe('example-value');
-      expect(exported.required).toBe(false);
+      expect(exported.required).toBe(true);
       expect(exported.sensitive).toBe(false);
     });
 
@@ -39,7 +39,7 @@ describe('Schema Exporter', () => {
         42,
         false,
         false,
-        Joi.number().required()
+        z.number()
       );
 
       const exported = exportElement(element);
@@ -55,7 +55,7 @@ describe('Schema Exporter', () => {
         'sk_test_123',
         true,
         false,
-        Joi.string()
+        z.string()
       );
 
       const exported = exportElement(element);
@@ -71,13 +71,13 @@ describe('Schema Exporter', () => {
         'example',
         false,
         true,
-        Joi.string()
+        z.string()
       );
 
       expect(element.omitFromSchema).toBe(true);
     });
 
-    it('should extract joi validation object', () => {
+    it('should extract zod validation object', () => {
       const element = new Element<number>(
         'port',
         'Server port',
@@ -85,14 +85,13 @@ describe('Schema Exporter', () => {
         undefined,
         false,
         false,
-        Joi.number().min(1).max(65535).required()
+        z.number().min(1).max(65535)
       );
 
       const exported = exportElement(element);
 
-      expect(exported.joiValidation).toBeDefined();
-      expect((exported.joiValidation as any).type).toBe('number');
-      expect((exported.joiValidation as any).rules).toBeDefined();
+      expect(exported.zodValidation).toBeDefined();
+      expect((exported.zodValidation as any).type).toBe('number');
     });
 
     it('should handle enum types', () => {
@@ -103,7 +102,7 @@ describe('Schema Exporter', () => {
         undefined,
         false,
         false,
-        Joi.string().valid('development', 'staging', 'production')
+        z.enum(['development', 'staging', 'production'])
       );
 
       const exported = exportElement(element);
@@ -153,7 +152,7 @@ describe('Schema Exporter', () => {
         'exampleApp',
         false,
         false,
-        Joi.string()
+        z.string()
       );
       const privateElement = new Element<string>(
         'internalKey',
@@ -162,7 +161,7 @@ describe('Schema Exporter', () => {
         'example',
         false,
         true,
-        Joi.string()
+        z.string()
       );
 
       const section = new Section(
@@ -191,7 +190,7 @@ describe('Schema Exporter', () => {
         'exampleApp',
         false,
         false,
-        Joi.string()
+        z.string()
       );
       const privateElement = new Element<string>(
         'internalKey',
@@ -200,7 +199,7 @@ describe('Schema Exporter', () => {
         'example',
         false,
         true,
-        Joi.string()
+        z.string()
       );
 
       const section = new Section(
@@ -254,7 +253,7 @@ describe('Schema Exporter', () => {
         'exampleApp',
         false,
         false,
-        Joi.string()
+        z.string()
       );
       const privateElement = new Element<string>(
         'internalKey',
@@ -263,7 +262,7 @@ describe('Schema Exporter', () => {
         'example',
         false,
         true,
-        Joi.string()
+        z.string()
       );
 
       const sections = [

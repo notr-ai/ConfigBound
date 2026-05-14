@@ -2,7 +2,7 @@
 description: Task-focused guides for working with ConfigBound binds and schema tools.
 ---
 
-# How-to Guides
+# How-to guides
 
 Complete specific tasks with ConfigBound.
 

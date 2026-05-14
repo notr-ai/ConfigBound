@@ -6,7 +6,7 @@ A type-safe configuration management library for TypeScript applications.
 
 - **Full Type Safety**: Autocomplete for section and element names, with types inferred from your schema
 - **Easy Validation**: Validate all config at startup with `validate()` or get detailed error reports
-- **Schema-Based**: Define your configuration declaratively with Joi validators
+- **Schema-Based**: Define your configuration declaratively with Zod validators
 - **Flexible Binds**: Environment variables, files, or custom sources
 - **Documentation Export**: Generate JSON or YAML documentation from your config schema
 
@@ -26,14 +26,14 @@ import {
   configSection
 } from '@config-bound/config-bound';
 import { EnvVarBind } from '@config-bound/config-bound';
-import Joi from 'joi';
+import { z } from 'zod';
 
 // Define your configuration schema with full type safety
 const config = ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: Joi.number().port(),
+      validator: z.number().int().min(0).max(65535),
       description: 'Application port'
     }),
     environment: configEnum({
@@ -45,12 +45,12 @@ const config = ConfigBound.createConfig(
       {
         host: configItem<string>({
           default: 'localhost',
-          validator: Joi.string().hostname(),
+          validator: z.string(),
           description: 'Database host'
         }),
         port: configItem<number>({
           default: 5432,
-          validator: Joi.number().port(),
+          validator: z.number().int().min(0).max(65535),
           description: 'Database port'
         })
       },
@@ -183,13 +183,13 @@ Use `StaticBind` to inject values directly in code while still participating in 
 import { ConfigBound, configItem } from '@config-bound/config-bound';
 import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
 import { StaticBind } from '@config-bound/config-bound/bind/binds/static';
-import Joi from 'joi';
+import { z } from 'zod';
 
 const config = ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: Joi.number().port()
+      validator: z.number().int().min(0).max(65535)
     })
   },
   {

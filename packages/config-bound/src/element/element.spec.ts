@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import { z } from 'zod';
 import { Element } from './element';
 import {
   ConfigInvalidException,
@@ -70,7 +70,7 @@ describe('Element', () => {
         100,
         false,
         false,
-        Joi.number().min(0).max(100) // Validator requires positive numbers
+        z.number().min(0).max(100) // Validator requires positive numbers
       );
     }).toThrow(ConfigInvalidException);
   });
@@ -107,7 +107,7 @@ describe('Element', () => {
   });
 
   // Test for isRequired functionality
-  test('isRequired should return true when validator has required presence', () => {
+  test('isRequired should return true when validator does not have optional', () => {
     const element = new Element<string>(
       'requiredConfig',
       'A required config element',
@@ -115,18 +115,21 @@ describe('Element', () => {
       'example',
       false,
       false,
-      Joi.string().required()
+      z.string()
     );
 
     expect(element.isRequired()).toBe(true);
   });
 
-  test('isRequired should return false when validator does not have required presence', () => {
-    const element = new Element<string>(
+  test('isRequired should return false when validator is optional', () => {
+    const element = new Element<string | undefined>(
       'optionalConfig',
       'An optional config element',
       'default',
-      'example'
+      'example',
+      false,
+      false,
+      z.string().optional()
     );
 
     expect(element.isRequired()).toBe(false);

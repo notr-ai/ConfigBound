@@ -21,7 +21,7 @@ describe('Schema Formatters', () => {
             example: 8080,
             required: false,
             sensitive: false,
-            joiValidation: {
+            zodValidation: {
               type: 'number',
               rules: [
                 { name: 'min', args: { limit: 1 } },
@@ -37,7 +37,7 @@ describe('Schema Formatters', () => {
             example: 'sk_test_123',
             required: true,
             sensitive: true,
-            joiValidation: { type: 'string', flags: { presence: 'required' } }
+            zodValidation: { type: 'string', flags: { presence: 'required' } }
           }
         ]
       },
@@ -53,7 +53,7 @@ describe('Schema Formatters', () => {
             example: undefined,
             required: false,
             sensitive: false,
-            joiValidation: { type: 'string' }
+            zodValidation: { type: 'string' }
           }
         ]
       }
@@ -148,7 +148,7 @@ describe('Schema Formatters', () => {
                 default: 3000,
                 required: false,
                 sensitive: false,
-                joiValidation: {}
+                zodValidation: {}
               }
             ]
           }
@@ -173,7 +173,7 @@ describe('Schema Formatters', () => {
                 default: 3000,
                 required: false,
                 sensitive: false,
-                joiValidation: {}
+                zodValidation: {}
               }
             ]
           }

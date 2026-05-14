@@ -1,7 +1,7 @@
 import { StaticBind } from './static';
 import { EnvVarBind } from './envVar';
 import { ConfigBound, configItem } from '../../configBound';
-import Joi from 'joi';
+import { z } from 'zod';
 
 describe('StaticBind', () => {
   it('retrieves flat dot-path values', async () => {
@@ -86,7 +86,7 @@ describe('StaticBind integration with ConfigBound', () => {
       const config = await ConfigBound.createConfig(
         {
           port: configItem<number>({
-            validator: Joi.number().port()
+            validator: z.number().int().min(0).max(65535)
           })
         },
         { binds: [staticBind, envBind] }
@@ -109,7 +109,7 @@ describe('StaticBind integration with ConfigBound', () => {
     const config = await ConfigBound.createConfig(
       {
         port: configItem<number>({
-          validator: Joi.number().port()
+          validator: z.number().int().min(0).max(65535)
         })
       },
       { binds: [envBind, staticBind] }
@@ -130,7 +130,7 @@ describe('StaticBind integration with ConfigBound', () => {
       const config = await ConfigBound.createConfig(
         {
           port: configItem<number>({
-            validator: Joi.number().port()
+            validator: z.number().int().min(0).max(65535)
           })
         },
         { binds: [staticBind, envBind] }

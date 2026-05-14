@@ -11,7 +11,7 @@ import {
   formatAsJSON,
   formatAsYAML
 } from '@config-bound/schema-export';
-import Joi from 'joi';
+import { z } from 'zod';
 
 /**
  * Example demonstrating configuration schema export functionality
@@ -55,7 +55,7 @@ async function main() {
     {
       port: configItem<number>({
         default: 3000,
-        validator: Joi.number().port(),
+        validator: z.number().int().min(0).max(65535),
         description: 'Application server port',
         example: 8080
       }),
@@ -66,7 +66,7 @@ async function main() {
       }),
       host: configItem<string>({
         default: '0.0.0.0',
-        validator: Joi.string(),
+        validator: z.string(),
         description: 'Application server host address'
       }),
       logLevel: configEnum({
@@ -78,35 +78,35 @@ async function main() {
         {
           host: configItem<string>({
             default: 'localhost',
-            validator: Joi.string().hostname(),
+            validator: z.string(),
             description: 'Database server hostname',
             example: 'db.example.com'
           }),
           port: configItem<number>({
             default: 5432,
-            validator: Joi.number().port(),
+            validator: z.number().int().min(0).max(65535),
             description: 'Database server port'
           }),
           name: configItem<string>({
             default: 'myapp',
-            validator: Joi.string().min(1),
+            validator: z.string().min(1),
             description: 'Database name',
             example: 'production_db'
           }),
           username: configItem<string>({
-            validator: Joi.string().required(),
+            validator: z.string(),
             description: 'Database username',
             example: 'dbuser'
           }),
           password: configItem<string>({
-            validator: Joi.string().required(),
+            validator: z.string(),
             description: 'Database password',
             sensitive: true,
             example: 'super_secret_password'
           }),
           ssl: configItem<boolean>({
             default: false,
-            validator: Joi.boolean(),
+            validator: z.boolean(),
             description: 'Enable SSL/TLS for database connection'
           })
         },
@@ -116,25 +116,25 @@ async function main() {
         {
           baseUrl: configItem<string>({
             default: 'https://api.example.com',
-            validator: Joi.string().uri(),
+            validator: z.string().url(),
             description: 'Base URL for external API',
             example: 'https://api.production.com'
           }),
           apiKey: configItem<string>({
-            validator: Joi.string().required(),
+            validator: z.string(),
             description: 'API key for authentication',
             sensitive: true,
             example: 'sk_live_1234567890abcdef'
           }),
           timeout: configItem<number>({
             default: 5000,
-            validator: Joi.number().min(100).max(60000),
+            validator: z.number().min(100).max(60000),
             description: 'Request timeout in milliseconds',
             example: 10000
           }),
           retries: configItem<number>({
             default: 3,
-            validator: Joi.number().min(0).max(10),
+            validator: z.number().min(0).max(10),
             description: 'Number of retry attempts for failed requests'
           })
         },
