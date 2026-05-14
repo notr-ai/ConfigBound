@@ -37,6 +37,13 @@ jobs:
           config: '.config/.markdownlint-cli2.jsonc'
       - name: Build docs
         run: npx turbo run docs:build --filter=@config-bound/docs
+      - name: Install Vale and sync styles
+        run: |
+          wget --quiet --output-document vale.tar.gz \
+            https://github.com/vale-cli/vale/releases/latest/download/vale_Linux_64-bit.tar.gz
+          tar --extract --gzip --file vale.tar.gz vale
+          ./vale sync --config=./.config/.vale.ini
+          rm vale vale.tar.gz
       - name: Check prose style (Vale) with PR annotations
         uses: vale-cli/vale-action@v2
         with:
