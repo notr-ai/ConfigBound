@@ -83,7 +83,7 @@ jobs:
           files: '["apps/docs", "apps/docs/.vitepress/dist"]'
           reporter: github-pr-review
           fail_on_error: true
-          vale_flags: --config=./.config/.vale.ini
+          vale_flags: --config=./.config/.vale.ini --glob=!**/reference/**
           version: 3.14.1
 
   link-check:

@@ -36,6 +36,9 @@ Thumbs.db
 # Git tools
 .husky/_
 
+# Vale styles (downloaded via vale sync)
+.config/styles/
+
 # Generated API docs (built by TypeDoc before docs:build)
 apps/docs/reference/api/
 apps/docs/reference/cli/
