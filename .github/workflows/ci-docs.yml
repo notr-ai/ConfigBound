@@ -43,6 +43,7 @@ jobs:
           files: '["apps/docs", "apps/docs/.vitepress/dist"]'
           reporter: github-pr-review
           fail_on_error: true
+          vale_flags: --config=./.config/.vale.ini
       - name: Check links
         uses: lycheeverse/lychee-action@v2.8.0
         with:
