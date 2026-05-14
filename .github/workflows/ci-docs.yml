@@ -38,7 +38,7 @@ jobs:
       - name: Build docs
         run: npx turbo run docs:build --filter=@config-bound/docs
       - name: Upload docs artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: docs
           path: apps/docs
@@ -54,16 +54,16 @@ jobs:
           fetch-depth: 1
           sparse-checkout: .config
       - name: Download docs artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: docs
-          path: apps/docs
+          path: .
       - name: Cache Vale styles
         id: cache-vale-styles
         uses: actions/cache@v5
         with:
           path: .config/styles
-          key: vale-3.14.1-${{ hashFiles('.config/.vale.ini') }}
+          key: vale-styles-3.14.1-${{ hashFiles('.config/.vale.ini') }}
       - name: Sync Vale styles
         if: steps.cache-vale-styles.outputs.cache-hit != 'true'
         env:
@@ -95,10 +95,10 @@ jobs:
           fetch-depth: 1
           sparse-checkout: .config/lychee.toml
       - name: Download docs artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: docs
-          path: apps/docs
+          path: .
       - name: Check links
         uses: lycheeverse/lychee-action@v2.8.0
         with:
