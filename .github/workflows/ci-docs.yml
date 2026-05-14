@@ -9,7 +9,7 @@ env:
   TURBO_TELEMETRY_DISABLED: 1
 
 jobs:
-  documentation-checks:
+  docs-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,6 +37,27 @@ jobs:
           config: '.config/.markdownlint-cli2.jsonc'
       - name: Build docs
         run: npx turbo run docs:build --filter=@config-bound/docs
+      - name: Upload docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: apps/docs
+          retention-days: 1
+
+  vale-check:
+    runs-on: ubuntu-latest
+    needs: docs-build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          sparse-checkout: .config
+      - name: Download docs artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docs
+          path: apps/docs
       - name: Cache Vale
         id: cache-vale
         uses: actions/cache@v5
@@ -66,6 +87,18 @@ jobs:
           fail_on_error: true
           vale_flags: --config=./.config/.vale.ini
           version: none
+
+  link-check:
+    runs-on: ubuntu-latest
+    needs: docs-build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            apps/docs
+            .config/lychee.toml
       - name: Check links
         uses: lycheeverse/lychee-action@v2.8.0
         with:
