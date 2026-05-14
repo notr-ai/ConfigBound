@@ -37,13 +37,27 @@ jobs:
           config: '.config/.markdownlint-cli2.jsonc'
       - name: Build docs
         run: npx turbo run docs:build --filter=@config-bound/docs
+      - name: Cache Vale
+        id: cache-vale
+        uses: actions/cache@v5
+        with:
+          path: |
+            /usr/local/bin/vale
+            .config/styles
+          key: vale-3.14.1-${{ hashFiles('.config/.vale.ini') }}
       - name: Install Vale and sync styles
+        if: steps.cache-vale.outputs.cache-hit != 'true'
+        env:
+          VALE_VERSION: 3.14.1
+          VALE_CHECKSUM: ff2b49ffaa9dcd246fd5008f03ff67746d2790b75bf4d3657e2fb9530fb96db3
         run: |
           wget --quiet --output-document vale.tar.gz \
-            https://github.com/vale-cli/vale/releases/latest/download/vale_Linux_64-bit.tar.gz
+            https://github.com/vale-cli/vale/releases/download/v${VALE_VERSION}/vale_${VALE_VERSION}_Linux_64-bit.tar.gz
+          echo "${VALE_CHECKSUM}  vale.tar.gz" | sha256sum --check
           tar --extract --gzip --file vale.tar.gz vale
-          ./vale sync --config=./.config/.vale.ini
-          rm vale vale.tar.gz
+          sudo mv vale /usr/local/bin/vale
+          rm vale.tar.gz
+          vale sync --config=./.config/.vale.ini
       - name: Check prose style (Vale) with PR annotations
         uses: vale-cli/vale-action@v2
         with:
@@ -51,6 +65,7 @@ jobs:
           reporter: github-pr-review
           fail_on_error: true
           vale_flags: --config=./.config/.vale.ini
+          version: none
       - name: Check links
         uses: lycheeverse/lychee-action@v2.8.0
         with:
