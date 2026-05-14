@@ -21,12 +21,12 @@ const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: z.number().port()
+      validator: z.number().int().min(1).max(65535)
     }),
     database: configSection({
       host: configItem<string>({
         default: "localhost",
-        validator: z.string()
+        validator: z.hostname()
       })
     })
   },
@@ -47,7 +47,7 @@ const binds = [new EnvVarBind({ prefix: "MYAPP" })];
 ```
 
 With the prefix `MYAPP`, `MYAPP_PORT` sets `port` and `MYAPP_DATABASE_HOST` sets
-`database.host`. The prefix is stripped before lookup — your code still calls
+`database.host`. The prefix is stripped before lookup - your code still calls
 `config.get("app", "port")`.
 
 ## Variable naming
@@ -61,4 +61,4 @@ With the prefix `MYAPP`, `MYAPP_PORT` sets `port` and `MYAPP_DATABASE_HOST` sets
 ## Related
 
 - [`EnvVarBind` API reference](/reference/api/@config-bound.config-bound.bind.binds.envVar.Class.EnvVarBind)
-- [Use FileBind](./file-bind.md) — read config from a file instead
+- [Use FileBind](./file-bind.md) - read config from a file instead

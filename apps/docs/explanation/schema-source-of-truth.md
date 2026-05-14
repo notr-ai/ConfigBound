@@ -30,7 +30,7 @@ import { z } from "zod";
 const schema = {
   port: configItem<number>({
     default: 3000,
-    validator: z.number().port(),
+    validator: z.number().int().min(1).max(65535),
     example: 8080,
     description: 'The port the server listens on'
   })
@@ -41,7 +41,7 @@ There is no separate place to maintain these pieces of information. They live to
 
 ## The consequence: docs can't drift
 
-When the schema is the source of truth, documentation generated from it stays accurate by construction. There is no "remember to update the wiki" step — if the schema changes, the exported output changes with it.
+When the schema is the source of truth, documentation generated from it stays accurate by construction. There is no "remember to update the wiki" step—if the schema changes, the exported output changes with it.
 
 Compare the alternative: an env var table in a README, maintained by hand, that nobody updates when a default changes in production.
 
@@ -54,4 +54,4 @@ Because the schema already contains everything needed to describe the configurat
 - Powering IDE autocomplete or tooling
 - Building configuration UIs
 
-The schema does not need to change to support any of these use cases. The information is already there.
+The schema doesn't need to change to support any of these use cases. The information is already there.

@@ -10,7 +10,7 @@ Five concepts comprise ConfigBound: the **schema**, **binds**, **sections**, **e
 
 The schema is a plain TypeScript object you pass to `ConfigBound.createConfig()`. It describes every configuration value your application expects.
 
-Each top-level key is either a `configItem` — a single value — or a `configSection` — a named group of items.
+Each top-level key is either a `configItem` (a single value) or a `configSection` (a named group of items).
 
 ```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
@@ -19,13 +19,13 @@ import { z } from "zod";
 const config = await ConfigBound.createConfig({
   port: configItem<number>({
     default: 3000,
-    validator: z.number().port(),
+    validator: z.number().int().min(1).max(65535),
     description: 'The port the server listens on',
     example: 8080
   }),
   database: configSection({
-    host: configItem<string>({ default: 'localhost', validator: z.string() }),
-    password: configItem<string>({ validator: z.string().required(), sensitive: true })
+    host: configItem<string>({ default: 'localhost', validator: z.hostname() }),
+    password: configItem<string>({ validator: z.string().min(1), sensitive: true })
   })
 });
 ```
@@ -34,7 +34,7 @@ Each item carries everything needed to describe and validate that value: its typ
 
 ## Binds
 
-A bind is a source adapter. It knows how to look up a value by its dot-path key (e.g. `database.host`) and return whatever it finds from its underlying source — environment variables, a file, a secrets manager, or anything else.
+A bind is a source adapter. It knows how to look up a value by its dot-path key (e.g. `database.host`) and return whatever it finds from its underlying source—environment variables, a file, a secrets manager, or anything else.
 
 When you call `config.get()`, ConfigBound iterates the bind list in order and returns the first non-`undefined` result. This means bind order is meaningful: an `EnvVarBind` listed before a `FileBind` takes precedence.
 
@@ -62,7 +62,7 @@ When `createConfig()` processes the schema, it builds the internal runtime struc
 - Top-level `configItem` entries (those not inside a section) are grouped into an implicit section called `app`.
 - Each item within a section becomes an **Element**.
 
-This is why `config.get()` always takes two arguments — a section name and an element name:
+This is why `config.get()` always takes two arguments: a section name and an element name.
 
 ```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
@@ -77,7 +77,7 @@ const host = await config.get('database', 'host');      // named sections use th
 
 ## Elements
 
-An element is the unit of runtime behaviour for a single configuration value.
+An element is the unit of runtime behavior for a single configuration value.
 
 **Default validation.** When an element is constructed, its `default` value (if provided) is immediately validated against the Zod schema. This means a bad default is caught at startup, not when the value is first read.
 
@@ -93,17 +93,17 @@ An element is the unit of runtime behaviour for a single configuration value.
 
 `createConfig()` returns a `TypedConfigBound`, which wraps a `ConfigBound` and provides full TypeScript inference over the schema. The two main ways to read values are:
 
-- **`get(section, element)`** — returns the value or `undefined` if nothing is set and there is no default.
-- **`getOrThrow(section, element)`** — returns the value or throws if it is `undefined`.
+- **`get(section, element)`** - returns the value or `undefined` if nothing is set and there is no default.
+- **`getOrThrow(section, element)`** - returns the value or throws if it is `undefined`.
 
-Validation runs when a value is retrieved: the value from the bind is passed through the Zod validator before being returned. You can also validate all values upfront — at startup — using `validate()` or by passing `validateOnInit: true` to `createConfig()`:
+Validation runs when a value is retrieved: the value from the bind is passed through the Zod validator before being returned. You can also validate all values upfront at startup using `validate()` or by passing `validateOnInit: true` to `createConfig()`:
 
 ```typescript twoslash
 import { ConfigBound, configItem } from "@config-bound/config-bound";
 import { z } from "zod";
 // ---cut---
 const config = await ConfigBound.createConfig(
-  { port: configItem<number>({ validator: z.number().port().required() }) },
+  { port: configItem<number>({ validator: z.number().int().min(1).max(65535) }) },
   { validateOnInit: true }
 );
 ```

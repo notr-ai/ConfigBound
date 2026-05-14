@@ -101,8 +101,8 @@ export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
     if (options.validator) {
       const defaultResult = options.validator.safeParse(options.default);
       if (!defaultResult.success) {
-        const errorMessage = defaultResult.error.errors
-          .map((e) => `${e.path.join('.')}: ${e.message}`)
+        const errorMessage = defaultResult.error.issues
+          .map((e: z.ZodIssue) => `${e.path.join('.')}: ${e.message}`)
           .join('; ');
         throw new Error(`Invalid default value for config item: ${errorMessage}`);
       }
@@ -334,8 +334,8 @@ export class ConfigBound implements ConfigValueProvider {
         // Validate the value against the element's schema
         const validationResult = element.validator.safeParse(value);
         if (!validationResult.success) {
-          const errorMessage = validationResult.error.errors
-            .map((e) => `${e.path.join('.')}: ${e.message}`)
+          const errorMessage = validationResult.error.issues
+            .map((e: z.ZodIssue) => `${e.path.join('.')}: ${e.message}`)
             .join('; ');
           this.logger.error(
             `Value for ${sectionName}.${elementName} failed validation: ${errorMessage}`

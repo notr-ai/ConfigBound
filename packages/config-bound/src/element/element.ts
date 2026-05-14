@@ -73,8 +73,8 @@ export class Element<T> {
     if (defaultValue !== undefined) {
       const defaultValueResult = this.validator.safeParse(defaultValue);
       if (!defaultValueResult.success) {
-        const errorMessage = defaultValueResult.error.errors
-          .map((e) => `${e.path.join('.')}: ${e.message}`)
+        const errorMessage = defaultValueResult.error.issues
+          .map((e: z.ZodIssue) => `${e.path.join('.')}: ${e.message}`)
           .join('; ');
         throw new ConfigInvalidException(this.name, errorMessage);
       }

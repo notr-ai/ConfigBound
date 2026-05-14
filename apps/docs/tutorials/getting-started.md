@@ -2,7 +2,7 @@
 description: Install ConfigBound and create your first type-safe configuration in a TypeScript app.
 ---
 
-# Getting Started
+# Getting started
 
 This tutorial gets a minimal ConfigBound setup running in a TypeScript app.
 
@@ -27,12 +27,12 @@ const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: z.number().port()
+      validator: z.number().int().min(1).max(65535)
     }),
     server: configSection({
       host: configItem<string>({
         default: "localhost",
-        validator: z.string().hostname()
+        validator: z.hostname()
       })
     })
   },

@@ -6,7 +6,7 @@ description: Implement a custom bind to load ConfigBound configuration values fr
 
 A [bind](/reference/api/@config-bound.config-bound.bind.bind.Class.Bind) is a source adapter: it knows how to retrieve a value for a given element.
 
-The built-in binds ([`EnvVarBind`](./env-var-bind.md), [`FileBind`](./file-bind.md), [`StaticBind`](./static-bind.md)) cover environment variables, files, and in-memory values. When you need a different source that is not yet available, you can create your own.
+The built-in binds ([`EnvVarBind`](./env-var-bind.md), [`FileBind`](./file-bind.md), [`StaticBind`](./static-bind.md)) cover environment variables, files, and in-memory values. When you need a different source that isn't yet available, you can create your own.
 
 ## Steps
 
@@ -98,9 +98,9 @@ const config = await ConfigBound.createConfig(schema, {
 
 ## The factory pattern
 
-`Bind.retrieve()` returns a `Promise`, but ConfigBound resolves all values during `createConfig()` — not lazily on demand. The async `create()` factory is the recommended pattern: fetch everything from the upstream source up front, store the values in an in-memory `Map`, and let `retrieve()` read from it. This keeps individual value lookups fast and avoids redundant network calls.
+`Bind.retrieve()` returns a `Promise`, but ConfigBound resolves all values during `createConfig()`. The async `create()` factory is the recommended pattern: fetch everything from the upstream source up front, store the values in an in-memory `Map`, and let `retrieve()` read from it. This keeps individual value lookups fast and avoids redundant network calls.
 
-A practical consequence: if the upstream source is unavailable at startup, `create()` will throw before the config is created. Handle startup failures explicitly rather than letting them surface as missing config values later.
+A practical consequence: if the upstream source is unavailable at startup, `create()` throws before the config is created. Handle startup failures explicitly rather than letting them surface as missing config values later.
 
 ## Tradeoffs
 
@@ -113,6 +113,6 @@ The `package` scaffold sets `"private": true` in `package.json`. Set it to `fals
 
 ## Related
 
-- [`configbound generate bind`](/reference/cli/generate-bind) — scaffold the boilerplate
-- [`Bind` API reference](/reference/api/@config-bound.config-bound.bind.bind.Class.Bind)
-- [EnvVarBind](./env-var-bind.md), [FileBind](./file-bind.md), [StaticBind](./static-bind.md) — built-in binds for reference
+- [`configbound generate bind`](/reference/cli/generate-bind) - scaffold the boilerplate
+- [`Bind` API reference](/reference/api/@config-bound.config-bound.bind.bind.Class.Bind) - the `Bind` class
+- [EnvVarBind](./env-var-bind.md), [FileBind](./file-bind.md), [StaticBind](./static-bind.md) - built-in binds for reference

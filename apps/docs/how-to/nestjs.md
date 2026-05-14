@@ -26,17 +26,17 @@ export const AppConfig = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: z.number().port(),
+      validator: z.number().int().min(1).max(65535),
       description: 'Application server port'
     }),
     database: configSection({
       host: configItem<string>({
         default: 'localhost',
-        validator: z.string().hostname()
+        validator: z.hostname()
       }),
       port: configItem<number>({
         default: 5432,
-        validator: z.number().port()
+        validator: z.number().int().min(1).max(65535)
       })
     })
   },

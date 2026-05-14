@@ -29,7 +29,7 @@ async function main() {
       }),
       host: configItem({
         default: '0.0.0.0',
-        validator: z.string().ip(),
+        validator: z.ipv4(),
         description: 'Application server host'
       }),
       database: configSection(

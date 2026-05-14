@@ -42,7 +42,7 @@ const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: z.number().port(),
+      validator: z.number().int().min(1).max(65535),
       description: "Application server port",
       example: 8080
     }),
@@ -55,16 +55,16 @@ const config = await ConfigBound.createConfig(
       {
         host: configItem<string>({
           default: "localhost",
-          validator: z.string().hostname(),
+          validator: z.hostname(),
           description: "Database host"
         }),
         port: configItem<number>({
           default: 5432,
-          validator: z.number().port(),
+          validator: z.number().int().min(1).max(65535),
           description: "Database port"
         }),
         password: configItem<string>({
-          validator: z.string().required(),
+          validator: z.string().min(1),
           description: "Database password",
           sensitive: true
         })

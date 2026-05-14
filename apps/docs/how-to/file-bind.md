@@ -27,12 +27,12 @@ const config = await ConfigBound.createConfig(
   {
     port: configItem<number>({
       default: 3000,
-      validator: z.number().port()
+      validator: z.number().int().min(1).max(65535)
     }),
     database: configSection({
       host: configItem<string>({
         default: "localhost",
-        validator: z.string()
+        validator: z.hostname()
       })
     })
   },
@@ -96,8 +96,7 @@ new FileBind({ filePath: "./config.yaml", rootKey: "wrapper" })
 
 ## Reload the file at runtime
 
-The file is read once at construction. Call `reload()` to re-read it — useful
-when the file changes while the process is running:
+The file is read once at construction. Call `reload()` to re-read it to pick up the latest file changes while the process is running:
 
 ```typescript twoslash
 import { FileBind } from "@config-bound/config-bound";
@@ -115,5 +114,5 @@ priority order, or the element's `default`, takes over.
 ## Related
 
 - [`FileBind` API reference](/reference/api/@config-bound.config-bound.bind.binds.file.Class.FileBind)
-- [Use EnvVarBind](./env-var-bind.md) — read config from environment variables
-- [Use StaticBind](./static-bind.md) — supply config values directly in code
+- [Use EnvVarBind](./env-var-bind.md) - read config from environment variables
+- [Use StaticBind](./static-bind.md) - supply config values directly in code

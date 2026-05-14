@@ -1,7 +1,6 @@
 import { Section } from '@config-bound/config-bound/section';
 import { Element } from '@config-bound/config-bound/element';
 import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 
 /**
  * Represents a single configuration element in the exported schema
@@ -39,36 +38,36 @@ export interface ExportedSchema {
  */
 function extractZodType(validator: z.ZodType): string {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const typeName = (validator as any)._def.typeName;
+  const typeName = (validator as any)._def?.type;
 
   // Handle ZodOptional and ZodNullable wrappers
-  if (typeName === 'ZodOptional' || typeName === 'ZodNullable') {
+  if (typeName === 'optional' || typeName === 'nullable') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return extractZodType((validator as any)._def.innerType);
   }
 
   // Map common Zod type names to readable types
   switch (typeName) {
-    case 'ZodString':
+    case 'string':
       return 'string';
-    case 'ZodNumber':
+    case 'number':
       return 'number';
-    case 'ZodBoolean':
+    case 'boolean':
       return 'boolean';
-    case 'ZodEnum': {
+    case 'enum': {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const enumValues = (validator as any)._def.values;
-      return enumValues.map((v: string) => `'${v}'`).join(' | ');
+      const enumValues = Object.values((validator as any)._def.entries ?? {});
+      return enumValues.map((v) => String(v)).join(' | ');
     }
-    case 'ZodLiteral':
+    case 'literal':
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return `'${(validator as any)._def.value}'`;
-    case 'ZodArray':
+      return String((validator as any)._def.value);
+    case 'array':
       return 'array';
-    case 'ZodObject':
+    case 'object':
       return 'object';
-    case 'ZodUnion':
-    case 'ZodDiscriminatedUnion': {
+    case 'union':
+    case 'discriminatedUnion': {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const options = (validator as any)._def.options;
       if (options) {
@@ -76,12 +75,12 @@ function extractZodType(validator: z.ZodType): string {
       }
       return 'union';
     }
-    case 'ZodAny':
+    case 'any':
       return 'any';
-    case 'ZodUnknown':
+    case 'unknown':
       return 'unknown';
     default:
-      return typeName?.replace('Zod', '').toLowerCase() || 'unknown';
+      return typeName || 'unknown';
   }
 }
 
@@ -89,9 +88,9 @@ function extractZodType(validator: z.ZodType): string {
  * Extracts the validation schema from a Zod validator as JSON Schema
  */
 function extractZodValidation(validator: z.ZodType): unknown {
-  return zodToJsonSchema(validator, {
-    target: 'openApi3',
-    $refStrategy: 'none'
+  return z.toJSONSchema(validator, {
+    target: 'openapi-3.0',
+    reused: 'inline'
   });
 }
 
