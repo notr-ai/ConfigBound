@@ -88,7 +88,6 @@ jobs:
           fail_on_error: true
           vale_flags: --config=./.config/.vale.ini --glob=!**/reference/**
           version: 3.14.1
-          level: warning
 
   link-check:
     runs-on: ubuntu-latest
