@@ -57,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v8.0.1
         with:
           name: docs
-          path: .
+          path: apps/docs
       - name: Cache Vale styles
         id: cache-vale-styles
         uses: actions/cache@v5
@@ -98,7 +98,7 @@ jobs:
         uses: actions/download-artifact@v8.0.1
         with:
           name: docs
-          path: .
+          path: apps/docs
       - name: Check links
         uses: lycheeverse/lychee-action@v2.8.0
         with:
