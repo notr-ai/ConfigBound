@@ -48,6 +48,9 @@ jobs:
   vale-check:
     runs-on: ubuntu-latest
     needs: docs-build
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -85,6 +88,7 @@ jobs:
           fail_on_error: true
           vale_flags: --config=./.config/.vale.ini --glob=!**/reference/**
           version: 3.14.1
+          level: warning
 
   link-check:
     runs-on: ubuntu-latest
