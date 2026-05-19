@@ -30,7 +30,8 @@ export class ConfigBoundModule {
           name: options.name,
           binds: options.binds,
           logger: options.logger,
-          validateOnInit: options.validateOnInit ?? false
+          validateOnInit: options.validateOnInit ?? false,
+          cacheMode: options.cacheMode
         });
       }
     };
@@ -55,7 +56,8 @@ export class ConfigBoundModule {
           name: configOptions.name,
           binds: configOptions.binds,
           logger: configOptions.logger,
-          validateOnInit: configOptions.validateOnInit ?? false
+          validateOnInit: configOptions.validateOnInit ?? false,
+          cacheMode: configOptions.cacheMode
         });
       },
       inject: [CONFIG_BOUND_OPTIONS]

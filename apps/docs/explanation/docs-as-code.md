@@ -30,9 +30,9 @@ This isn't about eliminating human authorship. Some content can be derived from 
 
 Each of these creates a feedback loop. If a TSDoc comment is missing, the API reference is incomplete and that gap is visible. If a link breaks, CI catches it. The docs stay accurate because the system makes inaccuracy visible.
 
-<!-- vale Google.Headings = NO =>
+<!-- vale Google.Headings = NO -->
 ## The limits of Docs as Code
-<-- vale Google.Headings = YES -->
+<!-- vale Google.Headings = YES -->
 
 Docs as Code addresses structured, factual content. It doesn't eliminate the need for human-authored explanation. Tutorials, conceptual overviews, and design rationale require a person to write them. No amount of code introspection produces a good getting-started guide.
 

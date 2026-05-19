@@ -87,7 +87,9 @@ export class Element<T> {
   }
 
   /**
-   * Sets the parent section name
+   * Sets the parent section name.
+   *
+   * @param sectionName - Name of the section this element belongs to.
    */
   setParentSection(sectionName: string): void {
     this.sectionName = sectionName;
@@ -102,7 +104,9 @@ export class Element<T> {
   }
 
   /**
-   * Returns true if the Element is required
+   * Returns true if the Element is required.
+   *
+   * @returns `true` when no default value exists and the validator is not optional.
    */
   isRequired(): boolean {
     return !this.validator.isOptional();

@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  ConfigSchema,
-  TypedConfigBound,
-  InferConfigType
+  type CacheRefreshOptions,
+  type ConfigSchema,
+  type InferConfigType,
+  type TypedConfigBound
 } from '@config-bound/config-bound';
 import { Bind } from '@config-bound/config-bound/bind';
 import { Section } from '@config-bound/config-bound/section';
@@ -60,6 +61,52 @@ export class ConfigBoundService<T extends ConfigSchema = ConfigSchema> {
     E extends keyof InferConfigType<T>[K]
   >(sectionName: K, elementName: E): Promise<InferConfigType<T>[K][E]> {
     return this.configBound.getOrThrow(sectionName, elementName);
+  }
+
+  /**
+   * Reads a configuration value from the in-memory cache only.
+   *
+   * @param sectionName - Section containing the requested element.
+   * @param elementName - Element name to read from cache.
+   * @returns Cached value when present; otherwise `undefined`.
+   */
+  getFromCache<
+    K extends keyof InferConfigType<T>,
+    E extends keyof InferConfigType<T>[K]
+  >(sectionName: K, elementName: E): InferConfigType<T>[K][E] | undefined {
+    return this.configBound.getFromCache(sectionName, elementName);
+  }
+
+  /**
+   * Reads a configuration value from cache and throws when it is undefined.
+   *
+   * @param sectionName - Section containing the requested element.
+   * @param elementName - Element name to read from cache.
+   * @returns Cached value.
+   */
+  getOrThrowFromCache<
+    K extends keyof InferConfigType<T>,
+    E extends keyof InferConfigType<T>[K]
+  >(sectionName: K, elementName: E): InferConfigType<T>[K][E] {
+    return this.configBound.getOrThrowFromCache(sectionName, elementName);
+  }
+
+  /**
+   * Populates the cache for all configured elements.
+   *
+   * @param options - Cache population behavior options.
+   */
+  async populateCache(options?: CacheRefreshOptions): Promise<void> {
+    await this.configBound.populateCache(options);
+  }
+
+  /**
+   * Indicates whether cached reads are currently available.
+   *
+   * @returns `true` when cache population has completed.
+   */
+  isCacheReady(): boolean {
+    return this.configBound.isCacheReady();
   }
 
   async validate(): Promise<void> {
