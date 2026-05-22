@@ -9,3 +9,18 @@ ignore:
   # No fix available in markdownlint-cli2@0.22.0 (latest): smol-toml DoS in dev tooling only
   # https://github.com/advisories/GHSA-v3rj-xjv7-4jmq
   - vulnerability: GHSA-v3rj-xjv7-4jmq
+
+  # Go stdlib vulnerabilities from the system-installed Go binary on the CI runner (ubuntu-latest
+  # ships with Go pre-installed). This project contains no Go source or binaries — these findings
+  # are not part of the project's dependency surface and are not actionable here.
+  - package:
+      name: stdlib
+      type: go-module
+
+  # brace-expansion vulnerability in typedoc -> minimatch -> brace-expansion (dev-only, not
+  # shipped in any published package). No fix available via typedoc upgrade at time of writing.
+  # https://github.com/advisories/GHSA-jxxr-4gwj-5jf2
+  - vulnerability: GHSA-jxxr-4gwj-5jf2
+    package:
+      name: brace-expansion
+      type: npm
