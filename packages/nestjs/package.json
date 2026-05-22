@@ -2,19 +2,30 @@
   "name": "@config-bound/nestjs",
   "version": "0.3.0",
   "description": "NestJS integration for ConfigBound configuration library",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
+  "sideEffects": false,
+  "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
+  "engines": { "node": ">=20" },
   "scripts": {
-    "build": "tsc",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
     "clean": "rimraf dist",
-    "test": "jest",
+    "test": "jest --config jest.config.cjs",
     "lint": "eslint src/**/*.ts --fix",
     "lint:ci": "eslint src/**/*.ts",
     "format": "prettier --write --config ../../.config/.prettierrc --ignore-path ../../.config/.prettierignore src/**/*.ts",
@@ -57,6 +68,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/notr-ai/ConfigBound"
+    "url": "git+https://github.com/notr-ai/ConfigBound.git"
   }
 }

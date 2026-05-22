@@ -4,71 +4,117 @@
   "description": "A config registration library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/notr-ai/ConfigBound"
+    "url": "git+https://github.com/notr-ai/ConfigBound.git"
   },
+  "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
     "clean": "rimraf dist coverage",
-    "test": "jest",
+    "test": "jest --config jest.config.cjs",
     "lint": "eslint src/**/*.ts --fix",
     "lint:ci": "eslint src/**/*.ts",
     "format": "prettier --write --config ../../.config/.prettierrc --ignore-path ../../.config/.prettierignore src/**/*.ts",
     "format:ci": "prettier --check --config ../../.config/.prettierrc --ignore-path ../../.config/.prettierignore src/**/*.ts"
   },
-  "main": "./dist/configBound.js",
-  "types": "./dist/configBound.d.ts",
+  "main": "./dist/configBound.cjs",
+  "module": "./dist/configBound.mjs",
+  "types": "./dist/configBound.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/configBound.d.ts",
-      "require": "./dist/configBound.js",
-      "import": "./dist/configBound.js"
-    },
-    "./createConfig": {
-      "types": "./dist/createConfig.d.ts",
-      "require": "./dist/createConfig.js",
-      "import": "./dist/createConfig.js"
+      "import": {
+        "types": "./dist/configBound.d.mts",
+        "default": "./dist/configBound.mjs"
+      },
+      "require": {
+        "types": "./dist/configBound.d.cts",
+        "default": "./dist/configBound.cjs"
+      }
     },
     "./section": {
-      "types": "./dist/section/section.d.ts",
-      "require": "./dist/section/section.js",
-      "import": "./dist/section/section.js"
+      "import": {
+        "types": "./dist/section/section.d.mts",
+        "default": "./dist/section/section.mjs"
+      },
+      "require": {
+        "types": "./dist/section/section.d.cts",
+        "default": "./dist/section/section.cjs"
+      }
     },
     "./element": {
-      "types": "./dist/element/element.d.ts",
-      "require": "./dist/element/element.js",
-      "import": "./dist/element/element.js"
+      "import": {
+        "types": "./dist/element/element.d.mts",
+        "default": "./dist/element/element.mjs"
+      },
+      "require": {
+        "types": "./dist/element/element.d.cts",
+        "default": "./dist/element/element.cjs"
+      }
     },
     "./bind": {
-      "types": "./dist/bind/bind.d.ts",
-      "require": "./dist/bind/bind.js",
-      "import": "./dist/bind/bind.js"
+      "import": {
+        "types": "./dist/bind/bind.d.mts",
+        "default": "./dist/bind/bind.mjs"
+      },
+      "require": {
+        "types": "./dist/bind/bind.d.cts",
+        "default": "./dist/bind/bind.cjs"
+      }
     },
     "./bind/configValueProvider": {
-      "types": "./dist/bind/configValueProvider.d.ts",
-      "require": "./dist/bind/configValueProvider.js",
-      "import": "./dist/bind/configValueProvider.js"
+      "import": {
+        "types": "./dist/bind/configValueProvider.d.mts",
+        "default": "./dist/bind/configValueProvider.mjs"
+      },
+      "require": {
+        "types": "./dist/bind/configValueProvider.d.cts",
+        "default": "./dist/bind/configValueProvider.cjs"
+      }
     },
     "./bind/binds/envVar": {
-      "types": "./dist/bind/binds/envVar.d.ts",
-      "require": "./dist/bind/binds/envVar.js",
-      "import": "./dist/bind/binds/envVar.js"
+      "import": {
+        "types": "./dist/bind/binds/envVar.d.mts",
+        "default": "./dist/bind/binds/envVar.mjs"
+      },
+      "require": {
+        "types": "./dist/bind/binds/envVar.d.cts",
+        "default": "./dist/bind/binds/envVar.cjs"
+      }
     },
     "./bind/binds/file": {
-      "types": "./dist/bind/binds/file.d.ts",
-      "require": "./dist/bind/binds/file.js",
-      "import": "./dist/bind/binds/file.js"
+      "import": {
+        "types": "./dist/bind/binds/file.d.mts",
+        "default": "./dist/bind/binds/file.mjs"
+      },
+      "require": {
+        "types": "./dist/bind/binds/file.d.cts",
+        "default": "./dist/bind/binds/file.cjs"
+      }
     },
     "./bind/binds/static": {
-      "types": "./dist/bind/binds/static.d.ts",
-      "require": "./dist/bind/binds/static.js",
-      "import": "./dist/bind/binds/static.js"
+      "import": {
+        "types": "./dist/bind/binds/static.d.mts",
+        "default": "./dist/bind/binds/static.mjs"
+      },
+      "require": {
+        "types": "./dist/bind/binds/static.d.cts",
+        "default": "./dist/bind/binds/static.cjs"
+      }
     },
     "./utilities": {
-      "types": "./dist/utilities/index.d.ts",
-      "require": "./dist/utilities/index.js",
-      "import": "./dist/utilities/index.js"
+      "import": {
+        "types": "./dist/utilities/index.d.mts",
+        "default": "./dist/utilities/index.mjs"
+      },
+      "require": {
+        "types": "./dist/utilities/index.d.cts",
+        "default": "./dist/utilities/index.cjs"
+      }
     }
   },
+  "sideEffects": false,
+  "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
+  "engines": { "node": ">=20" },
   "typedocOptions": {
     "entryPoints": [
       "./src/configBound.ts",

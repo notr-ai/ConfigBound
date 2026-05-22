@@ -1,8 +1,8 @@
 {
   "extends": "@config-bound/typescript-config/package.tsconfig.json",
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "Preserve",
+    "moduleResolution": "bundler",
     "target": "ES2024",
     "lib": ["ES2024"],
     "outDir": "./dist",

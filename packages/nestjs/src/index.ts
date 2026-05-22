@@ -1,6 +1,6 @@
 export { ConfigBoundModule } from './config-bound.module';
 export { ConfigBoundService } from './config-bound.service';
-export {
+export type {
   ConfigBoundModuleOptions,
   ConfigBoundModuleAsyncOptions,
   ConfigBoundOptionsFactory

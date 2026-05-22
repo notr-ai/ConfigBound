@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/notr-ai/ConfigBound"
+    "url": "git+https://github.com/notr-ai/ConfigBound.git"
   },
   "scripts": {
     "build": "turbo run build",
@@ -24,7 +24,10 @@
     "docs:preview": "turbo run docs:preview --filter=@config-bound/docs",
     "clean": "rimraf .turbo",
     "clean:all": "turbo run clean",
-    "check": "npm run format:ci && npm run lint:ci && npm run test",
+    "typecheck": "turbo run typecheck",
+    "publint": "turbo run build --filter=@config-bound/config-bound --filter=@config-bound/nestjs --filter=@config-bound/schema-export && publint packages/config-bound && publint packages/nestjs && publint packages/schema-export",
+    "attw": "attw --pack packages/config-bound && attw --pack packages/nestjs && attw --pack packages/schema-export",
+    "check": "npm run format:ci && npm run lint:ci && npm run typecheck && npm run test",
     "format": "turbo run format && npm run lint:markdown",
     "format:ci": "turbo run format:ci && npm run lint:markdown:ci",
     "lint": "turbo run lint && npm run lint:markdown",
@@ -47,6 +50,7 @@
     "new:bind": "node scripts/new-bind.mjs"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@changesets/cli": "^2.30.0",
     "@eslint/js": "^9.39.1",
     "@types/jest": "^30.0.0",
@@ -61,8 +65,10 @@
     "jest-runner-groups": "^2.2.0",
     "markdownlint-cli2": "^0.22.0",
     "prettier": "3.8.2",
+    "publint": "^0.3.21",
     "rimraf": "^6.1.0",
     "ts-jest": "^29.4.5",
+    "tsdown": "^0.22.0",
     "turbo": "^2.9.6",
     "typescript": "^6.0.0",
     "typescript-eslint": "^8.51.8"
