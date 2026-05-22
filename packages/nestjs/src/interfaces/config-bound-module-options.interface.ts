@@ -1,5 +1,5 @@
 import { ModuleMetadata, Type } from '@nestjs/common';
-import { ConfigSchema } from '@config-bound/config-bound';
+import { type CacheMode, type ConfigSchema } from '@config-bound/config-bound';
 import { Bind } from '@config-bound/config-bound/bind';
 
 export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
@@ -21,11 +21,24 @@ export interface Logger {
 export interface ConfigBoundModuleOptions<
   T extends ConfigSchema = ConfigSchema
 > {
+  /** Declarative schema that defines sections, elements, defaults, and validators. */
   schema: T;
+  /** Optional instance name; defaults to `app` when omitted. */
   name?: string;
+  /** Value sources consulted in bind order when resolving configuration values. */
   binds?: Bind[];
+  /** Optional logger implementation used by ConfigBound internals. */
   logger?: Logger;
+  /** Validates values during module initialization when true. */
   validateOnInit?: boolean;
+  /**
+   * Cache initialization strategy. Defaults to `eager`.
+   *
+   * - `eager`: Cache is populated during module initialization. Allows synchronous reads via `getFromCache()` immediate useful in NestJS constructors or other sync-only call sites that cannot `await`.
+   * - `manual`: Cache is not populated until you explicitly call `populateCache()`. Use this when you only read config asynchronously via `get()` or `getOrThrow()` and want to avoid the upfront startup cost.
+   */
+  cacheMode?: CacheMode;
+  /** Registers the module globally in Nest when true. */
   isGlobal?: boolean;
 }
 

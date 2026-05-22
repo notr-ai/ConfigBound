@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { ConfigBound, configItem, configSection } from './configBound';
 import { Section } from './section/section';
-import { SectionExistsException } from './utilities/errors';
+import { ConfigInvalidException, SectionExistsException } from './utilities/errors';
 import { ConsoleLogger, NullLogger } from './utilities/logger';
 import { EnvVarBind } from './bind/binds/envVar';
 
@@ -270,6 +270,61 @@ describe('ConfigBound', () => {
       const sections = config.getSections();
       expect(sections).toHaveLength(2);
       expect(sections.map((s) => s.name).sort()).toEqual(['app', 'database']);
+    });
+
+    it('should preload cache during createConfig', async () => {
+      const config = await ConfigBound.createConfig({
+        port: configItem({
+          default: 3000,
+          validator: z.number()
+        })
+      });
+
+      expect(config.isCacheReady()).toBe(true);
+      expect(config.getFromCache('app', 'port')).toBe(3000);
+      expect(config.getOrThrowFromCache('app', 'port')).toBe(3000);
+    });
+
+    it('should allow rebuilding cache after binds are added', async () => {
+      process.env.APP_PORT = '8081';
+      const config = await ConfigBound.createConfig({
+        port: configItem({
+          default: 3000,
+          validator: z.number()
+        })
+      });
+
+      config.addBind(new EnvVarBind());
+
+      expect(config.isCacheReady()).toBe(false);
+      expect(() => config.getFromCache('app', 'port')).toThrow(ConfigInvalidException);
+
+      await config.populateCache();
+
+      expect(config.isCacheReady()).toBe(true);
+      expect(config.getFromCache('app', 'port')).toBe(8081);
+    });
+
+    it('should require manual cache refresh in manual cache mode', async () => {
+      const config = await ConfigBound.createConfig(
+        {
+          port: configItem({
+            default: 3000,
+            validator: z.number()
+          })
+        },
+        { cacheMode: 'manual' }
+      );
+
+      expect(config.isCacheReady()).toBe(false);
+      expect(() => config.getFromCache('app', 'port')).toThrow(
+        'Configuration cache is not ready'
+      );
+
+      await config.populateCache();
+
+      expect(config.isCacheReady()).toBe(true);
+      expect(config.getFromCache('app', 'port')).toBe(3000);
     });
   });
 

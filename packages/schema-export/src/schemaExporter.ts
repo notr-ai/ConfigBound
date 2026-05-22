@@ -34,7 +34,10 @@ export interface ExportedSchema {
 }
 
 /**
- * Extracts type information from a Zod schema
+ * Extracts a human-readable type string from a Zod schema.
+ *
+ * @param validator - Zod validator to inspect.
+ * @returns Human-readable type string.
  */
 function extractZodType(validator: z.ZodType): string {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -85,7 +88,10 @@ function extractZodType(validator: z.ZodType): string {
 }
 
 /**
- * Extracts the validation schema from a Zod validator as JSON Schema
+ * Converts a Zod validator to a JSON Schema representation.
+ *
+ * @param validator - Zod validator to convert.
+ * @returns JSON Schema object.
  */
 function extractZodValidation(validator: z.ZodType): unknown {
   return z.toJSONSchema(validator, {
@@ -95,7 +101,10 @@ function extractZodValidation(validator: z.ZodType): unknown {
 }
 
 /**
- * Exports an Element to the external schema format
+ * Exports an Element to the external schema format.
+ *
+ * @param element - Element to export.
+ * @returns Exported element representation.
  */
 export function exportElement(element: Element<unknown>): ExportedElement {
   return {
@@ -111,9 +120,11 @@ export function exportElement(element: Element<unknown>): ExportedElement {
 }
 
 /**
- * Exports a Section to the external schema format
- * @param section - The section to export
- * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
+ * Exports a Section to the external schema format.
+ *
+ * @param section - The section to export.
+ * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false).
+ * @returns Exported section representation.
  */
 export function exportSection(
   section: Section,
@@ -132,10 +143,12 @@ export function exportSection(
 }
 
 /**
- * Exports the complete schema to a structured format
- * @param name - The name of the configuration
- * @param sections - Array of sections to export
- * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false)
+ * Exports the complete schema to a structured format.
+ *
+ * @param name - Name of the configuration.
+ * @param sections - Sections to include in the export.
+ * @param includeOmitted - Whether to include elements marked with omitFromSchema (default: false).
+ * @returns Exported schema representation.
  */
 export function exportSchema(
   name: string,

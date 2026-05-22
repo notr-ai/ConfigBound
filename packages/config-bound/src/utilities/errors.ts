@@ -43,6 +43,12 @@ export abstract class ConfigValueException extends Error {
  * An error that occurs when a {@link Element Element} is unset.
  */
 export class ConfigUnsetException extends ConfigValueException {
+  /**
+   * Returns the base error message for an unset element.
+   *
+   * @param elementName - Name of the unset element.
+   * @returns Base error message string.
+   */
   protected getBaseMessage(elementName: string): string {
     return `Value unset for ${elementName}`;
   }
@@ -52,6 +58,12 @@ export class ConfigUnsetException extends ConfigValueException {
  * An error that occurs when a {@link Element Element} is invalid.
  */
 export class ConfigInvalidException extends ConfigValueException {
+  /**
+   * Returns the base error message for an invalid element value.
+   *
+   * @param elementName - Name of the element with an invalid value.
+   * @returns Base error message string.
+   */
   protected getBaseMessage(elementName: string): string {
     return `Invalid value for ${elementName}`;
   }
