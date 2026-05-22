@@ -1,5 +1,18 @@
 # @config-bound/nestjs
 
+## 0.3.0
+
+### Minor Changes
+
+- 0a6960f: Add synchronous cache API for constructor-safe config reads.
+
+  Introduces `getFromCache()`, `getOrThrowFromCache()`, `populateCache()`, and `isCacheReady()` on both `TypedConfigBound` and `ConfigBoundService`. A `cacheMode` option (`'eager' | 'manual'`) controls whether the cache is populated automatically at startup (`eager`, default) or on demand (`manual`). This enables config reads in NestJS constructors and other sync-only call sites that cannot `await`.
+
+### Patch Changes
+
+- Updated dependencies [0a6960f]
+  - @config-bound/config-bound@0.3.0
+
 ## 0.2.0
 
 ### Patch Changes
