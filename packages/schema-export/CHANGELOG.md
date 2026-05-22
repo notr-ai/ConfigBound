@@ -1,5 +1,12 @@
 # @config-bound/schema-export
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [0a6960f]
+  - @config-bound/config-bound@0.3.0
+
 ## 0.1.1
 
 ### Patch Changes
