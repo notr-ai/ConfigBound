@@ -12,7 +12,7 @@ This project uses [Changesets](https://github.com/changesets/changesets) for ver
 ```bash
 # Make your changes
 # Then add a changeset
-  npm run changeset
+  pnpm run changeset
 # Select packages
 # If you are...
 # ...fixing a bug, choose "patch"
@@ -29,7 +29,7 @@ This creates a changeset file in `.changeset/`
 To update package versions and generate changelogs:
 
 ```bash
-npm run version-packages
+pnpm run version-packages
 ```
 
 This will:
@@ -44,7 +44,7 @@ This will:
 To publish packages to npm:
 
 ```bash
-npm run release
+pnpm run release
 ```
 
 This will:

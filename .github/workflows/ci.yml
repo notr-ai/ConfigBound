@@ -12,37 +12,48 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
       - name: Cache turbo build setup
         uses: actions/cache@v5
         with:
           path: ./.turbo
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-turbo-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-turbo-${{ hashFiles('**/pnpm-lock.yaml') }}-
             ${{ runner.os }}-turbo-
-      - uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: './package-lock.json'
-      - name: Install npm packages
-        id: npm-ci
-        run: npm ci --no-fund
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Check Formatting
         id: fmt
-        run: npx turbo format:ci
+        run: pnpm run format:ci
+
       - name: Lint
         id: lint
-        run: npx turbo lint:ci
+        run: pnpm run lint:ci
+
       - name: Build
         id: build
-        run: npx turbo build
+        run: pnpm run build
+
       - name: Run Unit Tests
         id: test
-        run: npx turbo test
+        run: pnpm run test
+
       - name: Examples
         id: examples
-        run: npm run examples
+        run: pnpm run examples
 
   security-checks:
     runs-on: ubuntu-latest
@@ -50,13 +61,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
       - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: './package-lock.json'
-      - name: Install npm packages
-        run: npm ci --no-fund
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Security Scan
         id: scan

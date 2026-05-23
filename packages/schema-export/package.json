@@ -43,20 +43,20 @@
   "author": "Robert Keyser",
   "license": "MIT",
   "dependencies": {
-    "@config-bound/config-bound": "0.3.0",
+    "@config-bound/config-bound": "workspace:*",
     "js-yaml": "^4.1.0",
     "zod": "^4.4.1"
   },
   "devDependencies": {
-    "@config-bound/eslint-config": "*",
-    "@types/jest": "^30.0.0",
+    "@config-bound/eslint-config": "workspace:*",
+    "@types/jest": "catalog:",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^24.10.0",
-    "eslint": "^9.39.1",
-    "jest": "^30.2.0",
-    "rimraf": "^6.1.0",
-    "ts-jest": "^29.4.5",
-    "typescript": "^6.0.0"
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "jest": "catalog:",
+    "rimraf": "catalog:",
+    "ts-jest": "catalog:",
+    "typescript": "catalog:"
   },
   "publishConfig": {
     "access": "public",

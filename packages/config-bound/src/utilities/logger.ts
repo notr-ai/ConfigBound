@@ -32,7 +32,8 @@ export type LogMethods = {
  * A logger interface that ensures all log levels are implemented except for trace
  */
 export interface Logger
-  extends Partial<Pick<LogMethods, 'trace' | 'silent'>>,
+  extends
+    Partial<Pick<LogMethods, 'trace' | 'silent'>>,
     Omit<LogMethods, 'trace' | 'silent'> {
   logLevels: LogLevel[];
 }

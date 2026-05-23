@@ -18,7 +18,7 @@
   "description": "Examples for ConfigBound",
   "private": true,
   "dependencies": {
-    "@config-bound/config-bound": "file:../packages/config-bound",
-    "@config-bound/schema-export": "file:../packages/schema-export"
+    "@config-bound/config-bound": "workspace:*",
+    "@config-bound/schema-export": "workspace:*"
   }
 }
