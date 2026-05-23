@@ -25,7 +25,7 @@ import {
   configEnum,
   configSection
 } from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound';
+import { EnvVarBind } from '@config-bound/config-bound/binds/env';
 import { z } from 'zod';
 
 // Define your configuration schema with full type safety
@@ -84,8 +84,8 @@ For advanced use cases where you need fine-grained control over construction, yo
 ```typescript
 import { ConfigBound } from '@config-bound/config-bound';
 import { Section } from '@config-bound/config-bound/section/section';
-import { Element } from '@config-bound/config-bound/element/element';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+import { Element } from '@config-bound/config-bound/element';
+import { EnvVarBind } from '@config-bound/config-bound/binds/env';
 
 // Create configuration elements
 const portElement = new Element<number>('port', 'Application port', 3000);
@@ -181,8 +181,8 @@ Use `StaticBind` to inject values directly in code while still participating in 
 
 ```typescript
 import { ConfigBound, configItem } from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
-import { StaticBind } from '@config-bound/config-bound/bind/binds/static';
+import { EnvVarBind } from '@config-bound/config-bound/binds/env';
+import { StaticBind } from '@config-bound/config-bound/binds/static';
 import { z } from 'zod';
 
 const config = ConfigBound.createConfig(

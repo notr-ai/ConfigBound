@@ -110,6 +110,36 @@
         "types": "./dist/utilities/index.d.cts",
         "default": "./dist/utilities/index.cjs"
       }
+    },
+    "./binds/env": {
+      "import": {
+        "types": "./dist/bind/binds/envVar.d.mts",
+        "default": "./dist/bind/binds/envVar.mjs"
+      },
+      "require": {
+        "types": "./dist/bind/binds/envVar.d.cts",
+        "default": "./dist/bind/binds/envVar.cjs"
+      }
+    },
+    "./binds/file": {
+      "import": {
+        "types": "./dist/bind/binds/file.d.mts",
+        "default": "./dist/bind/binds/file.mjs"
+      },
+      "require": {
+        "types": "./dist/bind/binds/file.d.cts",
+        "default": "./dist/bind/binds/file.cjs"
+      }
+    },
+    "./binds/static": {
+      "import": {
+        "types": "./dist/bind/binds/static.d.mts",
+        "default": "./dist/bind/binds/static.mjs"
+      },
+      "require": {
+        "types": "./dist/bind/binds/static.d.cts",
+        "default": "./dist/bind/binds/static.cjs"
+      }
     }
   },
   "sideEffects": false,

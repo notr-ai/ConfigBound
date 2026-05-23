@@ -15,7 +15,7 @@
     "clean": "rimraf .turbo",
     "clean:all": "turbo run clean",
     "typecheck": "turbo run typecheck",
-    "publint": "turbo run build --filter=@config-bound/config-bound --filter=@config-bound/nestjs --filter=@config-bound/schema-export && publint packages/config-bound && publint packages/nestjs && publint packages/schema-export",
+    "publint": "publint packages/config-bound && publint packages/nestjs && publint packages/schema-export",
     "attw": "attw --pack packages/config-bound && attw --pack packages/nestjs && attw --pack packages/schema-export",
     "check": "pnpm run format:ci && pnpm run lint:ci && pnpm run typecheck && pnpm run test",
     "format": "turbo run format && pnpm run lint:markdown",

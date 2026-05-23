@@ -145,15 +145,15 @@ export type InferConfigType<T> = ExtractSections<T> &
  * Creates a type-safe configuration item.
  * This helper provides better type inference and makes the schema more readable.
  *
+ * @param options - Configuration item definition including default, validator, description, and example.
+ * @returns The same options object, typed as {@link ConfigItem}.
  * @example
  * ```typescript
- * const config = await ConfigBound.createConfig({
- *   port: configItem<number>({
- *     default: 3000,
- *     validator: z.number().int().min(0).max(65535),
- *     description: 'Server port',
- *     example: 8080
- *   })
+ * const port = configItem({
+ *   default: 3000,
+ *   validator: z.number().int().min(0).max(65535),
+ *   description: 'Server port',
+ *   example: 8080
  * });
  * ```
  */
@@ -806,6 +806,9 @@ export class ConfigBound implements ConfigValueProvider {
    * Creates a ConfigBound instance from a declarative schema with full type safety.
    * This is the recommended way to create configuration objects.
    *
+   * @param schema - Declarative configuration schema.
+   * @param options - Optional name, binds, logger, and cache mode.
+   * @returns A fully initialized {@link TypedConfigBound} instance typed to the provided schema.
    * @example
    * ```typescript
    * const config = await ConfigBound.createConfig(
@@ -845,6 +848,9 @@ export class ConfigBound implements ConfigValueProvider {
 class ConfigBoundBuilder {
   /**
    * Builds a ConfigBound instance from a schema
+   * @param schema - Declarative configuration schema.
+   * @param options - Optional name, binds, logger, and cache mode.
+   * @returns A fully initialized {@link TypedConfigBound} instance.
    */
   public static async build<T extends ConfigSchema>(
     schema: T,
@@ -990,7 +996,3 @@ export {
   ConfigFileParseException,
   MissingDependencyException
 };
-
-export { EnvVarBind } from './bind/binds/envVar';
-export { FileBind, type FileBindOptions, type FileFormat } from './bind/binds/file';
-export { StaticBind, type StaticBindValues } from './bind/binds/static';
