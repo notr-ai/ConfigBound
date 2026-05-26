@@ -29,11 +29,11 @@ export class ConfigBoundService<T extends ConfigSchema = ConfigSchema> {
     return this.configBound.name;
   }
 
-  get binds(): Bind[] {
+  get binds(): ReadonlyArray<Bind> {
     return this.configBound.binds;
   }
 
-  get sections(): Section[] {
+  get sections(): ReadonlyArray<Section> {
     return this.configBound.sections;
   }
 
@@ -45,7 +45,7 @@ export class ConfigBoundService<T extends ConfigSchema = ConfigSchema> {
     this.configBound.addSection(section);
   }
 
-  getSections(): Section[] {
+  getSections(): ReadonlyArray<Section> {
     return this.configBound.getSections();
   }
 

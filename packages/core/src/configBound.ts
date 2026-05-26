@@ -300,7 +300,7 @@ export class TypedConfigBound<T extends ConfigSchema> {
    *
    * @returns Config sections.
    */
-  getSections(): Section[] {
+  getSections(): ReadonlyArray<Section> {
     return this.configBound.getSections();
   }
 
@@ -417,11 +417,21 @@ export class TypedConfigBound<T extends ConfigSchema> {
 export class ConfigBound implements ConfigValueProvider {
   readonly name: string;
   private logger: Logger;
-  readonly binds: Bind[];
-  readonly sections: Section[];
+  private _binds: Bind[];
+  private _sections: Section[];
   private valueCache: Map<string, unknown>;
   private cacheErrors: Map<string, Error>;
   private cacheReady: boolean;
+
+  /** Configured binds in resolution order. */
+  get binds(): ReadonlyArray<Bind> {
+    return this._binds;
+  }
+
+  /** Configured sections. */
+  get sections(): ReadonlyArray<Section> {
+    return this._sections;
+  }
 
   constructor(
     name: string,
@@ -431,8 +441,8 @@ export class ConfigBound implements ConfigValueProvider {
   ) {
     this.logger = logger ?? new ConsoleLogger();
     this.name = sanitizeName(name);
-    this.binds = binds;
-    this.sections = [];
+    this._binds = [...binds];
+    this._sections = [];
     this.valueCache = new Map<string, unknown>();
     this.cacheErrors = new Map<string, Error>();
     this.cacheReady = false;
@@ -458,7 +468,7 @@ export class ConfigBound implements ConfigValueProvider {
    */
   public addBind(bind: Bind) {
     this.logger.debug(`Adding config bind: ${bind.name}`);
-    this.binds.push(bind);
+    this._binds.push(bind);
     this.resetCache();
   }
 
@@ -469,14 +479,14 @@ export class ConfigBound implements ConfigValueProvider {
   public addSection(section: Section) {
     this.logger.debug(`Adding config section: ${section.name}`);
     const sanitizedName = sanitizeName(section.name);
-    if (this.sections.some((x) => x.name === sanitizedName)) {
+    if (this._sections.some((x) => x.name === sanitizedName)) {
       throw new SectionExistsException(sanitizedName);
     }
 
     section.setLogger(this.logger);
     section.setConfigValueProvider(this);
 
-    this.sections.push(section);
+    this._sections.push(section);
     this.resetCache();
   }
 
@@ -484,8 +494,8 @@ export class ConfigBound implements ConfigValueProvider {
    * Gets the Sections of the ConfigBound
    * @returns The Sections
    */
-  public getSections() {
-    return this.sections;
+  public getSections(): ReadonlyArray<Section> {
+    return this._sections;
   }
 
   /**
@@ -510,7 +520,7 @@ export class ConfigBound implements ConfigValueProvider {
     const element = this.getElementOrThrow(sectionName, elementName);
 
     // Try to get value from each Bind until one returns a value
-    for (const bind of this.binds) {
+    for (const bind of this._binds) {
       const value = await bind.get<T>(sectionName, elementName);
       if (value !== undefined) {
         this.logger.trace?.(
@@ -656,7 +666,7 @@ export class ConfigBound implements ConfigValueProvider {
   public async populateCache(options?: CacheRefreshOptions): Promise<void> {
     this.valueCache.clear();
     this.cacheErrors.clear();
-    for (const section of this.sections) {
+    for (const section of this._sections) {
       for (const element of section.getElements()) {
         const cacheKey = this.getCacheKey(section.name, element.name);
         try {
@@ -714,7 +724,7 @@ export class ConfigBound implements ConfigValueProvider {
   public async getValidationErrors(): Promise<Array<{ path: string; message: string }>> {
     const errors: Array<{ path: string; message: string }> = [];
 
-    for (const section of this.sections) {
+    for (const section of this._sections) {
       for (const element of section.getElements()) {
         try {
           // Try to get the value - this will trigger validation
@@ -753,7 +763,7 @@ export class ConfigBound implements ConfigValueProvider {
    * @throws SectionNotFoundException If no section exists with the provided name.
    */
   private getSectionOrThrow(sectionName: string): Section {
-    const section = this.sections.find((x) => x.name === sectionName);
+    const section = this._sections.find((x) => x.name === sectionName);
     if (!section) {
       throw new SectionNotFoundException(sectionName);
     }

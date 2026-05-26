@@ -121,7 +121,7 @@ describe('ConfigBoundModule - forRootAsync', () => {
     module = await Test.createTestingModule({
       imports: [
         ConfigBoundModule.forRootAsync({
-          useFactory: () => ({
+          useFactory: async () => ({
             schema: testSchema,
             binds: [await EnvVarBind.create()],
             validateOnInit: false
