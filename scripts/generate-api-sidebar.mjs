@@ -29,7 +29,7 @@ const CATEGORY_RULES = [
   { pattern: '@config-bound.schema-export', category: 'schema-export' },
   { pattern: '@config-bound.nestjs', category: 'nestjs' },
   { 
-    pattern: '@config-bound.config-bound',
+    pattern: '@config-bound.core',
     subcategories: [
       { patterns: ['.bind.'], category: 'core', subcategory: 'Binds' },
       { patterns: ['.utilities.errors.'], category: 'core', subcategory: 'Errors' },
@@ -39,7 +39,7 @@ const CATEGORY_RULES = [
 ];
 
 const PACKAGE_OVERVIEW_FILES = new Set([
-  '@config-bound.config-bound.md',
+  '@config-bound.core.md',
   '@config-bound.schema-export.md', 
   '@config-bound.nestjs.md'
 ]);
@@ -160,11 +160,10 @@ function main() {
     
     if (hasSubcategories) {
       // Multiple subcategories - create sections
-      const actualPackageName = getActualPackageName(packageName);
       sidebarConfig = Object.entries(subcategories)
         .filter(([_, items]) => items.length > 0)
         .map(([subcatName, items], index) => ({
-          text: index === 0 ? `@config-bound/${actualPackageName}` : subcatName,
+          text: index === 0 ? getPackageTitle(packageName) : subcatName,
           items: items
         }));
     } else {
@@ -201,18 +200,9 @@ function main() {
   }
 }
 
-function getActualPackageName(internalName) {
-  const packageNames = {
-    'core': 'config-bound',
-    'schema-export': 'schema-export',
-    'nestjs': 'nestjs'
-  };
-  return packageNames[internalName] || internalName;
-}
-
 function getPackageTitle(packageName) {
   const titles = {
-    'core': '@config-bound/config-bound',
+    'core': '@config-bound/core',
     'schema-export': '@config-bound/schema-export',
     'nestjs': '@config-bound/nestjs'
   };

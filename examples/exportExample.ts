@@ -3,8 +3,8 @@ import {
   configItem,
   configEnum,
   configSection
-} from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+} from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 import {
   exportSchema,
   formatAsEnvExample,

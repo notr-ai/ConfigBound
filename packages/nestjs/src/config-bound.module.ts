@@ -3,7 +3,7 @@ import {
   ConfigBound,
   ConfigSchema,
   TypedConfigBound
-} from '@config-bound/config-bound';
+} from '@config-bound/core';
 import { ConfigBoundService } from './config-bound.service';
 import {
   ConfigBoundModuleOptions,

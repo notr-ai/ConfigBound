@@ -3,7 +3,7 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [],
-  "linked": [["@config-bound/config-bound", "@config-bound/nestjs"]],
+  "linked": [["@config-bound/core", "@config-bound/nestjs"]],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",

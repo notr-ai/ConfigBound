@@ -5,7 +5,7 @@ NestJS integration for the ConfigBound configuration library. This package provi
 ## Installation
 
 ```bash
-npm install @config-bound/nestjs @config-bound/config-bound
+npm install @config-bound/nestjs @config-bound/core
 ```
 
 ## Quick Start
@@ -15,8 +15,8 @@ npm install @config-bound/nestjs @config-bound/config-bound
 ```typescript
 import { Module } from '@nestjs/common';
 import { ConfigBoundModule } from '@config-bound/nestjs';
-import { configItem, configSection } from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+import { configItem, configSection } from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 import { z } from 'zod';
 
 const appConfig = {

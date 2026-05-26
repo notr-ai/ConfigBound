@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigBoundService } from './config-bound.service';
 import { ConfigBoundModule } from './config-bound.module';
-import { configItem, configSection } from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+import { configItem, configSection } from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 import { z } from 'zod';
 
 type TestSchema = {

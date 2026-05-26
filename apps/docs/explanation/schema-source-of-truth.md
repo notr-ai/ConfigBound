@@ -24,7 +24,7 @@ The schema puts everything needed to describe a config item in one place, in cod
 - **Description** — human-readable intent, co-located with the definition
 
 ```typescript twoslash
-import { configItem } from "@config-bound/config-bound";
+import { configItem } from "@config-bound/core";
 import { z } from "zod";
 // ---cut---
 const schema = {

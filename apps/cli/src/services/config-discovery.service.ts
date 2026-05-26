@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Project, Node, SyntaxKind, SourceFile } from 'ts-morph';
 import * as path from 'path';
 import * as fs from 'fs';
-import { ensureError } from '@config-bound/config-bound/utilities';
+import { ensureError } from '@config-bound/core/utilities';
 
 export interface DiscoveredConfig {
   filePath: string;

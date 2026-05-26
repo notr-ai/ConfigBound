@@ -13,8 +13,9 @@
     "clean": "rimraf .vitepress/dist reference/api reference/cli .turbo"
   },
   "devDependencies": {
-    "@config-bound/config-bound": "workspace:*",
+    "@config-bound/core": "workspace:*",
     "@config-bound/schema-export": "workspace:*",
+    "zod": "catalog:",
     "@config-bound/typescript-config": "workspace:*",
     "@shikijs/twoslash": "2.5.0",
     "@shikijs/vitepress-twoslash": "^2.5.0",

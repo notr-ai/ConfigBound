@@ -11,7 +11,7 @@ export default defineConfig({
   target: 'node20',
   deps: {
     neverBundle: [
-      '@config-bound/config-bound',
+      '@config-bound/core',
       '@nestjs/common',
       '@nestjs/core',
       'reflect-metadata',

@@ -13,14 +13,14 @@ using nested keys first, falling back to flat dot-path keys.
 **1. Install the package if you haven't already:**
 
 ```bash
-npm install @config-bound/config-bound
+npm install @config-bound/core
 ```
 
 **2. Pass a `FileBind` to `ConfigBound.createConfig`:**
 
 ```typescript twoslash
-import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
-import { FileBind } from "@config-bound/config-bound";
+import { ConfigBound, configItem, configSection } from "@config-bound/core";
+import { FileBind } from "@config-bound/core";
 import { z } from "zod";
 
 const config = await ConfigBound.createConfig(
@@ -61,7 +61,7 @@ The format is inferred from the file extension. If your file uses a non-standard
 extension, pass `format` explicitly:
 
 ```typescript twoslash
-import { FileBind } from "@config-bound/config-bound";
+import { FileBind } from "@config-bound/core";
 // ---cut---
 new FileBind({ filePath: "./settings.conf", format: "json" })
 ```
@@ -87,7 +87,7 @@ wrapper:
 ```
 
 ```typescript twoslash
-import { FileBind } from "@config-bound/config-bound";
+import { FileBind } from "@config-bound/core";
 // ---cut---
 new FileBind({ filePath: "./config.yaml", rootKey: "wrapper" })
 // "app.port"       -> 3000
@@ -99,7 +99,7 @@ new FileBind({ filePath: "./config.yaml", rootKey: "wrapper" })
 The file is read once at construction. Call `reload()` to re-read it to pick up the latest file changes while the process is running:
 
 ```typescript twoslash
-import { FileBind } from "@config-bound/config-bound";
+import { FileBind } from "@config-bound/core";
 // ---cut---
 const bind = new FileBind({ filePath: "./config.yaml" });
 // ...later, after the file changes:
@@ -113,6 +113,6 @@ priority order, or the element's `default`, takes over.
 
 ## Related
 
-- [`FileBind` API reference](/reference/api/@config-bound.config-bound.bind.binds.file.Class.FileBind)
+- [`FileBind` API reference](/reference/api/@config-bound.core.bind.binds.file.Class.FileBind)
 - [Use EnvVarBind](./env-var-bind.md) - read config from environment variables
 - [Use StaticBind](./static-bind.md) - supply config values directly in code

@@ -24,8 +24,8 @@ import {
   configItem,
   configEnum,
   configSection
-} from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/binds/env';
+} from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 import { z } from 'zod';
 
 // Define your configuration schema with full type safety
@@ -82,10 +82,10 @@ try {
 For advanced use cases where you need fine-grained control over construction, you can use the imperative API:
 
 ```typescript
-import { ConfigBound } from '@config-bound/config-bound';
-import { Section } from '@config-bound/config-bound/section/section';
-import { Element } from '@config-bound/config-bound/element';
-import { EnvVarBind } from '@config-bound/config-bound/binds/env';
+import { ConfigBound } from '@config-bound/core';
+import { Section } from '@config-bound/core/section/section';
+import { Element } from '@config-bound/core/element';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 
 // Create configuration elements
 const portElement = new Element<number>('port', 'Application port', 3000);
@@ -180,9 +180,9 @@ MYAPP_API_APIKEY=your-secret-key
 Use `StaticBind` to inject values directly in code while still participating in bind priority order.
 
 ```typescript
-import { ConfigBound, configItem } from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/binds/env';
-import { StaticBind } from '@config-bound/config-bound/binds/static';
+import { ConfigBound, configItem } from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
+import { StaticBind } from '@config-bound/core/binds/static';
 import { z } from 'zod';
 
 const config = ConfigBound.createConfig(

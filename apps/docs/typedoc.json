@@ -1,7 +1,7 @@
 {
   "plugin": ["typedoc-plugin-markdown"],
   "entryPoints": [
-    "../../packages/config-bound",
+    "../../packages/core",
     "../../packages/schema-export",
     "../../packages/nestjs"
   ],
@@ -23,6 +23,7 @@
   "excludeExternals": true,
   "readme": "none",
   "entryFileName": "index",
+  "skipErrorChecking": true,
   "validation": {
     "notExported": false
   },

@@ -41,7 +41,7 @@
   "author": "Robert Keyser",
   "license": "MIT",
   "dependencies": {
-    "@config-bound/config-bound": "workspace:*"
+    "@config-bound/core": "workspace:*"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.0.0 || ^11.0.0",
@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@config-bound/eslint-config": "workspace:*",
+    "@config-bound/typescript-config": "workspace:*",
     "@nestjs/common": "^11.1.8",
     "@nestjs/core": "^11.1.8",
     "@nestjs/testing": "^11.1.8",
@@ -65,6 +66,11 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
+  },
+  "typedocOptions": {
+    "entryPoints": ["./src/index.ts"],
+    "tsconfig": "./tsconfig.typedoc.json",
+    "exclude": ["**/*.spec.ts"]
   },
   "repository": {
     "type": "git",

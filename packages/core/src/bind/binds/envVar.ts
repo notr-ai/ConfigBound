@@ -5,7 +5,7 @@
 
 import { Bind } from '../bind';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Element } from '../../element/element';
+import type { Element } from '../../element/element';
 import { ConfigInvalidException } from '../../utilities/errors';
 import { ensureError } from '../../utilities/ensureError';
 

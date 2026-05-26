@@ -4,9 +4,9 @@ import {
   type ConfigSchema,
   type InferConfigType,
   type TypedConfigBound
-} from '@config-bound/config-bound';
-import { Bind } from '@config-bound/config-bound/bind';
-import { Section } from '@config-bound/config-bound/section';
+} from '@config-bound/core';
+import { Bind } from '@config-bound/core/bind';
+import { Section } from '@config-bound/core/section';
 import { CONFIG_BOUND_INSTANCE } from './interfaces/config-bound-module-options.interface';
 
 /**

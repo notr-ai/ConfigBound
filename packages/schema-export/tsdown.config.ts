@@ -10,6 +10,6 @@ export default defineConfig({
   clean: true,
   target: 'node20',
   deps: {
-    neverBundle: ['@config-bound/config-bound', 'js-yaml', 'zod'],
+    neverBundle: ['@config-bound/core', 'js-yaml', 'zod'],
   },
 });

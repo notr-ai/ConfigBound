@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as fs from 'fs';
 import { pathToFileURL } from 'url';
-import { Section } from '@config-bound/config-bound/section';
+import { Section } from '@config-bound/core/section';
 import {
   ConfigBound,
   TypedConfigBound,
@@ -16,7 +16,7 @@ import {
   InvalidConfigBoundInstanceException,
   ConfigFileParseException,
   MissingDependencyException
-} from '@config-bound/config-bound';
+} from '@config-bound/core';
 
 export interface LoadedConfig {
   name: string;

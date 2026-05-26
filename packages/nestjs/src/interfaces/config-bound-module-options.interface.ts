@@ -1,6 +1,6 @@
 import { ModuleMetadata, Type } from '@nestjs/common';
-import { type CacheMode, type ConfigSchema } from '@config-bound/config-bound';
-import { Bind } from '@config-bound/config-bound/bind';
+import { type CacheMode, type ConfigSchema } from '@config-bound/core';
+import { Bind } from '@config-bound/core/bind';
 
 export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'silent';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@config-bound/config-bound",
+  "name": "@config-bound/core",
   "version": "0.3.0",
   "description": "A config registration library",
   "repository": {
@@ -71,36 +71,6 @@
         "default": "./dist/bind/configValueProvider.cjs"
       }
     },
-    "./bind/binds/envVar": {
-      "import": {
-        "types": "./dist/bind/binds/envVar.d.mts",
-        "default": "./dist/bind/binds/envVar.mjs"
-      },
-      "require": {
-        "types": "./dist/bind/binds/envVar.d.cts",
-        "default": "./dist/bind/binds/envVar.cjs"
-      }
-    },
-    "./bind/binds/file": {
-      "import": {
-        "types": "./dist/bind/binds/file.d.mts",
-        "default": "./dist/bind/binds/file.mjs"
-      },
-      "require": {
-        "types": "./dist/bind/binds/file.d.cts",
-        "default": "./dist/bind/binds/file.cjs"
-      }
-    },
-    "./bind/binds/static": {
-      "import": {
-        "types": "./dist/bind/binds/static.d.mts",
-        "default": "./dist/bind/binds/static.mjs"
-      },
-      "require": {
-        "types": "./dist/bind/binds/static.d.cts",
-        "default": "./dist/bind/binds/static.cjs"
-      }
-    },
     "./utilities": {
       "import": {
         "types": "./dist/utilities/index.d.mts",
@@ -113,32 +83,32 @@
     },
     "./binds/env": {
       "import": {
-        "types": "./dist/bind/binds/envVar.d.mts",
-        "default": "./dist/bind/binds/envVar.mjs"
+        "types": "./dist/binds/env.d.mts",
+        "default": "./dist/binds/env.mjs"
       },
       "require": {
-        "types": "./dist/bind/binds/envVar.d.cts",
-        "default": "./dist/bind/binds/envVar.cjs"
+        "types": "./dist/binds/env.d.cts",
+        "default": "./dist/binds/env.cjs"
       }
     },
     "./binds/file": {
       "import": {
-        "types": "./dist/bind/binds/file.d.mts",
-        "default": "./dist/bind/binds/file.mjs"
+        "types": "./dist/binds/file.d.mts",
+        "default": "./dist/binds/file.mjs"
       },
       "require": {
-        "types": "./dist/bind/binds/file.d.cts",
-        "default": "./dist/bind/binds/file.cjs"
+        "types": "./dist/binds/file.d.cts",
+        "default": "./dist/binds/file.cjs"
       }
     },
     "./binds/static": {
       "import": {
-        "types": "./dist/bind/binds/static.d.mts",
-        "default": "./dist/bind/binds/static.mjs"
+        "types": "./dist/binds/static.d.mts",
+        "default": "./dist/binds/static.mjs"
       },
       "require": {
-        "types": "./dist/bind/binds/static.d.cts",
-        "default": "./dist/bind/binds/static.cjs"
+        "types": "./dist/binds/static.d.cts",
+        "default": "./dist/binds/static.cjs"
       }
     }
   },
@@ -158,7 +128,8 @@
       "./src/utilities/errors.ts",
       "./src/utilities/logger.ts"
     ],
-    "tsconfig": "./tsconfig.json"
+    "tsconfig": "./tsconfig.typedoc.json",
+    "exclude": ["**/*.spec.ts"]
   },
   "publishConfig": {
     "access": "public",
@@ -175,6 +146,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
     "@config-bound/eslint-config": "workspace:*",
+    "@config-bound/typescript-config": "workspace:*",
     "@eslint/js": "catalog:",
     "@types/jest": "catalog:",
     "@types/js-yaml": "^4.0.9",
@@ -191,11 +163,14 @@
     "ts-jest": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "catalog:"
+    "typescript-eslint": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "zod": "^4.4.1"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
-    "jsonc-parser": "^3.3.1",
-    "zod": "^4.4.1"
+    "jsonc-parser": "^3.3.1"
   }
 }

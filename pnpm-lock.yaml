@@ -63,6 +63,9 @@ catalogs:
     typescript-eslint:
       specifier: ^8.51.8
       version: 8.59.4
+    zod:
+      specifier: ^4.4.1
+      version: 4.4.3
 
 importers:
 
@@ -137,9 +140,9 @@ importers:
 
   apps/cli:
     dependencies:
-      '@config-bound/config-bound':
+      '@config-bound/core':
         specifier: workspace:*
-        version: link:../../packages/config-bound
+        version: link:../../packages/core
       '@config-bound/schema-export':
         specifier: workspace:*
         version: link:../../packages/schema-export
@@ -201,9 +204,9 @@ importers:
 
   apps/docs:
     devDependencies:
-      '@config-bound/config-bound':
+      '@config-bound/core':
         specifier: workspace:*
-        version: link:../../packages/config-bound
+        version: link:../../packages/core
       '@config-bound/schema-export':
         specifier: workspace:*
         version: link:../../packages/schema-export
@@ -231,17 +234,20 @@ importers:
       vitepress-plugin-llms:
         specifier: ^1.12.0
         version: 1.12.2
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
 
   examples:
     dependencies:
-      '@config-bound/config-bound':
+      '@config-bound/core':
         specifier: workspace:*
-        version: link:../packages/config-bound
+        version: link:../packages/core
       '@config-bound/schema-export':
         specifier: workspace:*
         version: link:../packages/schema-export
 
-  packages/config-bound:
+  packages/core:
     dependencies:
       js-yaml:
         specifier: ^4.1.0
@@ -249,9 +255,6 @@ importers:
       jsonc-parser:
         specifier: ^3.3.1
         version: 3.3.1
-      zod:
-        specifier: ^4.4.1
-        version: 4.4.3
     devDependencies:
       '@changesets/cli':
         specifier: ^2.29.7
@@ -259,6 +262,9 @@ importers:
       '@config-bound/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@config-bound/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@eslint/js':
         specifier: 'catalog:'
         version: 9.39.4
@@ -310,6 +316,9 @@ importers:
       typescript-eslint:
         specifier: 'catalog:'
         version: 8.59.4(eslint@9.39.4)(typescript@6.0.3)
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
 
   packages/eslint-config:
     dependencies:
@@ -343,9 +352,9 @@ importers:
 
   packages/nestjs:
     dependencies:
-      '@config-bound/config-bound':
+      '@config-bound/core':
         specifier: workspace:*
-        version: link:../config-bound
+        version: link:../core
       reflect-metadata:
         specifier: ^0.1.13 || ^0.2.0
         version: 0.2.2
@@ -356,6 +365,9 @@ importers:
       '@config-bound/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@config-bound/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@nestjs/common':
         specifier: ^11.1.8
         version: 11.1.23(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -389,19 +401,19 @@ importers:
 
   packages/schema-export:
     dependencies:
-      '@config-bound/config-bound':
+      '@config-bound/core':
         specifier: workspace:*
-        version: link:../config-bound
+        version: link:../core
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.1
-      zod:
-        specifier: ^4.4.1
-        version: 4.4.3
     devDependencies:
       '@config-bound/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@config-bound/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@types/jest':
         specifier: 'catalog:'
         version: 30.0.0
@@ -426,6 +438,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
 
   packages/typescript-config: {}
 

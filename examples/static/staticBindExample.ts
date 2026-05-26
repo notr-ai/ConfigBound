@@ -3,9 +3,9 @@ import {
   configItem,
   configEnum,
   configSection
-} from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
-import { StaticBind } from '@config-bound/config-bound/bind/binds/static';
+} from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
+import { StaticBind } from '@config-bound/core/binds/static';
 import { z } from 'zod';
 
 /**

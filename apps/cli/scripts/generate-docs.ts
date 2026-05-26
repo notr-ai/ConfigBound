@@ -311,7 +311,7 @@ The factory pattern pre-loads values into a cache at startup. \`retrieve()\` rea
     { text: 'Create a custom bind', link: '/how-to/custom-bind' },
     {
       text: '`Bind` API reference',
-      link: '/reference/api/@config-bound.config-bound.bind.bind.Class.Bind',
+      link: '/reference/api/@config-bound.core.bind.bind.Class.Bind',
     },
   ],
 };

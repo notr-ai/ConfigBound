@@ -30,7 +30,7 @@
     "format:ci": "prettier --check --config ../../.config/.prettierrc --ignore-path ../../.config/.prettierignore src/**/*.ts"
   },
   "dependencies": {
-    "@config-bound/config-bound": "workspace:*",
+    "@config-bound/core": "workspace:*",
     "@config-bound/schema-export": "workspace:*",
     "@nestjs/common": "^11.1.18",
     "@nestjs/core": "^11.1.18",

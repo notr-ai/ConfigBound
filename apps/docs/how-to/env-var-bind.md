@@ -13,8 +13,8 @@ paths to uppercase environment variable names: `section.element` becomes
 **1. Create the bind and pass it to `ConfigBound.createConfig`:**
 
 ```typescript twoslash
-import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
-import { EnvVarBind } from "@config-bound/config-bound";
+import { ConfigBound, configItem, configSection } from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core";
 import { z } from "zod";
 
 const config = await ConfigBound.createConfig(
@@ -41,7 +41,7 @@ With this config, `PORT` sets `port` and `DATABASE_HOST` sets `database.host`.
 **2. To avoid collisions with other applications' environment variables, use a prefix:**
 
 ```typescript twoslash
-import { EnvVarBind } from "@config-bound/config-bound";
+import { EnvVarBind } from "@config-bound/core";
 // ---cut---
 const binds = [new EnvVarBind({ prefix: "MYAPP" })];
 ```
@@ -60,5 +60,5 @@ With the prefix `MYAPP`, `MYAPP_PORT` sets `port` and `MYAPP_DATABASE_HOST` sets
 
 ## Related
 
-- [`EnvVarBind` API reference](/reference/api/@config-bound.config-bound.bind.binds.envVar.Class.EnvVarBind)
+- [`EnvVarBind` API reference](/reference/api/@config-bound.core.bind.binds.envVar.Class.EnvVarBind)
 - [Use FileBind](./file-bind.md) - read config from a file instead

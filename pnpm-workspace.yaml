@@ -9,6 +9,9 @@ allowBuilds:
   unrs-resolver: true
 
 catalog:
+  # Shared runtime
+  zod: "^4.4.1"
+
   # Build tooling
   tsdown: "^0.22.0"
   turbo: "^2.9.6"

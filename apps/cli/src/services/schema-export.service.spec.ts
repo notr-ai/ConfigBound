@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SchemaExportService } from './schema-export.service.js';
 import { describe, beforeEach, it, expect } from '@jest/globals';
-import { ConfigBound } from '@config-bound/config-bound';
-import { Section } from '@config-bound/config-bound/section';
-import { Element } from '@config-bound/config-bound/element';
+import { ConfigBound } from '@config-bound/core';
+import { Section } from '@config-bound/core/section';
+import { Element } from '@config-bound/core/element';
 import { z } from 'zod';
 
 describe('SchemaExportService', () => {

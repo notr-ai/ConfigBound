@@ -94,7 +94,7 @@ jobs:
 
       - name: Get package version
         id: package_version
-        run: echo "version=$(jq -r '.version' ./packages/config-bound/package.json)" >> $GITHUB_OUTPUT
+        run: echo "version=$(jq -r '.version' ./packages/core/package.json)" >> $GITHUB_OUTPUT
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets

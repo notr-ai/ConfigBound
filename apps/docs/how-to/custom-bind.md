@@ -4,7 +4,7 @@ description: Implement a custom bind to load ConfigBound configuration values fr
 
 # Create a custom bind
 
-A [bind](/reference/api/@config-bound.config-bound.bind.bind.Class.Bind) is a source adapter: it knows how to retrieve a value for a given element.
+A [bind](/reference/api/@config-bound.core.bind.bind.Class.Bind) is a source adapter: it knows how to retrieve a value for a given element.
 
 The built-in binds ([`EnvVarBind`](./env-var-bind.md), [`FileBind`](./file-bind.md), [`StaticBind`](./static-bind.md)) cover environment variables, files, and in-memory values. When you need a different source that isn't yet available, you can create your own.
 
@@ -23,7 +23,7 @@ When prompted, choose `embedded` for a bind that lives in your project, or `pack
 The generator produces a class with a static async `create()` factory, a private constructor, and a `retrieve()` method. Fill in the body of `create()` to initialize your client and populate the map:
 
 ```typescript twoslash
-import { Bind } from "@config-bound/config-bound/bind";
+import { Bind } from "@config-bound/core/bind";
 declare class SecretStoreClient {
   constructor(options: { token: string });
   read(path: string): Promise<{ data: Record<string, unknown> }>;
@@ -79,9 +79,9 @@ The key must match the path exactly. A mismatch means `retrieve()` returns `unde
 Call the factory before creating the config, then pass the instance to `ConfigBound.createConfig`:
 
 ```typescript twoslash
-import { ConfigBound, configItem } from "@config-bound/config-bound";
-import { EnvVarBind } from "@config-bound/config-bound";
-import { Bind } from "@config-bound/config-bound/bind";
+import { ConfigBound, configItem } from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core";
+import { Bind } from "@config-bound/core/bind";
 declare class SecretStoreBind extends Bind {
   static create(options: { token: string }): Promise<SecretStoreBind>;
   retrieve<T>(elementName: string): Promise<T | undefined>;
@@ -114,5 +114,5 @@ The `package` scaffold sets `"private": true` in `package.json`. Set it to `fals
 ## Related
 
 - [`configbound generate bind`](/reference/cli/generate-bind) - scaffold the boilerplate
-- [`Bind` API reference](/reference/api/@config-bound.config-bound.bind.bind.Class.Bind) - the `Bind` class
+- [`Bind` API reference](/reference/api/@config-bound.core.bind.bind.Class.Bind) - the `Bind` class
 - [EnvVarBind](./env-var-bind.md), [FileBind](./file-bind.md), [StaticBind](./static-bind.md) - built-in binds for reference

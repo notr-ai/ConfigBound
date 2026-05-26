@@ -15,7 +15,7 @@ import { Section } from '../section/section';
  *
  * @example
  * ```typescript
- * import { ConfigBound, ConfigValueException } from '@config-bound/config-bound';
+ * import { ConfigBound, ConfigValueException } from '@config-bound/core';
  *
  * try {
  *   const value = config.get('database', 'password');

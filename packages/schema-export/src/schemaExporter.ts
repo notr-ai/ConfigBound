@@ -1,5 +1,5 @@
-import { Section } from '@config-bound/config-bound/section';
-import { Element } from '@config-bound/config-bound/element';
+import { Section } from '@config-bound/core/section';
+import { Element } from '@config-bound/core/element';
 import { z } from 'zod';
 
 /**

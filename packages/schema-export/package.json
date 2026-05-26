@@ -42,13 +42,16 @@
   ],
   "author": "Robert Keyser",
   "license": "MIT",
-  "dependencies": {
-    "@config-bound/config-bound": "workspace:*",
-    "js-yaml": "^4.1.0",
+  "peerDependencies": {
     "zod": "^4.4.1"
+  },
+  "dependencies": {
+    "@config-bound/core": "workspace:*",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@config-bound/eslint-config": "workspace:*",
+    "@config-bound/typescript-config": "workspace:*",
     "@types/jest": "catalog:",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "catalog:",
@@ -56,11 +59,17 @@
     "jest": "catalog:",
     "rimraf": "catalog:",
     "ts-jest": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "zod": "catalog:"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
+  },
+  "typedocOptions": {
+    "entryPoints": ["./src/index.ts"],
+    "tsconfig": "./tsconfig.typedoc.json",
+    "exclude": ["**/*.spec.ts"]
   },
   "repository": {
     "type": "git",

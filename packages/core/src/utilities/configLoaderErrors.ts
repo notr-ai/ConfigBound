@@ -5,7 +5,7 @@
  *
  * @example
  * ```typescript
- * import { ConfigBound, ConfigLoaderException } from '@config-bound/config-bound';
+ * import { ConfigBound, ConfigLoaderException } from '@config-bound/core';
  *
  * try {
  *   const config = new ConfigBound([]);
