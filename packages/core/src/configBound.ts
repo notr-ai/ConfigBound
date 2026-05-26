@@ -8,6 +8,7 @@ import { Bind } from './bind/bind';
 import { Section } from './section/section';
 import {
   ConfigInvalidException,
+  ConfigUnsetException,
   ElementNotFoundException,
   SectionExistsException,
   SectionNotFoundException
@@ -158,16 +159,13 @@ export type InferConfigType<T> = ExtractSections<T> &
  * ```
  */
 export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
-  // Validate that default matches example if both are provided
-  if (options.default !== undefined && options.example !== undefined) {
-    if (options.validator) {
-      const defaultResult = options.validator.safeParse(options.default);
-      if (!defaultResult.success) {
-        const errorMessage = defaultResult.error.issues
-          .map((e: z.ZodIssue) => `${e.path.join('.')}: ${e.message}`)
-          .join('; ');
-        throw new Error(`Invalid default value for config item: ${errorMessage}`);
-      }
+  if (options.default !== undefined && options.validator) {
+    const defaultResult = options.validator.safeParse(options.default);
+    if (!defaultResult.success) {
+      const errorMessage = defaultResult.error.issues
+        .map((e: z.ZodIssue) => `${e.path.join('.')}: ${e.message}`)
+        .join('; ');
+      throw new Error(`Invalid default value for config item: ${errorMessage}`);
     }
   }
   return options;
@@ -329,6 +327,7 @@ export class TypedConfigBound<T extends ConfigSchema> {
    * @param sectionName - Section containing the requested element.
    * @param elementName - Element to resolve.
    * @returns Resolved value.
+   * @throws ConfigUnsetException If the element exists but has no value and no default.
    */
   async getOrThrow<
     K extends keyof InferConfigType<T>,
@@ -586,13 +585,14 @@ export class ConfigBound implements ConfigValueProvider {
    * @param elementName - The name of the element
    * @returns The value of the element (never undefined)
    * @throws SectionNotFoundException If section doesn't exist
-   * @throws ElementNotFoundException If element doesn't exist or value is undefined
+   * @throws ElementNotFoundException If element doesn't exist in the section
+   * @throws ConfigUnsetException If the element exists but has no value and no default
    * @throws ConfigInvalidException If value fails validation
    */
   public async getOrThrow<T = unknown>(sectionName: string, elementName: string): Promise<T> {
     const value = await this.get<T>(sectionName, elementName);
     if (value === undefined) {
-      throw new ElementNotFoundException(elementName);
+      throw new ConfigUnsetException(`${sectionName}.${elementName}`);
     }
     return value;
   }
@@ -631,14 +631,15 @@ export class ConfigBound implements ConfigValueProvider {
    * @param elementName - Element name to read from cache.
    * @returns The cached value.
    * @throws SectionNotFoundException If the section does not exist.
-   * @throws ElementNotFoundException If the element does not exist or the cached value is `undefined`.
+   * @throws ElementNotFoundException If the element does not exist in the section.
+   * @throws ConfigUnsetException If the element exists but has no cached value.
    * @throws ConfigInvalidException If the cache is not ready.
    * @throws Error Re-throws a cached validation error for this element, when present.
    */
   public getOrThrowFromCache<T = unknown>(sectionName: string, elementName: string): T {
     const value = this.getFromCache<T>(sectionName, elementName);
     if (value === undefined) {
-      throw new ElementNotFoundException(elementName);
+      throw new ConfigUnsetException(`${sectionName}.${elementName}`);
     }
     return value;
   }

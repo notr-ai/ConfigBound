@@ -4,9 +4,9 @@
  */
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Element } from '../element/element';
+import type { Element } from '../element/element';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Section } from '../section/section';
+import type { Section } from '../section/section';
 
 /**
  * Base exception class for configuration value errors.

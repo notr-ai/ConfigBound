@@ -39,21 +39,21 @@ describe('FileBind format detection', () => {
     ['.jsonc', 'jsonc'],
     ['.yml', 'yaml'],
     ['.yaml', 'yaml']
-  ])('detects %s as %s', (ext, expectedFormat) => {
+  ])('detects %s as %s', async (ext, expectedFormat) => {
     const filePath = tmpFile(`config${ext}`, minimalJson);
-    const bind = new FileBind({ filePath });
+    const bind = await FileBind.create({ filePath });
     expect(bind.format).toBe(expectedFormat);
   });
 
-  it('throws for an unknown extension', () => {
+  it('throws for an unknown extension', async () => {
     const filePath = tmpFile('config.toml', '');
-    expect(() => new FileBind({ filePath })).toThrow(ConfigInvalidException);
-    expect(() => new FileBind({ filePath })).toThrow(/Unsupported file extension/);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(ConfigInvalidException);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(/Unsupported file extension/);
   });
 
   it('uses explicit format override regardless of extension', async () => {
     const filePath = tmpFile('settings.conf', '{ "x": 1 }');
-    const bind = new FileBind({ filePath, format: 'json' });
+    const bind = await FileBind.create({ filePath, format: 'json' });
     expect(bind.format).toBe('json');
     await expect(bind.retrieve('x')).resolves.toBe(1);
   });
@@ -62,54 +62,54 @@ describe('FileBind format detection', () => {
 // -- File reading & parsing -----------------------------------------------
 
 describe('FileBind file reading', () => {
-  it('throws when the file does not exist', () => {
+  it('throws when the file does not exist', async () => {
     const filePath = path.join(tmpDir, 'nope.json');
-    expect(() => new FileBind({ filePath })).toThrow(ConfigInvalidException);
-    expect(() => new FileBind({ filePath })).toThrow(/Cannot read/);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(ConfigInvalidException);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(/Cannot read/);
   });
 
-  it('throws when JSON content is malformed', () => {
+  it('throws when JSON content is malformed', async () => {
     const filePath = tmpFile('bad.json', '{ broken }');
-    expect(() => new FileBind({ filePath })).toThrow(ConfigInvalidException);
-    expect(() => new FileBind({ filePath })).toThrow(/Failed to parse/);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(ConfigInvalidException);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(/Failed to parse/);
   });
 
-  it('throws when YAML content is malformed', () => {
+  it('throws when YAML content is malformed', async () => {
     const filePath = tmpFile('bad.yaml', ':\n  :\n    - [invalid');
-    expect(() => new FileBind({ filePath })).toThrow(ConfigInvalidException);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(ConfigInvalidException);
   });
 
-  it('throws when JSONC content is malformed', () => {
+  it('throws when JSONC content is malformed', async () => {
     const filePath = tmpFile('bad.jsonc', '{ // ok comment\n broken }');
-    expect(() => new FileBind({ filePath })).toThrow(ConfigInvalidException);
-    expect(() => new FileBind({ filePath })).toThrow(/Failed to parse/);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(ConfigInvalidException);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(/Failed to parse/);
   });
 
-  it('throws when the top-level value is an array', () => {
+  it('throws when the top-level value is an array', async () => {
     const filePath = tmpFile('arr.json', '[1, 2, 3]');
-    expect(() => new FileBind({ filePath })).toThrow(ConfigInvalidException);
-    expect(() => new FileBind({ filePath })).toThrow(
+    await expect(FileBind.create({ filePath })).rejects.toThrow(ConfigInvalidException);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(
       /must contain an object at the top level, found array/
     );
   });
 
-  it('throws when the top-level value is a scalar', () => {
+  it('throws when the top-level value is a scalar', async () => {
     const filePath = tmpFile('scalar.yaml', '"just a string"');
-    expect(() => new FileBind({ filePath })).toThrow(ConfigInvalidException);
-    expect(() => new FileBind({ filePath })).toThrow(
+    await expect(FileBind.create({ filePath })).rejects.toThrow(ConfigInvalidException);
+    await expect(FileBind.create({ filePath })).rejects.toThrow(
       /must contain an object at the top level/
     );
   });
 
   it('treats an empty JSON object as valid empty config', async () => {
     const filePath = tmpFile('empty.json', '{}');
-    const bind = new FileBind({ filePath });
+    const bind = await FileBind.create({ filePath });
     await expect(bind.retrieve('anything')).resolves.toBeUndefined();
   });
 
   it('treats an empty YAML file as valid empty config', async () => {
     const filePath = tmpFile('empty.yaml', '');
-    const bind = new FileBind({ filePath });
+    const bind = await FileBind.create({ filePath });
     await expect(bind.retrieve('anything')).resolves.toBeUndefined();
   });
 
@@ -122,7 +122,7 @@ describe('FileBind file reading', () => {
       },
     }`;
     const filePath = tmpFile('config.jsonc', content);
-    const bind = new FileBind({ filePath });
+    const bind = await FileBind.create({ filePath });
     await expect(bind.retrieve('server.host')).resolves.toBe('localhost');
   });
 });
@@ -132,7 +132,7 @@ describe('FileBind file reading', () => {
 describe('FileBind retrieve', () => {
   let bind: FileBind;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const filePath = tmpFile(
       'config.json',
       JSON.stringify({
@@ -143,7 +143,7 @@ describe('FileBind retrieve', () => {
         'overlap.key': 'from-flat'
       })
     );
-    bind = new FileBind({ filePath });
+    bind = await FileBind.create({ filePath });
   });
 
   it('resolves nested paths', async () => {
@@ -172,7 +172,7 @@ describe('FileBind retrieve', () => {
       'nulls.json',
       JSON.stringify({ section: { key: null } })
     );
-    const nullBind = new FileBind({ filePath });
+    const nullBind = await FileBind.create({ filePath });
     await expect(nullBind.retrieve('section.key')).resolves.toBeUndefined();
   });
 
@@ -183,7 +183,7 @@ describe('FileBind retrieve', () => {
       'null-flat.json',
       JSON.stringify({ section: { key: null }, 'section.key': 'flat-value' })
     );
-    const nullFlatBind = new FileBind({ filePath });
+    const nullFlatBind = await FileBind.create({ filePath });
     await expect(nullFlatBind.retrieve('section.key')).resolves.toBe('flat-value');
   });
 
@@ -194,7 +194,7 @@ describe('FileBind retrieve', () => {
         section: { zero: 0, empty: '', no: false }
       })
     );
-    const falsyBind = new FileBind({ filePath });
+    const falsyBind = await FileBind.create({ filePath });
     await expect(falsyBind.retrieve('section.zero')).resolves.toBe(0);
     await expect(falsyBind.retrieve('section.empty')).resolves.toBe('');
     await expect(falsyBind.retrieve('section.no')).resolves.toBe(false);
@@ -209,7 +209,7 @@ describe('FileBind retrieve', () => {
       '  date: 2024-01-15'
     ].join('\n');
     const filePath = tmpFile('coerce.yaml', yamlContent);
-    const bind = new FileBind({ filePath });
+    const bind = await FileBind.create({ filePath });
     await expect(bind.retrieve('section.toggle')).resolves.toBe('yes');
     await expect(bind.retrieve('section.date')).resolves.toBe('2024-01-15');
   });
@@ -224,7 +224,7 @@ describe('FileBind retrieve', () => {
         }
       })
     );
-    const complexBind = new FileBind({ filePath });
+    const complexBind = await FileBind.create({ filePath });
     await expect(complexBind.retrieve('section.hosts')).resolves.toEqual(['a', 'b']);
     await expect(complexBind.retrieve('section.meta')).resolves.toEqual({ nested: true });
   });
@@ -240,7 +240,7 @@ describe('FileBind rootKey', () => {
         wrapper: { database: { host: 'scoped.local' } }
       })
     );
-    const bind = new FileBind({ filePath, rootKey: 'wrapper' });
+    const bind = await FileBind.create({ filePath, rootKey: 'wrapper' });
     await expect(bind.retrieve('database.host')).resolves.toBe('scoped.local');
   });
 
@@ -251,26 +251,26 @@ describe('FileBind rootKey', () => {
         a: { b: { server: { port: 9090 } } }
       })
     );
-    const bind = new FileBind({ filePath, rootKey: 'a.b' });
+    const bind = await FileBind.create({ filePath, rootKey: 'a.b' });
     await expect(bind.retrieve('server.port')).resolves.toBe(9090);
   });
 
-  it('throws when rootKey path does not exist', () => {
+  it('throws when rootKey path does not exist', async () => {
     const filePath = tmpFile('config.json', JSON.stringify({ other: {} }));
-    expect(() => new FileBind({ filePath, rootKey: 'missing' })).toThrow(
+    await expect(FileBind.create({ filePath, rootKey: 'missing' })).rejects.toThrow(
       ConfigInvalidException
     );
-    expect(() => new FileBind({ filePath, rootKey: 'missing' })).toThrow(
+    await expect(FileBind.create({ filePath, rootKey: 'missing' })).rejects.toThrow(
       /Root key "missing" does not resolve/
     );
   });
 
-  it('throws when rootKey resolves to a non-object', () => {
+  it('throws when rootKey resolves to a non-object', async () => {
     const filePath = tmpFile(
       'config.json',
       JSON.stringify({ level: 'not-an-object' })
     );
-    expect(() => new FileBind({ filePath, rootKey: 'level' })).toThrow(
+    await expect(FileBind.create({ filePath, rootKey: 'level' })).rejects.toThrow(
       ConfigInvalidException
     );
   });
@@ -284,7 +284,7 @@ describe('FileBind reload', () => {
       'live.json',
       JSON.stringify({ section: { val: 'original' } })
     );
-    const bind = new FileBind({ filePath });
+    const bind = await FileBind.create({ filePath });
     await expect(bind.retrieve('section.val')).resolves.toBe('original');
 
     fs.writeFileSync(
@@ -292,17 +292,17 @@ describe('FileBind reload', () => {
       JSON.stringify({ section: { val: 'updated' } }),
       'utf-8'
     );
-    bind.reload();
+    await bind.reload();
     await expect(bind.retrieve('section.val')).resolves.toBe('updated');
   });
 
-  it('throws when the file has been deleted', () => {
+  it('throws when the file has been deleted', async () => {
     const filePath = tmpFile('ephemeral.json', '{}');
-    const bind = new FileBind({ filePath });
+    const bind = await FileBind.create({ filePath });
 
     fs.unlinkSync(filePath);
-    expect(() => bind.reload()).toThrow(ConfigInvalidException);
-    expect(() => bind.reload()).toThrow(/Cannot read/);
+    await expect(bind.reload()).rejects.toThrow(ConfigInvalidException);
+    await expect(bind.reload()).rejects.toThrow(/Cannot read/);
   });
 
   it('throws when rootKey subtree disappears after reload', async () => {
@@ -310,12 +310,12 @@ describe('FileBind reload', () => {
       'rooted-live.json',
       JSON.stringify({ wrapper: { val: 'original' } })
     );
-    const bind = new FileBind({ filePath, rootKey: 'wrapper' });
+    const bind = await FileBind.create({ filePath, rootKey: 'wrapper' });
     await expect(bind.retrieve('val')).resolves.toBe('original');
 
     fs.writeFileSync(filePath, JSON.stringify({ other: {} }), 'utf-8');
-    expect(() => bind.reload()).toThrow(ConfigInvalidException);
-    expect(() => bind.reload()).toThrow(/Root key "wrapper" does not resolve/);
+    await expect(bind.reload()).rejects.toThrow(ConfigInvalidException);
+    await expect(bind.reload()).rejects.toThrow(/Root key "wrapper" does not resolve/);
   });
 });
 
@@ -327,7 +327,7 @@ describe('FileBind integration with ConfigBound', () => {
       'app.json',
       JSON.stringify({ app: { port: 3000, host: 'localhost' } })
     );
-    const fileBind = new FileBind({ filePath });
+    const fileBind = await FileBind.create({ filePath });
 
     const portElement = new Element<number>(
       'port',
@@ -360,7 +360,7 @@ describe('FileBind integration with ConfigBound', () => {
       JSON.stringify({ app: { port: 3000 } })
     );
     const envBind = new EnvVarBind({ prefix: 'FILEBIND_TEST' });
-    const fileBind = new FileBind({ filePath });
+    const fileBind = await FileBind.create({ filePath });
 
     const portElement = new Element<number>(
       'port',
@@ -385,7 +385,7 @@ describe('FileBind integration with ConfigBound', () => {
 
   it('falls back to element default when key is missing from file', async () => {
     const filePath = tmpFile('sparse.json', JSON.stringify({ app: {} }));
-    const fileBind = new FileBind({ filePath });
+    const fileBind = await FileBind.create({ filePath });
 
     const portElement = new Element<number>(
       'port',
@@ -410,7 +410,7 @@ describe('FileBind integration with ConfigBound', () => {
         database: { host: 'db.example.com' }
       })
     );
-    const fileBind = new FileBind({ filePath });
+    const fileBind = await FileBind.create({ filePath });
 
     const config = await ConfigBound.createConfig(
       {

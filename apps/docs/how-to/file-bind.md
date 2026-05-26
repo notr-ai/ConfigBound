@@ -5,7 +5,7 @@ description: Load configuration values from a JSON, JSONC, or YAML file using Fi
 # Read configuration from a file <Badge type="tip" text="Core" />
 
 `FileBind` reads configuration values from a JSON, JSONC, or YAML file. The file
-is read once at construction. Element paths are resolved against the parsed file
+is read once when `FileBind.create()` resolves. Element paths are resolved against the parsed file
 using nested keys first, falling back to flat dot-path keys.
 
 ## Steps
@@ -20,7 +20,7 @@ npm install @config-bound/core
 
 ```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/core";
-import { FileBind } from "@config-bound/core";
+import { FileBind } from "@config-bound/core/binds/file";
 import { z } from "zod";
 
 const config = await ConfigBound.createConfig(
@@ -37,7 +37,7 @@ const config = await ConfigBound.createConfig(
     })
   },
   {
-    binds: [new FileBind({ filePath: "./config.yaml" })]
+    binds: [await FileBind.create({ filePath: "./config.yaml" })]
   }
 );
 ```
@@ -61,9 +61,9 @@ The format is inferred from the file extension. If your file uses a non-standard
 extension, pass `format` explicitly:
 
 ```typescript twoslash
-import { FileBind } from "@config-bound/core";
+import { FileBind } from "@config-bound/core/binds/file";
 // ---cut---
-new FileBind({ filePath: "./settings.conf", format: "json" })
+await FileBind.create({ filePath: "./settings.conf", format: "json" })
 ```
 
 | Extension        | Inferred format |
@@ -87,23 +87,23 @@ wrapper:
 ```
 
 ```typescript twoslash
-import { FileBind } from "@config-bound/core";
+import { FileBind } from "@config-bound/core/binds/file";
 // ---cut---
-new FileBind({ filePath: "./config.yaml", rootKey: "wrapper" })
+await FileBind.create({ filePath: "./config.yaml", rootKey: "wrapper" })
 // "app.port"       -> 3000
 // "database.host"  -> "db.local"
 ```
 
 ## Reload the file at runtime
 
-The file is read once at construction. Call `reload()` to re-read it to pick up the latest file changes while the process is running:
+The file is read once at creation. Call `reload()` to re-read it to pick up the latest file changes while the process is running:
 
 ```typescript twoslash
-import { FileBind } from "@config-bound/core";
+import { FileBind } from "@config-bound/core/binds/file";
 // ---cut---
-const bind = new FileBind({ filePath: "./config.yaml" });
+const bind = await FileBind.create({ filePath: "./config.yaml" });
 // ...later, after the file changes:
-bind.reload();
+await bind.reload();
 ```
 
 ## Null handling

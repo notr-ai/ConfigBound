@@ -3,7 +3,7 @@
  * @module
  */
 
-import * as fs from 'fs';
+import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import yaml from 'js-yaml';
 import {
@@ -76,7 +76,7 @@ const PARSERS: Readonly<Record<FileFormat, (content: string) => unknown>> = {
 /**
  * A {@link Bind} that reads configuration values from a JSON, JSONC, or YAML file.
  *
- * The file is read and parsed once at construction time. Values are cached
+ * The file is read and parsed once via {@link FileBind.create}. Values are cached
  * in memory and served from the cache on every `retrieve()` call. Call
  * {@link reload} to re-read the file when its contents have changed.
  *
@@ -87,6 +87,11 @@ const PARSERS: Readonly<Record<FileFormat, (content: string) => unknown>> = {
  * Explicit `null` values in the file are treated as "not set" and
  * return `undefined`, allowing the next bind or element default to
  * take over.
+ *
+ * @example
+ * ```typescript
+ * const bind = await FileBind.create({ filePath: './config.yaml' });
+ * ```
  */
 export class FileBind extends Bind {
   readonly resolvedPath: string;
@@ -94,13 +99,31 @@ export class FileBind extends Bind {
   private readonly rootKey?: string;
   private data: Record<string, unknown>;
 
-  constructor(options: FileBindOptions) {
+  private constructor(
+    resolvedPath: string,
+    format: FileFormat,
+    rootKey: string | undefined,
+    data: Record<string, unknown>
+  ) {
     super('File');
+    this.resolvedPath = resolvedPath;
+    this.format = format;
+    this.rootKey = rootKey;
+    this.data = data;
+  }
 
-    this.resolvedPath = path.resolve(options.filePath);
-    this.format = options.format ?? detectFormat(this.resolvedPath);
-    this.rootKey = options.rootKey;
-    this.data = this.loadAndParse();
+  /**
+   * Creates a `FileBind` by asynchronously reading and parsing the config file.
+   *
+   * @param options - File bind options.
+   * @returns A fully initialised `FileBind` instance.
+   * @throws ConfigInvalidException If the file cannot be read, parsed, or scoped.
+   */
+  static async create(options: FileBindOptions): Promise<FileBind> {
+    const resolvedPath = path.resolve(options.filePath);
+    const format = options.format ?? detectFormat(resolvedPath);
+    const data = await FileBind.loadAndParseAsync(resolvedPath, format, options.rootKey);
+    return new FileBind(resolvedPath, format, options.rootKey, data);
   }
 
   /**
@@ -122,58 +145,47 @@ export class FileBind extends Bind {
 
   /**
    * Re-reads and re-parses the configuration file, replacing the cached data.
+   *
+   * @throws ConfigInvalidException If the file cannot be read, parsed, or scoped.
    */
-  reload(): void {
-    this.data = this.loadAndParse();
+  async reload(): Promise<void> {
+    this.data = await FileBind.loadAndParseAsync(this.resolvedPath, this.format, this.rootKey);
   }
 
-  /**
-   * Reads and parses the configuration file.
-   *
-   * @private
-   * @returns The parsed configuration data.
-   */
-  private loadAndParse(): Record<string, unknown> {
-    const content = this.readFile();
-    const parsed = this.parseContent(content);
-    return this.rootKey
-      ? scopeToRootKey(parsed, this.rootKey, this.resolvedPath)
-      : parsed;
+  private static async loadAndParseAsync(
+    resolvedPath: string,
+    format: FileFormat,
+    rootKey: string | undefined
+  ): Promise<Record<string, unknown>> {
+    const content = await FileBind.readFileAsync(resolvedPath);
+    const parsed = FileBind.parseContent(content, resolvedPath, format);
+    return rootKey ? scopeToRootKey(parsed, rootKey, resolvedPath) : parsed;
   }
 
-  /**
-   * Reads the configuration file.
-   *
-   * @private
-   * @returns The file content.
-   */
-  private readFile(): string {
+  private static async readFileAsync(resolvedPath: string): Promise<string> {
     try {
-      return fs.readFileSync(this.resolvedPath, 'utf-8');
+      return await fsPromises.readFile(resolvedPath, 'utf-8');
     } catch (error) {
       throw new ConfigInvalidException(
         'FileBind',
-        `Cannot read "${this.resolvedPath}": ${ensureError(error).message}`
+        `Cannot read "${resolvedPath}": ${ensureError(error).message}`
       );
     }
   }
 
-  /**
-   * Parses the configuration file content into a record
-   *
-   * @private
-   * @param content The file content.
-   * @returns The parsed configuration data.
-   */
-  private parseContent(content: string): Record<string, unknown> {
+  private static parseContent(
+    content: string,
+    resolvedPath: string,
+    format: FileFormat
+  ): Record<string, unknown> {
     let parsed: unknown;
 
     try {
-      parsed = PARSERS[this.format](content);
+      parsed = PARSERS[format](content);
     } catch (error) {
       throw new ConfigInvalidException(
         'FileBind',
-        `Failed to parse "${this.resolvedPath}" as ${this.format}: ${ensureError(error).message}`
+        `Failed to parse "${resolvedPath}" as ${format}: ${ensureError(error).message}`
       );
     }
 
@@ -184,7 +196,7 @@ export class FileBind extends Bind {
       const actual = Array.isArray(parsed) ? 'array' : typeof parsed;
       throw new ConfigInvalidException(
         'FileBind',
-        `Config file "${this.resolvedPath}" must contain an object at the top level, found ${actual}`
+        `Config file "${resolvedPath}" must contain an object at the top level, found ${actual}`
       );
     }
 

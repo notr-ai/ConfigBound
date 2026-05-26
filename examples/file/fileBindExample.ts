@@ -100,7 +100,7 @@ async function main() {
     },
     {
       // Earlier bind wins, so env vars override file values.
-      binds: [new EnvVarBind({ prefix: 'EXAMPLE' }), new FileBind({ filePath })]
+      binds: [new EnvVarBind({ prefix: 'EXAMPLE' }), await FileBind.create({ filePath })]
     }
   );
 
