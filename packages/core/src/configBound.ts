@@ -827,7 +827,7 @@ export class ConfigBound implements ConfigValueProvider {
    *     }
    *   },
    *   {
-   *     binds: [new EnvVarBind()]
+   *     binds: [await EnvVarBind.create()]
    *   }
    * );
    *

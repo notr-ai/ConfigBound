@@ -42,7 +42,7 @@ describe('ConfigBoundService', () => {
       imports: [
         ConfigBoundModule.forRoot({
           schema: testSchema,
-          binds: [new EnvVarBind()],
+          binds: [await EnvVarBind.create()],
           validateOnInit: false
         })
       ]
@@ -123,7 +123,7 @@ describe('ConfigBoundModule - forRootAsync', () => {
         ConfigBoundModule.forRootAsync({
           useFactory: () => ({
             schema: testSchema,
-            binds: [new EnvVarBind()],
+            binds: [await EnvVarBind.create()],
             validateOnInit: false
           })
         })
@@ -180,7 +180,7 @@ describe('ConfigBoundService cache mode', () => {
       imports: [
         ConfigBoundModule.forRoot({
           schema: testSchema,
-          binds: [new EnvVarBind()],
+          binds: [await EnvVarBind.create()],
           validateOnInit: false,
           cacheMode: 'manual'
         })

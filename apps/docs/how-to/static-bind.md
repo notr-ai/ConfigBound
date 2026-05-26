@@ -30,7 +30,7 @@ const config = await ConfigBound.createConfig(
   },
   {
     binds: [
-      new StaticBind({
+      await StaticBind.create({
         port: 8080,
         database: { host: "db.local" }
       })
@@ -44,7 +44,7 @@ const config = await ConfigBound.createConfig(
 ```typescript twoslash
 import { StaticBind } from "@config-bound/core";
 // ---cut---
-new StaticBind({
+await StaticBind.create({
   port: 8080,                  // nested key
   "database.host": "db.local"  // flat dot-path key
 })

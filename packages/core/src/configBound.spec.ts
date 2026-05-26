@@ -162,7 +162,7 @@ describe('ConfigBound', () => {
         })
       });
 
-      config.addBind(new EnvVarBind());
+      config.addBind(await EnvVarBind.create());
 
       await expect(config.get('app', 'port')).resolves.toBe(8080);
       await expect(config.get('database', 'host')).resolves.toBe('db.example.com');
@@ -189,7 +189,7 @@ describe('ConfigBound', () => {
         }
       });
 
-      config.addBind(new EnvVarBind());
+      config.addBind(await EnvVarBind.create());
 
       await expect(config.get('app', 'port')).rejects.toThrow();
     });
@@ -231,7 +231,7 @@ describe('ConfigBound', () => {
           }
         },
         {
-          binds: [new EnvVarBind()]
+          binds: [await EnvVarBind.create()]
         }
       );
 
@@ -248,7 +248,7 @@ describe('ConfigBound', () => {
         }
       });
 
-      config.addBind(new EnvVarBind());
+      config.addBind(await EnvVarBind.create());
 
       await expect(config.getOrThrow('app', 'port')).resolves.toBe(8080);
     });
@@ -294,7 +294,7 @@ describe('ConfigBound', () => {
         })
       });
 
-      config.addBind(new EnvVarBind());
+      config.addBind(await EnvVarBind.create());
 
       expect(config.isCacheReady()).toBe(false);
       expect(() => config.getFromCache('app', 'port')).toThrow(ConfigInvalidException);
@@ -354,7 +354,7 @@ describe('ConfigBound', () => {
         })
       });
 
-      config.addBind(new EnvVarBind());
+      config.addBind(await EnvVarBind.create());
 
       await expect(config.validate()).rejects.toThrow();
     });
@@ -370,7 +370,7 @@ describe('ConfigBound', () => {
             })
           },
           {
-            binds: [new EnvVarBind()],
+            binds: [await EnvVarBind.create()],
             validateOnInit: true
           }
         )
@@ -388,7 +388,7 @@ describe('ConfigBound', () => {
             })
           },
           {
-            binds: [new EnvVarBind()],
+            binds: [await EnvVarBind.create()],
             validateOnInit: false
           }
         )
@@ -428,7 +428,7 @@ describe('ConfigBound', () => {
         })
       });
 
-      config.addBind(new EnvVarBind());
+      config.addBind(await EnvVarBind.create());
 
       const errors = await config.getValidationErrors();
       expect(errors.length).toBeGreaterThan(0);
@@ -452,7 +452,7 @@ describe('ConfigBound', () => {
         })
       });
 
-      config.addBind(new EnvVarBind());
+      config.addBind(await EnvVarBind.create());
 
       const errors = await config.getValidationErrors();
       expect(errors).toHaveLength(2);

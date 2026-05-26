@@ -19,7 +19,17 @@ export type StaticBindValues = Record<string, unknown>;
 export class StaticBind extends Bind {
   private values: StaticBindValues;
 
-  constructor(values: StaticBindValues = {}) {
+  /**
+   * Creates a `StaticBind` from an in-memory values object.
+   *
+   * @param values - Key/value pairs to serve as configuration values.
+   * @returns A fully initialised `StaticBind` instance.
+   */
+  static async create(values: StaticBindValues = {}): Promise<StaticBind> {
+    return new StaticBind(values);
+  }
+
+  private constructor(values: StaticBindValues = {}) {
     super('Static');
     this.values = values;
   }

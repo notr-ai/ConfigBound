@@ -119,7 +119,7 @@ async function main() {
     },
     {
       // This is where you specify HOW to get the data, not WHAT the data looks like
-      binds: [new EnvVarBind({ prefix: 'EXAMPLE' })]
+      binds: [await EnvVarBind.create({ prefix: 'EXAMPLE' })]
     }
   );
 

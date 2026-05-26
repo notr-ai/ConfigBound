@@ -58,7 +58,7 @@ const config = ConfigBound.createConfig(
     )
   },
   {
-    binds: [new EnvVarBind({ prefix: 'MYAPP' })],
+    binds: [await EnvVarBind.create({ prefix: 'MYAPP' })],
     validateOnInit: true // Catch config errors at startup!
   }
 );
@@ -101,7 +101,7 @@ const appSection = new Section('app', [portElement, logLevelElement]);
 // Create the config instance
 const config = new ConfigBound(
   'app',
-  [new EnvVarBind({ prefix: 'MYAPP' })],
+  [await EnvVarBind.create({ prefix: 'MYAPP' })],
   [appSection]
 );
 
@@ -156,7 +156,7 @@ const config = ConfigBound.createConfig(
     /* your schema */
   },
   {
-    binds: [new EnvVarBind({ prefix: 'MYAPP' })]
+    binds: [await EnvVarBind.create({ prefix: 'MYAPP' })]
   }
 );
 ```
@@ -195,8 +195,8 @@ const config = ConfigBound.createConfig(
   {
     // Earlier bind wins: StaticBind overrides EnvVarBind here.
     binds: [
-      new StaticBind({ 'app.port': 8080 }),
-      new EnvVarBind({ prefix: 'MYAPP' })
+      await StaticBind.create({ 'app.port': 8080 }),
+      await EnvVarBind.create({ prefix: 'MYAPP' })
     ]
   }
 );

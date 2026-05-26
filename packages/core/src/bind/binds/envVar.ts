@@ -24,7 +24,20 @@ export class EnvVarBind extends Bind {
    */
   private customEnvVarName?: (elementPath: string) => string;
 
-  constructor(options?: {
+  /**
+   * Creates an `EnvVarBind`.
+   *
+   * @param options - Optional prefix or custom naming function.
+   * @returns A fully initialised `EnvVarBind` instance.
+   */
+  static async create(options?: {
+    prefix?: string;
+    customEnvVarName?: (elementPath: string) => string;
+  }): Promise<EnvVarBind> {
+    return new EnvVarBind(options);
+  }
+
+  private constructor(options?: {
     prefix?: string;
     customEnvVarName?: (elementPath: string) => string;
   }) {

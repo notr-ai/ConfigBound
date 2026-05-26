@@ -2,21 +2,27 @@
 "@config-bound/core": major
 ---
 
-Fix several API correctness issues.
+Fix several API correctness issues and standardize bind creation.
 
-**Breaking: `FileBind` now requires `await FileBind.create(options)` instead of `new FileBind(options)`**
+**Breaking: All binds now use `await Bind.create(options)` instead of `new Bind(options)`**
 
-The constructor is now private. File I/O is performed asynchronously via the static factory, eliminating synchronous blocking at startup.
+Constructors on all built-in binds are now private. Use the static async factory on each:
 
 ```ts
 // Before
 const bind = new FileBind({ filePath: './config.yaml' });
+const env  = new EnvVarBind({ prefix: 'APP' });
+const stat = new StaticBind({ 'app.port': 3000 });
 
 // After
 const bind = await FileBind.create({ filePath: './config.yaml' });
+const env  = await EnvVarBind.create({ prefix: 'APP' });
+const stat = await StaticBind.create({ 'app.port': 3000 });
 ```
 
-`reload()` is now async and returns `Promise<void>`:
+This establishes a uniform creation pattern across all binds. `FileBind` already required I/O at creation; `EnvVarBind` and `StaticBind` now follow the same convention so that custom binds have a clear, idiomatic pattern to follow.
+
+`FileBind.reload()` is also now async and returns `Promise<void>`:
 
 ```ts
 // Before

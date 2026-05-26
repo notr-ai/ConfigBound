@@ -46,7 +46,7 @@ const appConfig = {
   imports: [
     ConfigBoundModule.forRoot({
       schema: appConfig,
-      binds: [new EnvVarBind({ prefix: 'APP' })],
+      binds: [await EnvVarBind.create({ prefix: 'APP' })],
       validateOnInit: true,
       isGlobal: true
     })
@@ -98,7 +98,7 @@ import { ConfigService } from '@nestjs/config';
       ): Promise<ConfigBoundModuleOptions> => {
         return {
           schema: appConfig,
-          binds: [new EnvVarBind({ prefix: 'APP' })],
+          binds: [await EnvVarBind.create({ prefix: 'APP' })],
           validateOnInit: true
         };
       },
@@ -124,7 +124,7 @@ export class ConfigBoundConfigService implements ConfigBoundOptionsFactory {
   createConfigBoundOptions(): ConfigBoundModuleOptions {
     return {
       schema: appConfig,
-      binds: [new EnvVarBind({ prefix: 'APP' })],
+      binds: [await EnvVarBind.create({ prefix: 'APP' })],
       validateOnInit: true
     };
   }
@@ -199,7 +199,7 @@ The service provides full type-safe access to your configuration:
 3. **Use `getOrThrow()`** for required configuration values
 4. **Use `get()`** for optional configuration values with proper fallback handling
 5. **Define your schema in a separate file** for reusability and better organization
-6. **Use a prefix with `EnvVarBind`** to give a meaningful prefix to environment variable names (e.g., `new EnvVarBind({ prefix: "APP" })`)
+6. **Use a prefix with `EnvVarBind`** to give a meaningful prefix to environment variable names (e.g., `await EnvVarBind.create({ prefix: "APP" })`)
 7. **Remember top-level items go in the 'app' section**: Top-level `configItem` entries are automatically placed in a section named after the `name` option (default: 'app'), so access them with `config.getOrThrow("app", "port")`
 
 ## Type Safety

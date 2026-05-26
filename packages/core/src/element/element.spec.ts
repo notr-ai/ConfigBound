@@ -17,7 +17,7 @@ describe('Element', () => {
   let element: Element<string>;
   let elementNoDefault: Element<string>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Element with default value
     element = new Element<string>(
       'testName',
@@ -40,7 +40,7 @@ describe('Element', () => {
     const section = new Section('TestSection', [element, elementNoDefault]);
 
     // Create bind and config bound
-    const envVarBind = new EnvVarBind();
+    const envVarBind = await EnvVarBind.create();
     configBound = new ConfigBound(
       'TestConfig',
       [envVarBind],

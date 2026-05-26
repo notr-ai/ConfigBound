@@ -10,6 +10,10 @@ import type { Section } from '../section/section';
 
 /**
  * A Bind retrieves the values of the {@link Element} from their source.
+ *
+ * Concrete implementations should expose a `static async create(options): Promise<BindSubclass>`
+ * factory rather than a public constructor. This ensures a uniform creation pattern across
+ * all binds regardless of whether initialisation is sync or async.
  */
 export abstract class Bind {
   readonly name: BindName;

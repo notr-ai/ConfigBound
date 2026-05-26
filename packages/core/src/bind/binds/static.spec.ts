@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 describe('StaticBind', () => {
   it('retrieves flat dot-path values', async () => {
-    const bind = new StaticBind({
+    const bind = await StaticBind.create({
       'app.port': 3000
     });
 
@@ -13,7 +13,7 @@ describe('StaticBind', () => {
   });
 
   it('retrieves nested values', async () => {
-    const bind = new StaticBind({
+    const bind = await StaticBind.create({
       app: {
         host: 'localhost'
       }
@@ -23,7 +23,7 @@ describe('StaticBind', () => {
   });
 
   it('prefers nested values over flat values when both exist', async () => {
-    const bind = new StaticBind({
+    const bind = await StaticBind.create({
       app: {
         mode: 'nested'
       },
@@ -34,7 +34,7 @@ describe('StaticBind', () => {
   });
 
   it('returns undefined when no value exists for the path', async () => {
-    const bind = new StaticBind({
+    const bind = await StaticBind.create({
       app: {
         host: 'localhost'
       }
@@ -44,7 +44,7 @@ describe('StaticBind', () => {
   });
 
   it('treats flat null values as undefined', async () => {
-    const bind = new StaticBind({
+    const bind = await StaticBind.create({
       'app.port': null
     });
 
@@ -52,7 +52,7 @@ describe('StaticBind', () => {
   });
 
   it('treats nested null values as undefined', async () => {
-    const bind = new StaticBind({
+    const bind = await StaticBind.create({
       app: {
         port: null
       }
@@ -62,7 +62,7 @@ describe('StaticBind', () => {
   });
 
   it('falls back to flat value when nested value is null', async () => {
-    const bind = new StaticBind({
+    const bind = await StaticBind.create({
       app: {
         mode: null
       },
@@ -78,10 +78,10 @@ describe('StaticBind integration with ConfigBound', () => {
     process.env.STATIC_BIND_TEST_APP_PORT = '9999';
 
     try {
-      const staticBind = new StaticBind({
+      const staticBind = await StaticBind.create({
         'app.port': 8080
       });
-      const envBind = new EnvVarBind({ prefix: 'STATIC_BIND_TEST' });
+      const envBind = await EnvVarBind.create({ prefix: 'STATIC_BIND_TEST' });
 
       const config = await ConfigBound.createConfig(
         {
@@ -101,10 +101,10 @@ describe('StaticBind integration with ConfigBound', () => {
   it('acts as fallback when placed after other binds', async () => {
     delete process.env.STATIC_BIND_TEST_APP_PORT;
 
-    const staticBind = new StaticBind({
+    const staticBind = await StaticBind.create({
       'app.port': 7000
     });
-    const envBind = new EnvVarBind({ prefix: 'STATIC_BIND_TEST' });
+    const envBind = await EnvVarBind.create({ prefix: 'STATIC_BIND_TEST' });
 
     const config = await ConfigBound.createConfig(
       {
@@ -122,10 +122,10 @@ describe('StaticBind integration with ConfigBound', () => {
     process.env.STATIC_BIND_TEST_APP_PORT = '9090';
 
     try {
-      const staticBind = new StaticBind({
+      const staticBind = await StaticBind.create({
         'app.port': null
       });
-      const envBind = new EnvVarBind({ prefix: 'STATIC_BIND_TEST' });
+      const envBind = await EnvVarBind.create({ prefix: 'STATIC_BIND_TEST' });
 
       const config = await ConfigBound.createConfig(
         {

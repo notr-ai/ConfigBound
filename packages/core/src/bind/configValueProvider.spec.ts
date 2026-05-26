@@ -17,7 +17,7 @@ describe('ConfigValueProvider functionality', () => {
   let dbHostElement: Element<string>;
   let dbPortElement: Element<number>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Set environment variables before creating any objects
     process.env.TEST_APP_SERVER_PORT = '8081';
     process.env.TEST_APP_DATABASE_HOST = 'test-db.example.com';
@@ -78,7 +78,7 @@ describe('ConfigValueProvider functionality', () => {
     );
 
     // Create bind first
-    const envVarBind = new EnvVarBind({ prefix: 'TEST_APP' });
+    const envVarBind = await EnvVarBind.create({ prefix: 'TEST_APP' });
 
     // Create the config bound with bind and then add sections
     configBound = new ConfigBound(

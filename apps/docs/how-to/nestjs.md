@@ -41,7 +41,7 @@ export const AppConfig = await ConfigBound.createConfig(
     })
   },
   {
-    binds: [new EnvVarBind({ prefix: 'APP' })]
+    binds: [await EnvVarBind.create({ prefix: 'APP' })]
   }
 );
 

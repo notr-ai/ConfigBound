@@ -31,7 +31,7 @@ const config = await ConfigBound.createConfig(
     })
   },
   {
-    binds: [new EnvVarBind()]
+    binds: [await EnvVarBind.create()]
   }
 );
 ```
@@ -43,7 +43,7 @@ With this config, `PORT` sets `port` and `DATABASE_HOST` sets `database.host`.
 ```typescript twoslash
 import { EnvVarBind } from "@config-bound/core";
 // ---cut---
-const binds = [new EnvVarBind({ prefix: "MYAPP" })];
+const binds = [await EnvVarBind.create({ prefix: "MYAPP" })];
 ```
 
 With the prefix `MYAPP`, `MYAPP_PORT` sets `port` and `MYAPP_DATABASE_HOST` sets

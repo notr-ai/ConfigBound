@@ -11,7 +11,7 @@ let config: ConfigBound;
  * @group integration
  */
 describe('envVarBindIntegration', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Set environment variables first
     process.env.MY_APP_SERVER_PORT = '8081';
     process.env.MY_APP_API_APIKEY = 'abc123';
@@ -51,7 +51,7 @@ describe('envVarBindIntegration', () => {
     );
 
     // Create an env var bind
-    const envVarBind = new EnvVarBind({ prefix: 'MY_APP' });
+    const envVarBind = await EnvVarBind.create({ prefix: 'MY_APP' });
 
     // Create the config bound with the bind
     config = new ConfigBound(

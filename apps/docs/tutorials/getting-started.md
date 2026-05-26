@@ -37,7 +37,7 @@ const config = await ConfigBound.createConfig(
     })
   },
   {
-    binds: [new EnvVarBind()],
+    binds: [await EnvVarBind.create()],
     validateOnInit: true
   }
 );

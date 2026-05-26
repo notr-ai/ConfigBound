@@ -73,7 +73,7 @@ const config = await ConfigBound.createConfig(
     )
   },
   {
-    binds: [new EnvVarBind({ prefix: "MYAPP" })]
+    binds: [await EnvVarBind.create({ prefix: "MYAPP" })]
   }
 );
 

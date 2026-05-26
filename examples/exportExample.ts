@@ -142,7 +142,7 @@ async function main() {
       )
     },
     {
-      binds: [new EnvVarBind({ prefix: 'MYAPP' })],
+      binds: [await EnvVarBind.create({ prefix: 'MYAPP' })],
       name: 'myApplication'
     }
   );

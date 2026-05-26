@@ -359,7 +359,7 @@ describe('FileBind integration with ConfigBound', () => {
       'low-priority.json',
       JSON.stringify({ app: { port: 3000 } })
     );
-    const envBind = new EnvVarBind({ prefix: 'FILEBIND_TEST' });
+    const envBind = await EnvVarBind.create({ prefix: 'FILEBIND_TEST' });
     const fileBind = await FileBind.create({ filePath });
 
     const portElement = new Element<number>(

@@ -125,7 +125,7 @@ async function main() {
     },
     {
       // Bind order is priority; env vars override static defaults.
-      binds: [new EnvVarBind({ prefix: 'EXAMPLE' }), new StaticBind(staticValues)]
+      binds: [await EnvVarBind.create({ prefix: 'EXAMPLE' }), await StaticBind.create(staticValues)]
     }
   );
 

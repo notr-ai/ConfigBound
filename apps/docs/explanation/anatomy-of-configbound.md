@@ -44,7 +44,7 @@ const schema = { port: configItem<number>({ default: 3000 }) };
 // ---cut---
 const config = await ConfigBound.createConfig(schema, {
   binds: [
-    new EnvVarBind(),                                       // checked first
+    await EnvVarBind.create(),                              // checked first
     await FileBind.create({ filePath: '.env.local' })       // fallback
   ]
 });
