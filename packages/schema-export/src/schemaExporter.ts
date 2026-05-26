@@ -152,7 +152,7 @@ export function exportSection(
  */
 export function exportSchema(
   name: string,
-  sections: Section[],
+  sections: ReadonlyArray<Section>,
   includeOmitted: boolean = false
 ): ExportedSchema {
   return {
