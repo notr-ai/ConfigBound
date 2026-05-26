@@ -982,16 +982,16 @@ class ConfigBoundBuilder {
     config: ConfigItem<unknown>,
     logger: Logger
   ): Element<unknown> {
-    return new Element(
+    return new Element({
       name,
-      config.description,
-      config.default,
-      config.example,
-      config.sensitive ?? false,
-      config.omitFromSchema ?? false,
-      config.validator ?? z.any(),
+      description: config.description,
+      default: config.default,
+      example: config.example,
+      sensitive: config.sensitive ?? false,
+      omitFromSchema: config.omitFromSchema ?? false,
+      validator: config.validator ?? z.any(),
       logger
-    );
+    });
   }
 
 }

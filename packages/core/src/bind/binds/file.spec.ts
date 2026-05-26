@@ -329,24 +329,20 @@ describe('FileBind integration with ConfigBound', () => {
     );
     const fileBind = await FileBind.create({ filePath });
 
-    const portElement = new Element<number>(
-      'port',
-      'Server port',
-      undefined,
-      undefined,
-      false,
-      false,
-      z.number().int().min(0).max(65535)
-    );
-    const hostElement = new Element<string>(
-      'host',
-      'Server host',
-      undefined,
-      undefined,
-      false,
-      false,
-      z.string()
-    );
+    const portElement = new Element<number>({
+      name: 'port',
+      description: 'Server port',
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.number().int().min(0).max(65535)
+    });
+    const hostElement = new Element<string>({
+      name: 'host',
+      description: 'Server host',
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.string()
+    });
     const section = new Section('app', [portElement, hostElement]);
     const config = new ConfigBound('myapp', [fileBind], [section]);
 
@@ -362,15 +358,13 @@ describe('FileBind integration with ConfigBound', () => {
     const envBind = await EnvVarBind.create({ prefix: 'FILEBIND_TEST' });
     const fileBind = await FileBind.create({ filePath });
 
-    const portElement = new Element<number>(
-      'port',
-      'Server port',
-      undefined,
-      undefined,
-      false,
-      false,
-      z.number()
-    );
+    const portElement = new Element<number>({
+      name: 'port',
+      description: 'Server port',
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.number()
+    });
     const section = new Section('app', [portElement]);
 
     // EnvVarBind first → env wins when set
@@ -387,15 +381,14 @@ describe('FileBind integration with ConfigBound', () => {
     const filePath = tmpFile('sparse.json', JSON.stringify({ app: {} }));
     const fileBind = await FileBind.create({ filePath });
 
-    const portElement = new Element<number>(
-      'port',
-      'Server port',
-      8080,
-      undefined,
-      false,
-      false,
-      z.number()
-    );
+    const portElement = new Element<number>({
+      name: 'port',
+      description: 'Server port',
+      default: 8080,
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.number()
+    });
     const section = new Section('app', [portElement]);
     const config = new ConfigBound('myapp', [fileBind], [section]);
 

@@ -11,13 +11,18 @@ describe('Section', () => {
   let element2: Element<number>;
 
   beforeEach(() => {
-    element1 = new Element<string>(
-      'element1',
-      'First element',
-      'default',
-      'example'
-    );
-    element2 = new Element<number>('element2', 'Second element', 42, 100);
+    element1 = new Element<string>({
+      name: 'element1',
+      description: 'First element',
+      default: 'default',
+      example: 'example'
+    });
+    element2 = new Element<number>({
+      name: 'element2',
+      description: 'Second element',
+      default: 42,
+      example: 100
+    });
     section = new Section(
       'TestSection',
       [element1, element2],
@@ -44,9 +49,9 @@ describe('Section', () => {
   describe('findDuplicateElements', () => {
     it('should return an empty array when no duplicates exist', () => {
       const noDuplicates = [
-        new Element<string>('unique1', 'Unique 1'),
-        new Element<string>('unique2', 'Unique 2'),
-        new Element<string>('unique3', 'Unique 3')
+        new Element<string>({ name: 'unique1', description: 'Unique 1' }),
+        new Element<string>({ name: 'unique2', description: 'Unique 2' }),
+        new Element<string>({ name: 'unique3', description: 'Unique 3' })
       ];
 
       const result = Section.findDuplicateElements(noDuplicates);
@@ -54,9 +59,18 @@ describe('Section', () => {
     });
 
     it('should return all elements with duplicate names', () => {
-      const duplicateElement1 = new Element<string>('duplicate', 'Duplicate 1');
-      const duplicateElement2 = new Element<number>('duplicate', 'Duplicate 2');
-      const uniqueElement = new Element<boolean>('unique', 'Unique');
+      const duplicateElement1 = new Element<string>({
+        name: 'duplicate',
+        description: 'Duplicate 1'
+      });
+      const duplicateElement2 = new Element<number>({
+        name: 'duplicate',
+        description: 'Duplicate 2'
+      });
+      const uniqueElement = new Element<boolean>({
+        name: 'unique',
+        description: 'Unique'
+      });
 
       const elementsWithDuplicates = [
         duplicateElement1,
@@ -69,11 +83,26 @@ describe('Section', () => {
     });
 
     it('should handle multiple sets of duplicates', () => {
-      const dupA1 = new Element<string>('dupA', 'Duplicate A1');
-      const dupA2 = new Element<string>('dupA', 'Duplicate A2');
-      const dupB1 = new Element<string>('dupB', 'Duplicate B1');
-      const dupB2 = new Element<string>('dupB', 'Duplicate B2');
-      const uniqueC = new Element<string>('uniqueC', 'Unique C');
+      const dupA1 = new Element<string>({
+        name: 'dupA',
+        description: 'Duplicate A1'
+      });
+      const dupA2 = new Element<string>({
+        name: 'dupA',
+        description: 'Duplicate A2'
+      });
+      const dupB1 = new Element<string>({
+        name: 'dupB',
+        description: 'Duplicate B1'
+      });
+      const dupB2 = new Element<string>({
+        name: 'dupB',
+        description: 'Duplicate B2'
+      });
+      const uniqueC = new Element<string>({
+        name: 'uniqueC',
+        description: 'Unique C'
+      });
 
       const elements = [dupA1, dupB1, uniqueC, dupA2, dupB2];
 
@@ -95,8 +124,8 @@ describe('Section', () => {
   describe('setElements', () => {
     it('should update elements when there are no duplicates', () => {
       const newElements = [
-        new Element<string>('new1', 'New Element 1'),
-        new Element<number>('new2', 'New Element 2')
+        new Element<string>({ name: 'new1', description: 'New Element 1' }),
+        new Element<number>({ name: 'new2', description: 'New Element 2' })
       ];
 
       section.setElements(newElements);
@@ -106,8 +135,14 @@ describe('Section', () => {
     });
 
     it('should throw ElementExistsException when duplicates exist', () => {
-      const duplicateElement1 = new Element<string>('duplicate', 'Duplicate 1');
-      const duplicateElement2 = new Element<number>('duplicate', 'Duplicate 2');
+      const duplicateElement1 = new Element<string>({
+        name: 'duplicate',
+        description: 'Duplicate 1'
+      });
+      const duplicateElement2 = new Element<number>({
+        name: 'duplicate',
+        description: 'Duplicate 2'
+      });
 
       expect(() => {
         section.setElements([duplicateElement1, duplicateElement2]);
@@ -126,7 +161,10 @@ describe('Section', () => {
 
   describe('addElement', () => {
     it('should add an element when there are no duplicates', () => {
-      const newElement = new Element<boolean>('newElement', 'New Element');
+      const newElement = new Element<boolean>({
+        name: 'newElement',
+        description: 'New Element'
+      });
       section.addElement(newElement);
 
       const expectedElements = [element1, element2, newElement];
@@ -134,10 +172,10 @@ describe('Section', () => {
     });
 
     it('should throw ElementExistsException when adding a duplicate element', () => {
-      const duplicateElement = new Element<string>(
-        'element1',
-        'Duplicate of element1'
-      );
+      const duplicateElement = new Element<string>({
+        name: 'element1',
+        description: 'Duplicate of element1'
+      });
 
       expect(() => {
         section.addElement(duplicateElement);

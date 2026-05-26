@@ -13,6 +13,28 @@ import { sanitizeName } from '../utilities/sanitizeNames';
 import { ConfigValueProvider } from '../bind/configValueProvider';
 
 /**
+ * Options for constructing an {@link Element}.
+ */
+export interface ElementOptions<T> {
+  /** The name of the element. Must be unique within its section. */
+  name: string;
+  /** A human-readable description of what this element configures. */
+  description?: string;
+  /** The default value used when no bind provides a value. */
+  default?: T;
+  /** An example value shown in exported schemas. Not validated. */
+  example?: T;
+  /** When `true`, the value is treated as sensitive (e.g. redacted in logs). */
+  sensitive?: boolean;
+  /** When `true`, the element is excluded from exported schemas. */
+  omitFromSchema?: boolean;
+  /** Zod validator applied to the resolved value. Defaults to `z.any()`. */
+  validator?: z.ZodType<T>;
+  /** Logger instance. Typically injected by the parent {@link Section}. */
+  logger?: Logger;
+}
+
+/**
  * A Element is a single configuration option
  */
 export class Element<T> {
@@ -53,25 +75,25 @@ export class Element<T> {
    */
   private logger?: Logger;
 
-  constructor(
-    name: string,
-    description?: string,
-    defaultValue?: T,
-    exampleValue?: T,
-    sensitive: boolean = false,
-    omitFromSchema: boolean = false,
-    validator: z.ZodType<T> = z.any() as z.ZodType<T>,
-    logger?: Logger
-  ) {
+  constructor(options: ElementOptions<T>) {
+    const {
+      name,
+      description,
+      sensitive = false,
+      omitFromSchema = false,
+      validator = z.any() as z.ZodType<T>,
+      logger
+    } = options;
+
     this.name = sanitizeName(name);
     this.description = description;
     this.omitFromSchema = omitFromSchema;
     this.validator = validator;
     this.logger = logger;
+    this.sensitive = sensitive;
 
-    // Ensure the default value is valid
-    if (defaultValue !== undefined) {
-      const defaultValueResult = this.validator.safeParse(defaultValue);
+    if (options.default !== undefined) {
+      const defaultValueResult = this.validator.safeParse(options.default);
       if (!defaultValueResult.success) {
         const errorMessage = defaultValueResult.error.issues
           .map((e: z.ZodIssue) => `${e.path.join('.')}: ${e.message}`)
@@ -79,11 +101,10 @@ export class Element<T> {
         throw new ConfigInvalidException(this.name, errorMessage);
       }
     }
-    this.sensitive = sensitive;
-    this.default = defaultValue;
+    this.default = options.default;
 
     // Example values are not validated because they might use placeholder values that wouldn't validate.
-    this.example = exampleValue;
+    this.example = options.example;
   }
 
   /**

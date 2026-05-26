@@ -19,22 +19,21 @@ describe('Element', () => {
 
   beforeEach(async () => {
     // Element with default value
-    element = new Element<string>(
-      'testName',
-      'A test config element',
-      'defaultValue',
-      'exampleValue',
-      false
-    );
+    element = new Element<string>({
+      name: 'testName',
+      description: 'A test config element',
+      default: 'defaultValue',
+      example: 'exampleValue',
+      sensitive: false
+    });
 
     // Element without default value
-    elementNoDefault = new Element<string>(
-      'testNoDefault',
-      'A test config element without default',
-      undefined,
-      'exampleValue',
-      false
-    );
+    elementNoDefault = new Element<string>({
+      name: 'testNoDefault',
+      description: 'A test config element without default',
+      example: 'exampleValue',
+      sensitive: false
+    });
 
     // Create section with both elements
     const section = new Section('TestSection', [element, elementNoDefault]);
@@ -63,15 +62,15 @@ describe('Element', () => {
   // Test for constructor with invalid default value
   test('constructor should throw ConfigInvalidException when default value is invalid', () => {
     expect(() => {
-      new Element<number>(
-        'invalidDefault',
-        'Config with invalid default',
-        -10, // Invalid default according to validator
-        100,
-        false,
-        false,
-        z.number().min(0).max(100) // Validator requires positive numbers
-      );
+      new Element<number>({
+        name: 'invalidDefault',
+        description: 'Config with invalid default',
+        default: -10,
+        example: 100,
+        sensitive: false,
+        omitFromSchema: false,
+        validator: z.number().min(0).max(100)
+      });
     }).toThrow(ConfigInvalidException);
   });
 
@@ -108,53 +107,53 @@ describe('Element', () => {
 
   // Test for isRequired functionality
   test('isRequired should return true when validator does not have optional', () => {
-    const element = new Element<string>(
-      'requiredConfig',
-      'A required config element',
-      'default',
-      'example',
-      false,
-      false,
-      z.string()
-    );
+    const element = new Element<string>({
+      name: 'requiredConfig',
+      description: 'A required config element',
+      default: 'default',
+      example: 'example',
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.string()
+    });
 
     expect(element.isRequired()).toBe(true);
   });
 
   test('isRequired should return false when validator is optional', () => {
-    const element = new Element<string | undefined>(
-      'optionalConfig',
-      'An optional config element',
-      'default',
-      'example',
-      false,
-      false,
-      z.string().optional()
-    );
+    const element = new Element<string | undefined>({
+      name: 'optionalConfig',
+      description: 'An optional config element',
+      default: 'default',
+      example: 'example',
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.string().optional()
+    });
 
     expect(element.isRequired()).toBe(false);
   });
 
   test('should initialize with omitFromSchema property', () => {
-    const element = new Element<string>(
-      'privateConfig',
-      'A private config element',
-      'default',
-      'example',
-      false,
-      true
-    );
+    const element = new Element<string>({
+      name: 'privateConfig',
+      description: 'A private config element',
+      default: 'default',
+      example: 'example',
+      sensitive: false,
+      omitFromSchema: true
+    });
 
     expect(element.omitFromSchema).toBe(true);
   });
 
   test('should default omitFromSchema to false when not specified', () => {
-    const element = new Element<string>(
-      'publicConfig',
-      'A public config element',
-      'default',
-      'example'
-    );
+    const element = new Element<string>({
+      name: 'publicConfig',
+      description: 'A public config element',
+      default: 'default',
+      example: 'example'
+    });
 
     expect(element.omitFromSchema).toBe(false);
   });

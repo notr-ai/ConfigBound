@@ -18,25 +18,23 @@ describe('SchemaExportService', () => {
 
     service = module.get<SchemaExportService>(SchemaExportService);
 
-    const hostElement = new Element<string>(
-      'host',
-      'Database host',
-      'localhost',
-      undefined,
-      false,
-      false,
-      z.string()
-    );
+    const hostElement = new Element<string>({
+      name: 'host',
+      description: 'Database host',
+      default: 'localhost',
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.string()
+    });
 
-    const portElement = new Element<number>(
-      'port',
-      'Database port',
-      5432,
-      undefined,
-      false,
-      false,
-      z.number()
-    );
+    const portElement = new Element<number>({
+      name: 'port',
+      description: 'Database port',
+      default: 5432,
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.number()
+    });
 
     const databaseSection = new Section(
       'database',

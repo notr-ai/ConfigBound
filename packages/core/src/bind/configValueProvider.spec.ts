@@ -23,46 +23,46 @@ describe('ConfigValueProvider functionality', () => {
     process.env.TEST_APP_DATABASE_HOST = 'test-db.example.com';
 
     // Create config elements for server
-    portElement = new Element<number>(
-      'port',
-      'The port for the server to listen on',
-      3000, // default
-      8080, // example
-      false, // not sensitive
-      false, // not omitted from schema
-      z.number().int().min(0).max(65535)
-    );
+    portElement = new Element<number>({
+      name: 'port',
+      description: 'The port for the server to listen on',
+      default: 3000,
+      example: 8080,
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.number().int().min(0).max(65535)
+    });
 
-    hostElement = new Element<string>(
-      'host',
-      'The host for the server',
-      'localhost', // default
-      '0.0.0.0', // example
-      false, // not sensitive
-      false, // not omitted from schema
-      z.string()
-    );
+    hostElement = new Element<string>({
+      name: 'host',
+      description: 'The host for the server',
+      default: 'localhost',
+      example: '0.0.0.0',
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.string()
+    });
 
     // Create config elements for database
-    dbHostElement = new Element<string>(
-      'host',
-      'The database host',
-      'localhost', // default
-      'db.example.com', // example
-      false, // not sensitive
-      false, // not omitted from schema
-      z.string()
-    );
+    dbHostElement = new Element<string>({
+      name: 'host',
+      description: 'The database host',
+      default: 'localhost',
+      example: 'db.example.com',
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.string()
+    });
 
-    dbPortElement = new Element<number>(
-      'port',
-      'The database port',
-      5432, // default
-      5432, // example
-      false, // not sensitive
-      false, // not omitted from schema
-      z.number().int().min(0).max(65535)
-    );
+    dbPortElement = new Element<number>({
+      name: 'port',
+      description: 'The database port',
+      default: 5432,
+      example: 5432,
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.number().int().min(0).max(65535)
+    });
 
     // Create sections
     serverSection = new Section(
