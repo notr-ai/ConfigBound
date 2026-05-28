@@ -20,7 +20,7 @@ import {
 
 export interface LoadedConfig {
   name: string;
-  sections: Section[];
+  sections: ReadonlyArray<Section>;
   instance: ConfigBound | TypedConfigBound<ConfigSchema>;
 }
 
