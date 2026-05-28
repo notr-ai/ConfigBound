@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Project, Node, SyntaxKind, SourceFile } from 'ts-morph';
 import * as path from 'path';
 import * as fs from 'fs';
+import { glob } from 'node:fs/promises';
 import { ensureError } from '@config-bound/core/utilities';
 
 export interface DiscoveredConfig {
@@ -18,7 +19,7 @@ export class ConfigDiscoveryService {
     searchPath: string,
     recursive: boolean = true
   ): Promise<DiscoveredConfig[]> {
-    const tsFiles = this.findTypeScriptFiles(searchPath, recursive);
+    const tsFiles = await this.findTypeScriptFiles(searchPath, recursive);
     const discovered: DiscoveredConfig[] = [];
 
     // Create a single project instance for all files
@@ -171,11 +172,10 @@ export class ConfigDiscoveryService {
     return undefined;
   }
 
-  private findTypeScriptFiles(
+  private async findTypeScriptFiles(
     searchPath: string,
     recursive: boolean
-  ): string[] {
-    const files: string[] = [];
+  ): Promise<string[]> {
     const excludedDirs = new Set([
       'node_modules',
       'dist',
@@ -192,44 +192,29 @@ export class ConfigDiscoveryService {
       'env'
     ]);
 
-    function traverse(dir: string) {
-      let entries;
-      try {
-        entries = fs.readdirSync(dir, { withFileTypes: true });
-      } catch {
-        // Skip directories we can't read
-        return;
-      }
-
-      for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-
-        // Skip excluded directories and hidden directories
-        if (entry.isDirectory()) {
-          if (excludedDirs.has(entry.name) || entry.name.startsWith('.')) {
-            continue;
-          }
-          if (recursive) {
-            traverse(fullPath);
-          }
-        } else if (entry.isFile() && entry.name.endsWith('.ts')) {
-          // Skip test files and declaration files
-          if (
-            !entry.name.endsWith('.spec.ts') &&
-            !entry.name.endsWith('.test.ts') &&
-            !entry.name.endsWith('.d.ts')
-          ) {
-            files.push(fullPath);
-          }
-        }
-      }
+    const stats = fs.statSync(searchPath);
+    if (stats.isFile()) {
+      return searchPath.endsWith('.ts') ? [searchPath] : [];
     }
 
-    const stats = fs.statSync(searchPath);
-    if (stats.isDirectory()) {
-      traverse(searchPath);
-    } else if (stats.isFile() && searchPath.endsWith('.ts')) {
-      files.push(searchPath);
+    const pattern = recursive ? '**/*.ts' : '*.ts';
+    const files: string[] = [];
+
+    for await (const file of glob(pattern, {
+      cwd: searchPath,
+      exclude: (p) =>
+        p
+          .split(path.sep)
+          .some((part) => excludedDirs.has(part) || part.startsWith('.'))
+    })) {
+      const name = path.basename(file);
+      if (
+        !name.endsWith('.spec.ts') &&
+        !name.endsWith('.test.ts') &&
+        !name.endsWith('.d.ts')
+      ) {
+        files.push(path.join(searchPath, file));
+      }
     }
 
     return files;

@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@config-bound/eslint-config": "workspace:*",
+    "@config-bound/typescript-config": "workspace:*",
     "@nestjs/testing": "^11.1.18",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
