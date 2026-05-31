@@ -304,6 +304,9 @@ importers:
       husky:
         specifier: 'catalog:'
         version: 9.1.7
+      jest:
+        specifier: 'catalog:'
+        version: 30.4.2(@types/node@25.9.1)
       jest-runner-groups:
         specifier: 'catalog:'
         version: 2.2.0(jest-docblock@30.4.0)(jest-runner@30.4.2)

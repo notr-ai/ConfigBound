@@ -149,6 +149,7 @@
     "@config-bound/typescript-config": "workspace:*",
     "@eslint/js": "catalog:",
     "@types/jest": "catalog:",
+    "jest": "catalog:",
     "@types/js-yaml": "^4.0.9",
     "@typescript-eslint/eslint-plugin": "catalog:",
     "eslint": "catalog:",
