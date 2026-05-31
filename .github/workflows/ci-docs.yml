@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - uses: DavidAnson/markdownlint-cli2-action@v23.0.0
+      - uses: DavidAnson/markdownlint-cli2-action@v23.2.0
         with:
           globs: '**/*.md'
           config: '.config/.markdownlint-cli2.jsonc'
