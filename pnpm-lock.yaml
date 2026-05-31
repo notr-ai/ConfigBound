@@ -249,6 +249,12 @@ importers:
       '@config-bound/schema-export':
         specifier: workspace:*
         version: link:../packages/schema-export
+      '@config-bound/typescript-config':
+        specifier: workspace:*
+        version: link:../packages/typescript-config
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
 
   packages/core:
     dependencies:

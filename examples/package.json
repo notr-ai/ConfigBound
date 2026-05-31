@@ -19,6 +19,8 @@
   "private": true,
   "dependencies": {
     "@config-bound/core": "workspace:*",
-    "@config-bound/schema-export": "workspace:*"
+    "@config-bound/schema-export": "workspace:*",
+    "@config-bound/typescript-config": "workspace:*",
+    "zod": "catalog:"
   }
 }

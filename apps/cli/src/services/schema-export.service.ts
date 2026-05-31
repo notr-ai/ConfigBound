@@ -25,7 +25,7 @@ export interface ExportSchemaOptions {
 export class SchemaExportService {
   exportToString(
     configName: string,
-    sections: Section[],
+    sections: ReadonlyArray<Section>,
     configInstance: ConfigBound | TypedConfigBound<ConfigSchema>,
     options: ExportSchemaOptions
   ): string {
