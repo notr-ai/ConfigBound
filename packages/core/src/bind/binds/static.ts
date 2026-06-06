@@ -17,7 +17,7 @@ export type StaticBindValues = Record<string, unknown>;
  * - `{ 'app.port': 3000 }`
  */
 export class StaticBind extends Bind {
-  private values: StaticBindValues;
+  private readonly values: StaticBindValues;
 
   /**
    * Creates a `StaticBind` from an in-memory values object.
