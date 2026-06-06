@@ -20,7 +20,7 @@ import {
   configItem,
   configSection
 } from "@config-bound/core";
-import { EnvVarBind } from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core/binds/env";
 import { z } from "zod";
 
 const config = await ConfigBound.createConfig(

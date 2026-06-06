@@ -80,7 +80,7 @@ Call the factory before creating the config, then pass the instance to `ConfigBo
 
 ```typescript twoslash
 import { ConfigBound, configItem } from "@config-bound/core";
-import { EnvVarBind } from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core/binds/env";
 import { Bind } from "@config-bound/core/bind";
 declare class SecretStoreBind extends Bind {
   static create(options: { token: string }): Promise<SecretStoreBind>;

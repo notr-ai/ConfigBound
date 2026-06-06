@@ -39,7 +39,9 @@ A bind is a source adapter. It knows how to look up a value by its dot-path key 
 When you call `config.get()`, ConfigBound iterates the bind list in order and returns the first non-`undefined` result. This means bind order is meaningful: an `EnvVarBind` listed before a `FileBind` takes precedence.
 
 ```typescript twoslash
-import { ConfigBound, configItem, EnvVarBind, FileBind } from "@config-bound/core";
+import { ConfigBound, configItem } from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core/binds/env";
+import { FileBind } from "@config-bound/core/binds/file";
 const schema = { port: configItem<number>({ default: 3000 }) };
 // ---cut---
 const config = await ConfigBound.createConfig(schema, {

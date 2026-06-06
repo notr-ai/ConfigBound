@@ -14,7 +14,7 @@ startup, or values derived from other runtime state.
 
 ```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/core";
-import { StaticBind } from "@config-bound/core";
+import { StaticBind } from "@config-bound/core/binds/static";
 import { z } from "zod";
 
 const config = await ConfigBound.createConfig(
@@ -42,7 +42,7 @@ const config = await ConfigBound.createConfig(
 **2. Values can be nested objects or flat dot-path keys. Both work:**
 
 ```typescript twoslash
-import { StaticBind } from "@config-bound/core";
+import { StaticBind } from "@config-bound/core/binds/static";
 // ---cut---
 await StaticBind.create({
   port: 8080,                  // nested key

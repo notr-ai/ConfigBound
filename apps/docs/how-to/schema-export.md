@@ -29,7 +29,7 @@ import {
   configSection,
   configEnum
 } from "@config-bound/core";
-import { EnvVarBind } from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core/binds/env";
 import {
   exportSchema,
   formatAsJSON,

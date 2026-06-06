@@ -14,7 +14,7 @@ paths to uppercase environment variable names: `section.element` becomes
 
 ```typescript twoslash
 import { ConfigBound, configItem, configSection } from "@config-bound/core";
-import { EnvVarBind } from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core/binds/env";
 import { z } from "zod";
 
 const config = await ConfigBound.createConfig(
@@ -41,7 +41,7 @@ With this config, `PORT` sets `port` and `DATABASE_HOST` sets `database.host`.
 **2. To avoid collisions with other applications' environment variables, use a prefix:**
 
 ```typescript twoslash
-import { EnvVarBind } from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core/binds/env";
 // ---cut---
 const binds = [await EnvVarBind.create({ prefix: "MYAPP" })];
 ```

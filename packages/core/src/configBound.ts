@@ -1009,6 +1009,3 @@ export {
 };
 
 export { Bind } from './bind/bind';
-export { EnvVarBind } from './bind/binds/envVar';
-export { FileBind } from './bind/binds/file';
-export { StaticBind } from './bind/binds/static';

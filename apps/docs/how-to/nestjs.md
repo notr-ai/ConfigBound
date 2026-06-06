@@ -19,7 +19,7 @@ npm install @config-bound/nestjs
 ```typescript
 // config/app.config.ts
 import { ConfigBound, configItem, configSection } from '@config-bound/core';
-import { EnvVarBind } from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 import { z } from 'zod';
 
 export const AppConfig = await ConfigBound.createConfig(
