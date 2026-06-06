@@ -54,6 +54,9 @@ catalogs:
     tsdown:
       specifier: ^0.22.0
       version: 0.22.0
+    tsx:
+      specifier: ^4.20.6
+      version: 4.22.3
     turbo:
       specifier: ^2.9.16
       version: 2.9.16
@@ -128,6 +131,9 @@ importers:
       tsdown:
         specifier: 'catalog:'
         version: 0.22.0(@arethetypeswrong/core@0.18.3)(publint@0.3.21)(tsx@4.22.3)(typescript@6.0.3)
+      tsx:
+        specifier: 'catalog:'
+        version: 4.22.3
       turbo:
         specifier: 'catalog:'
         version: 2.9.16
@@ -168,7 +174,7 @@ importers:
         specifier: ^24.0.0
         version: 24.0.0
       tsx:
-        specifier: ^4.20.6
+        specifier: 'catalog:'
         version: 4.22.3
     devDependencies:
       '@config-bound/eslint-config':

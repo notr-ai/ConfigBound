@@ -58,6 +58,7 @@
     "publint": "^0.3.21",
     "rimraf": "catalog:",
     "ts-jest": "catalog:",
+    "tsx": "catalog:",
     "tsdown": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
