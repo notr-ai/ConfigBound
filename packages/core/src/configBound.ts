@@ -165,7 +165,7 @@ export function configItem<T>(options: ConfigItem<T>): ConfigItem<T> {
       const errorMessage = defaultResult.error.issues
         .map((e: z.ZodIssue) => `${e.path.join('.')}: ${e.message}`)
         .join('; ');
-      throw new Error(`Invalid default value for config item: ${errorMessage}`);
+      throw new ConfigInvalidException('configItem', errorMessage);
     }
   }
   return options;
