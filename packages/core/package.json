@@ -112,6 +112,18 @@
       }
     }
   },
+  "typesVersions": {
+    "*": {
+      "section": ["./dist/section/section.d.cts"],
+      "element": ["./dist/element/element.d.cts"],
+      "bind": ["./dist/bind/bind.d.cts"],
+      "bind/configValueProvider": ["./dist/bind/configValueProvider.d.cts"],
+      "utilities": ["./dist/utilities/index.d.cts"],
+      "binds/env": ["./dist/binds/env.d.cts"],
+      "binds/file": ["./dist/binds/file.d.cts"],
+      "binds/static": ["./dist/binds/static.d.cts"]
+    }
+  },
   "sideEffects": false,
   "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
   "engines": { "node": ">=20" },

@@ -40,7 +40,7 @@
     "new:bind": "node scripts/new-bind.mjs"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.2",
+    "@arethetypeswrong/cli": "^0.18.3",
     "@changesets/cli": "^2.30.0",
     "@eslint/js": "catalog:",
     "@types/jest": "catalog:",
