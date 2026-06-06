@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Project, Node, SyntaxKind, SourceFile } from 'ts-morph';
 import * as path from 'path';
-import * as fs from 'fs';
+import { promises as fs } from 'fs';
 import { glob } from 'node:fs/promises';
 import { ensureError } from '@config-bound/core/utilities';
 
@@ -192,7 +192,7 @@ export class ConfigDiscoveryService {
       'env'
     ]);
 
-    const stats = fs.statSync(searchPath);
+    const stats = await fs.stat(searchPath);
     if (stats.isFile()) {
       return searchPath.endsWith('.ts') ? [searchPath] : [];
     }
