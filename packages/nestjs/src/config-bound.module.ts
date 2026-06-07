@@ -1,8 +1,7 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
 import {
   ConfigBound,
-  ConfigSchema,
-  TypedConfigBound
+  ConfigSchema
 } from '@config-bound/core';
 import { ConfigBoundService } from './config-bound.service';
 import {
@@ -25,7 +24,7 @@ export class ConfigBoundModule {
   ): DynamicModule {
     const configBoundProvider: Provider = {
       provide: CONFIG_BOUND_INSTANCE,
-      useFactory: async (): Promise<TypedConfigBound<T>> => {
+      useFactory: async (): Promise<ConfigBound<T>> => {
         return ConfigBound.createConfig(options.schema, {
           name: options.name,
           binds: options.binds,
@@ -51,7 +50,7 @@ export class ConfigBoundModule {
       provide: CONFIG_BOUND_INSTANCE,
       useFactory: async (
         configOptions: ConfigBoundModuleOptions<T>
-      ): Promise<TypedConfigBound<T>> => {
+      ): Promise<ConfigBound<T>> => {
         return ConfigBound.createConfig(configOptions.schema, {
           name: configOptions.name,
           binds: configOptions.binds,

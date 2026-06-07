@@ -85,184 +85,20 @@ export interface ConfigBoundCreateOptions {
 }
 
 /**
- * Typed wrapper around {@link ConfigBound} with schema-driven type inference.
- * Provides strongly typed section and element access based on the supplied schema.
+ * @deprecated Use {@link ConfigBound} directly. `ConfigBound` is now generic — replace
+ * `TypedConfigBound<T>` with `ConfigBound<T>`. This alias will be removed in a future major version.
  */
-export class TypedConfigBound<T extends ConfigSchema> {
-  private configBound: ConfigBound;
-
-  /**
-   * Creates a typed ConfigBound wrapper.
-   *
-   * @param configBound - Underlying untyped ConfigBound instance.
-   */
-  constructor(configBound: ConfigBound) {
-    this.configBound = configBound;
-  }
-
-  /**
-   * Gets the instance name.
-   *
-   * @returns ConfigBound instance name.
-   */
-  get name() {
-    return this.configBound.name;
-  }
-  /**
-   * Gets configured binds in resolution order.
-   *
-   * @returns Config binds.
-   */
-  get binds() {
-    return this.configBound.binds;
-  }
-  /**
-   * Gets configured sections.
-   *
-   * @returns Config sections.
-   */
-  get sections() {
-    return this.configBound.sections;
-  }
-
-  /**
-   * Adds a bind and invalidates cache state.
-   *
-   * @param bind - Bind to append.
-   */
-  addBind(bind: Bind): void {
-    this.configBound.addBind(bind);
-  }
-
-  /**
-   * Adds a section and invalidates cache state.
-   *
-   * @param section - Section to append.
-   */
-  addSection(section: Section): void {
-    this.configBound.addSection(section);
-  }
-
-  /**
-   * Returns all configured sections.
-   *
-   * @returns Config sections.
-   */
-  getSections(): ReadonlyArray<Section> {
-    return this.configBound.getSections();
-  }
-
-  /**
-   * Resolves a configuration value from binds/defaults.
-   *
-   * @param sectionName - Section containing the requested element.
-   * @param elementName - Element to resolve.
-   * @returns Resolved value or `undefined` when not set.
-   */
-  async get<
-    K extends keyof InferConfigType<T>,
-    E extends keyof InferConfigType<T>[K]
-  >(sectionName: K, elementName: E): Promise<InferConfigType<T>[K][E] | undefined> {
-    return this.configBound.get<InferConfigType<T>[K][E]>(
-      sectionName as string,
-      elementName as string
-    );
-  }
-
-  /**
-   * Resolves a configuration value and throws when it is undefined.
-   *
-   * @param sectionName - Section containing the requested element.
-   * @param elementName - Element to resolve.
-   * @returns Resolved value.
-   * @throws ConfigUnsetException If the element exists but has no value and no default.
-   */
-  async getOrThrow<
-    K extends keyof InferConfigType<T>,
-    E extends keyof InferConfigType<T>[K]
-  >(sectionName: K, elementName: E): Promise<InferConfigType<T>[K][E]> {
-    return this.configBound.getOrThrow<InferConfigType<T>[K][E]>(
-      sectionName as string,
-      elementName as string
-    );
-  }
-
-  /**
-   * Validates all configured values.
-   *
-   * @returns A promise that resolves when validation succeeds.
-   */
-  async validate(): Promise<void> {
-    return this.configBound.validate();
-  }
-
-  /**
-   * Returns all validation errors without throwing.
-   *
-   * @returns Validation error list.
-   */
-  async getValidationErrors(): Promise<Array<{ path: string; message: string }>> {
-    return this.configBound.getValidationErrors();
-  }
-
-  /**
-   * Reads a configuration value from the in-memory cache only.
-   *
-   * @param sectionName - Section containing the requested element.
-   * @param elementName - Element name to read from cache.
-   * @returns Cached value when present; otherwise `undefined`.
-   */
-  getFromCache<
-    K extends keyof InferConfigType<T>,
-    E extends keyof InferConfigType<T>[K]
-  >(sectionName: K, elementName: E): InferConfigType<T>[K][E] | undefined {
-    return this.configBound.getFromCache<InferConfigType<T>[K][E]>(
-      sectionName as string,
-      elementName as string
-    );
-  }
-
-  /**
-   * Reads a configuration value from cache and throws when it is undefined.
-   *
-   * @param sectionName - Section containing the requested element.
-   * @param elementName - Element name to read from cache.
-   * @returns Cached value.
-   */
-  getOrThrowFromCache<
-    K extends keyof InferConfigType<T>,
-    E extends keyof InferConfigType<T>[K]
-  >(sectionName: K, elementName: E): InferConfigType<T>[K][E] {
-    return this.configBound.getOrThrowFromCache<InferConfigType<T>[K][E]>(
-      sectionName as string,
-      elementName as string
-    );
-  }
-
-  /**
-   * Populates the cache for all elements in the schema.
-   *
-   * @param options - Cache population behavior options.
-   */
-  async populateCache(options?: CacheRefreshOptions): Promise<void> {
-    await this.configBound.populateCache(options);
-  }
-
-  /**
-   * Indicates whether cached reads are currently available.
-   *
-   * @returns `true` when cache population has completed.
-   */
-  isCacheReady(): boolean {
-    return this.configBound.isCacheReady();
-  }
-}
+export type TypedConfigBound<T extends ConfigSchema> = ConfigBound<T>;
 
 /**
  * A ConfigBound is the top level object that contains all the {@link Section}s and {@link Bind}s.
  * It is used to retrieve the values of the {@link Element Elements} from its binds.
+ *
+ * The optional `TSchema` generic parameter enables schema-driven type inference for all read methods.
+ * When supplied, `get()`, `getOrThrow()`, `getFromCache()`, and `getOrThrowFromCache()` accept only
+ * valid section/element names from the schema and return the corresponding inferred value type.
  */
-export class ConfigBound implements ConfigValueProvider {
+export class ConfigBound<TSchema extends ConfigSchema = ConfigSchema> implements ConfigValueProvider {
   readonly name: string;
   private logger: Logger;
   private _binds: Bind[];
@@ -347,7 +183,10 @@ export class ConfigBound implements ConfigValueProvider {
   }
 
   /**
-   * Gets the value of an Element using the first available Bind.
+   * Resolves a configuration value from binds/defaults.
+   *
+   * When the schema generic `TSchema` is specified, `sectionName` and `elementName` are
+   * constrained to valid keys and the return type is inferred from the schema.
    *
    * @param sectionName - The name of the section
    * @param elementName - The name of the element
@@ -359,23 +198,23 @@ export class ConfigBound implements ConfigValueProvider {
    * @see {@link ElementNotFoundException}
    * @see {@link ConfigInvalidException}
    */
-  public async get<T = unknown>(
-    sectionName: string,
-    elementName: string
-  ): Promise<T | undefined> {
+  public async get<
+    K extends keyof InferConfigType<TSchema> & string,
+    E extends keyof InferConfigType<TSchema>[K] & string
+  >(sectionName: K, elementName: E): Promise<InferConfigType<TSchema>[K][E] | undefined>;
+  public async get<V = unknown>(sectionName: string, elementName: string): Promise<V | undefined>;
+  public async get(sectionName: string, elementName: string): Promise<unknown> {
     this.logger.debug(`Getting value for ${sectionName}.${elementName}`);
 
     const element = this.getElementOrThrow(sectionName, elementName);
 
-    // Try to get value from each Bind until one returns a value
     for (const bind of this._binds) {
-      const value = await bind.get<T>(sectionName, elementName);
+      const value = await bind.get(sectionName, elementName);
       if (value !== undefined) {
         this.logger.trace?.(
           `Found value for ${sectionName}.${elementName} in ${bind.name}: ${element.sensitive ? '[MASKED]' : value}`
         );
 
-        // Validate the value against the element's schema
         const validationResult = element.validator.safeParse(value);
         if (!validationResult.success) {
           const errorMessage = validationResult.error.issues
@@ -390,7 +229,7 @@ export class ConfigBound implements ConfigValueProvider {
           );
         }
 
-        return validationResult.data as T;
+        return validationResult.data;
       } else {
         this.logger.trace?.(
           `No value found for ${sectionName}.${elementName} in ${bind.name}`
@@ -398,12 +237,11 @@ export class ConfigBound implements ConfigValueProvider {
       }
     }
 
-    // Fall back to the element default if no bind returned a value
     if (element.default !== undefined) {
       this.logger.debug(
         `Using default value for ${sectionName}.${elementName}: ${element.sensitive ? '[MASKED]' : element.default}`
       );
-      return element.default as unknown as T;
+      return element.default;
     }
 
     this.logger.debug(`No value found for ${sectionName}.${elementName}`);
@@ -411,8 +249,10 @@ export class ConfigBound implements ConfigValueProvider {
   }
 
   /**
-   * Gets the value of an Element, throwing an error if the value is undefined.
-   * This is useful for required configuration values.
+   * Resolves a configuration value and throws when it is undefined.
+   *
+   * When the schema generic `TSchema` is specified, `sectionName` and `elementName` are
+   * constrained to valid keys and the return type is inferred from the schema.
    *
    * @param sectionName - The name of the section
    * @param elementName - The name of the element
@@ -422,8 +262,13 @@ export class ConfigBound implements ConfigValueProvider {
    * @throws ConfigUnsetException If the element exists but has no value and no default
    * @throws ConfigInvalidException If value fails validation
    */
-  public async getOrThrow<T = unknown>(sectionName: string, elementName: string): Promise<T> {
-    const value = await this.get<T>(sectionName, elementName);
+  public async getOrThrow<
+    K extends keyof InferConfigType<TSchema> & string,
+    E extends keyof InferConfigType<TSchema>[K] & string
+  >(sectionName: K, elementName: E): Promise<InferConfigType<TSchema>[K][E]>;
+  public async getOrThrow<V = unknown>(sectionName: string, elementName: string): Promise<V>;
+  public async getOrThrow(sectionName: string, elementName: string): Promise<unknown> {
+    const value = await this.get(sectionName, elementName);
     if (value === undefined) {
       throw new ConfigUnsetException(`${sectionName}.${elementName}`);
     }
@@ -441,6 +286,9 @@ export class ConfigBound implements ConfigValueProvider {
    * `populateCache()` last ran — it is not updated by subsequent {@link get} calls.
    * Call `populateCache()` again to refresh the snapshot (e.g. after `FileBind.reload()`).
    *
+   * When the schema generic `TSchema` is specified, `sectionName` and `elementName` are
+   * constrained to valid keys and the return type is inferred from the schema.
+   *
    * @param sectionName - Section name containing the element.
    * @param elementName - Element name to read from cache.
    * @returns The cached value, or `undefined` when the element had no value at population time.
@@ -448,10 +296,12 @@ export class ConfigBound implements ConfigValueProvider {
    * @throws ElementNotFoundException If the element does not exist in the section.
    * @throws ConfigInvalidException If the cache is not ready or the element had a validation error at population time.
    */
-  public getFromCache<T = unknown>(
-    sectionName: string,
-    elementName: string
-  ): T | undefined {
+  public getFromCache<
+    K extends keyof InferConfigType<TSchema> & string,
+    E extends keyof InferConfigType<TSchema>[K] & string
+  >(sectionName: K, elementName: E): InferConfigType<TSchema>[K][E] | undefined;
+  public getFromCache<V = unknown>(sectionName: string, elementName: string): V | undefined;
+  public getFromCache(sectionName: string, elementName: string): unknown {
     this.getElementOrThrow(sectionName, elementName);
     this.assertCacheReady();
     const cacheKey = this.getCacheKey(sectionName, elementName);
@@ -459,13 +309,14 @@ export class ConfigBound implements ConfigValueProvider {
     if (cachedError) {
       throw cachedError;
     }
-    return this.valueCache.get(cacheKey) as
-      | T
-      | undefined;
+    return this.valueCache.get(cacheKey);
   }
 
   /**
    * Gets a cached element value and throws when the value is `undefined`.
+   *
+   * When the schema generic `TSchema` is specified, `sectionName` and `elementName` are
+   * constrained to valid keys and the return type is inferred from the schema.
    *
    * @param sectionName - Section name containing the element.
    * @param elementName - Element name to read from cache.
@@ -476,8 +327,13 @@ export class ConfigBound implements ConfigValueProvider {
    * @throws ConfigInvalidException If the cache is not ready.
    * @throws Error Re-throws a cached validation error for this element, when present.
    */
-  public getOrThrowFromCache<T = unknown>(sectionName: string, elementName: string): T {
-    const value = this.getFromCache<T>(sectionName, elementName);
+  public getOrThrowFromCache<
+    K extends keyof InferConfigType<TSchema> & string,
+    E extends keyof InferConfigType<TSchema>[K] & string
+  >(sectionName: K, elementName: E): InferConfigType<TSchema>[K][E];
+  public getOrThrowFromCache<V = unknown>(sectionName: string, elementName: string): V;
+  public getOrThrowFromCache(sectionName: string, elementName: string): unknown {
+    const value = this.getFromCache(sectionName, elementName);
     if (value === undefined) {
       throw new ConfigUnsetException(`${sectionName}.${elementName}`);
     }
@@ -677,7 +533,7 @@ export class ConfigBound implements ConfigValueProvider {
   public static async createConfig<T extends ConfigSchema>(
     schema: T,
     options?: ConfigBoundCreateOptions
-  ): Promise<TypedConfigBound<T>> {
+  ): Promise<ConfigBound<T>> {
     return ConfigBoundBuilder.build(schema, options);
   }
 }
@@ -691,12 +547,12 @@ class ConfigBoundBuilder {
    * Builds a ConfigBound instance from a schema
    * @param schema - Declarative configuration schema.
    * @param options - Optional name, binds, logger, and cache mode.
-   * @returns A fully initialized {@link TypedConfigBound} instance.
+   * @returns A fully initialized {@link ConfigBound} instance.
    */
   public static async build<T extends ConfigSchema>(
     schema: T,
     options?: ConfigBoundCreateOptions
-  ): Promise<TypedConfigBound<T>> {
+  ): Promise<ConfigBound<T>> {
     const configName = options?.name ?? 'app';
     const logger = options?.logger ?? new NullLogger();
     const binds = options?.binds ?? [];
@@ -732,7 +588,7 @@ class ConfigBoundBuilder {
       await configBound.validate();
     }
 
-    return new TypedConfigBound<T>(configBound);
+    return configBound as ConfigBound<T>;
   }
 
   /**
