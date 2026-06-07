@@ -3,7 +3,7 @@ import { ConfigBound } from '../configBound';
 import { Element } from '../element/element';
 import { Section } from '../section/section';
 import { EnvVarBind } from './binds/envVar';
-import { ConsoleLogger, NullLogger } from '../utilities/logger';
+import { testLogger } from '../../test/testUtils';
 
 /**
  * @group integration
@@ -81,14 +81,7 @@ describe('ConfigValueProvider functionality', () => {
     const envVarBind = await EnvVarBind.create({ prefix: 'TEST_APP' });
 
     // Create the config bound with bind and then add sections
-    configBound = new ConfigBound(
-      'my-app',
-      [envVarBind],
-      [],
-      process.env.TEST_USE_CONSOLE_LOGGER === 'true'
-        ? new ConsoleLogger()
-        : new NullLogger()
-    );
+    configBound = new ConfigBound('my-app', [envVarBind], [], testLogger());
 
     // Add sections to the configBound
     configBound.addSection(serverSection);

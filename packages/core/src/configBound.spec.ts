@@ -2,8 +2,8 @@ import { z } from 'zod';
 import { ConfigBound, configItem, configSection } from './configBound';
 import { Section } from './section/section';
 import { ConfigInvalidException, SectionExistsException } from './utilities/errors';
-import { ConsoleLogger, NullLogger } from './utilities/logger';
 import { EnvVarBind } from './bind/binds/envVar';
+import { testLogger } from '../test/testUtils';
 
 // Mock the Section class
 jest.mock('./section/section', () => {
@@ -44,9 +44,7 @@ describe('ConfigBound', () => {
       'TestConfig',
       [],
       [],
-      process.env.TEST_USE_CONSOLE_LOGGER === 'true'
-        ? new ConsoleLogger()
-        : new NullLogger()
+      testLogger()
     );
   });
 

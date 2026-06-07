@@ -9,11 +9,7 @@ module.exports = {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
-        tsconfig: {
-          experimentalDecorators: true,
-          emitDecoratorMetadata: true,
-          isolatedModules: false
-        },
+        tsconfig: './tsconfig.test.json',
         diagnostics: {
           ignoreCodes: [151002]
         }
