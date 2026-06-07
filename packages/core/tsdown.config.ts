@@ -3,6 +3,7 @@ import { defineConfig } from 'tsdown';
 export default defineConfig({
   entry: {
     configBound: 'src/configBound.ts',
+    schema: 'src/schema.ts',
     'section/section': 'src/section/section.ts',
     'element/element': 'src/element/element.ts',
     'bind/bind': 'src/bind/bind.ts',

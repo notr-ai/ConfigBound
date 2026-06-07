@@ -54,7 +54,7 @@ const EXTENSION_FORMATS: ReadonlyMap<string, FileFormat> = new Map(
  * `(content: string) => unknown` signature. Parse failures throw.
  */
 const PARSERS: Readonly<Record<FileFormat, (content: string) => unknown>> = {
-  json: (content) => JSON.parse(content),
+  json: JSON.parse,
 
   jsonc: (content) => {
     const errors: ParseError[] = [];

@@ -81,6 +81,16 @@
         "default": "./dist/utilities/index.cjs"
       }
     },
+    "./schema": {
+      "import": {
+        "types": "./dist/schema.d.mts",
+        "default": "./dist/schema.mjs"
+      },
+      "require": {
+        "types": "./dist/schema.d.cts",
+        "default": "./dist/schema.cjs"
+      }
+    },
     "./binds/env": {
       "import": {
         "types": "./dist/binds/env.d.mts",
@@ -119,6 +129,7 @@
       "bind": ["./dist/bind/bind.d.cts"],
       "bind/configValueProvider": ["./dist/bind/configValueProvider.d.cts"],
       "utilities": ["./dist/utilities/index.d.cts"],
+      "schema": ["./dist/schema.d.cts"],
       "binds/env": ["./dist/binds/env.d.cts"],
       "binds/file": ["./dist/binds/file.d.cts"],
       "binds/static": ["./dist/binds/static.d.cts"]
@@ -130,6 +141,7 @@
   "typedocOptions": {
     "entryPoints": [
       "./src/configBound.ts",
+      "./src/schema.ts",
       "./src/section/section.ts",
       "./src/element/element.ts",
       "./src/bind/bind.ts",
