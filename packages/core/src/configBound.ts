@@ -384,28 +384,13 @@ export class ConfigBound implements ConfigValueProvider {
           this.logger.error(
             `Value for ${sectionName}.${elementName} failed validation: ${errorMessage}`
           );
-          if (this.cacheReady) {
-            this.cacheErrors.set(
-              this.getCacheKey(sectionName, elementName),
-              new ConfigInvalidException(`${sectionName}.${elementName}`, errorMessage)
-            );
-          }
           throw new ConfigInvalidException(
             `${sectionName}.${elementName}`,
             errorMessage
           );
         }
 
-        // Return the validated (and potentially transformed) value
-        const validatedValue = validationResult.data as T;
-        if (this.cacheReady) {
-          this.cacheErrors.delete(this.getCacheKey(sectionName, elementName));
-          this.valueCache.set(
-            this.getCacheKey(sectionName, elementName),
-            validatedValue
-          );
-        }
-        return validatedValue;
+        return validationResult.data as T;
       } else {
         this.logger.trace?.(
           `No value found for ${sectionName}.${elementName} in ${bind.name}`
@@ -413,25 +398,15 @@ export class ConfigBound implements ConfigValueProvider {
       }
     }
 
-    // If no value found in binds but element has a default, use that
+    // Fall back to the element default if no bind returned a value
     if (element.default !== undefined) {
       this.logger.debug(
         `Using default value for ${sectionName}.${elementName}: ${element.sensitive ? '[MASKED]' : element.default}`
       );
-      const defaultValue = element.default as unknown as T;
-      if (this.cacheReady) {
-        this.cacheErrors.delete(this.getCacheKey(sectionName, elementName));
-        this.valueCache.set(this.getCacheKey(sectionName, elementName), defaultValue);
-      }
-      return defaultValue;
+      return element.default as unknown as T;
     }
 
-    // If no bind returned a value, return undefined
     this.logger.debug(`No value found for ${sectionName}.${elementName}`);
-    if (this.cacheReady) {
-      this.cacheErrors.delete(this.getCacheKey(sectionName, elementName));
-      this.valueCache.set(this.getCacheKey(sectionName, elementName), undefined);
-    }
     return undefined;
   }
 
@@ -458,13 +433,20 @@ export class ConfigBound implements ConfigValueProvider {
   /**
    * Gets a cached element value without querying binds.
    *
+   * Returns the value captured by the most recent {@link populateCache} call.
+   * This method is synchronous and safe to call in contexts that cannot `await`,
+   * such as class constructors.
+   *
+   * The returned value reflects the state of the configuration at the time
+   * `populateCache()` last ran — it is not updated by subsequent {@link get} calls.
+   * Call `populateCache()` again to refresh the snapshot (e.g. after `FileBind.reload()`).
+   *
    * @param sectionName - Section name containing the element.
    * @param elementName - Element name to read from cache.
-   * @returns The cached value, or `undefined` when no value is cached.
+   * @returns The cached value, or `undefined` when the element had no value at population time.
    * @throws SectionNotFoundException If the section does not exist.
    * @throws ElementNotFoundException If the element does not exist in the section.
-   * @throws ConfigInvalidException If the cache is not ready.
-   * @throws Error Re-throws a cached validation error for this element, when present.
+   * @throws ConfigInvalidException If the cache is not ready or the element had a validation error at population time.
    */
   public getFromCache<T = unknown>(
     sectionName: string,
