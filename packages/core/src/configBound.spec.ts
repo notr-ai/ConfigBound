@@ -52,22 +52,19 @@ describe('ConfigBound', () => {
 
   describe('addSection', () => {
     it('should add a Section to the sections array', () => {
-      const configBoundAny = configBound as any;
-
       // Arrange
-      expect(configBoundAny.sections).toHaveLength(0);
+      expect(configBound.getSections()).toHaveLength(0);
 
       // Act
       configBound.addSection(mockSection1);
 
       // Assert
-      expect(configBoundAny.sections).toHaveLength(1);
-      expect(configBoundAny.sections[0]).toBe(mockSection1);
+      expect(configBound.getSections()).toHaveLength(1);
+      expect(configBound.getSections()[0]).toBe(mockSection1);
     });
 
     it('should add multiple Sections to the sections array', () => {
       // Arrange
-      const configBoundAny = configBound as any;
       const mockSection2 = new Section('TestSection2', []);
 
       // Act
@@ -75,9 +72,9 @@ describe('ConfigBound', () => {
       configBound.addSection(mockSection2);
 
       // Assert
-      expect(configBoundAny['sections']).toHaveLength(2);
-      expect(configBoundAny.sections[0]).toBe(mockSection1);
-      expect(configBoundAny.sections[1]).toBe(mockSection2);
+      expect(configBound.getSections()).toHaveLength(2);
+      expect(configBound.getSections()[0]).toBe(mockSection1);
+      expect(configBound.getSections()[1]).toBe(mockSection2);
     });
 
     it('should throw SectionExistsException when adding a section with the same name', () => {
