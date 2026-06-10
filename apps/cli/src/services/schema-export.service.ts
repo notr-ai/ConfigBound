@@ -5,13 +5,9 @@ import {
   formatAsYAML,
   formatAsEnvExample
 } from '@config-bound/schema-export';
-import {
-  ConfigBound,
-  TypedConfigBound,
-  ConfigSchema
-} from '@config-bound/config-bound';
-import { Section } from '@config-bound/config-bound/section';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+import { ConfigBound, ConfigSchema } from '@config-bound/core';
+import { Section } from '@config-bound/core/section';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 
 export type ExportFormat = 'json' | 'yaml' | 'env';
 
@@ -25,8 +21,8 @@ export interface ExportSchemaOptions {
 export class SchemaExportService {
   exportToString(
     configName: string,
-    sections: Section[],
-    configInstance: ConfigBound | TypedConfigBound<ConfigSchema>,
+    sections: ReadonlyArray<Section>,
+    configInstance: ConfigBound<ConfigSchema>,
     options: ExportSchemaOptions
   ): string {
     const includeOmitted = options.includeOmitted || false;
@@ -41,7 +37,6 @@ export class SchemaExportService {
         return formatAsYAML(schema);
 
       case 'env': {
-        // Extract prefix from EnvVarBind if present
         const prefix = this.extractEnvVarPrefix(configInstance);
         return formatAsEnvExample(schema, prefix);
       }
@@ -52,7 +47,7 @@ export class SchemaExportService {
   }
 
   private extractEnvVarPrefix(
-    configInstance: ConfigBound | TypedConfigBound<ConfigSchema>
+    configInstance: ConfigBound<ConfigSchema>
   ): string | undefined {
     if (!configInstance || !configInstance.binds) {
       return undefined;

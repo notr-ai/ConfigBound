@@ -3,8 +3,8 @@ import {
   configItem,
   configEnum,
   configSection
-} from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+} from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 import { z } from 'zod';
 
 /**
@@ -119,7 +119,7 @@ async function main() {
     },
     {
       // This is where you specify HOW to get the data, not WHAT the data looks like
-      binds: [new EnvVarBind({ prefix: 'EXAMPLE' })]
+      binds: [await EnvVarBind.create({ prefix: 'EXAMPLE' })]
     }
   );
 

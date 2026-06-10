@@ -24,3 +24,29 @@ ignore:
     package:
       name: brace-expansion
       type: npm
+
+  # turbo CSRF login callback vulnerability — fixed in turbo >=2.9.14. We are on 2.9.14.
+  # Grype's DB was published before the patched-version metadata propagated.
+  # https://github.com/advisories/GHSA-hcf7-66rw-9f5r
+  - vulnerability: GHSA-hcf7-66rw-9f5r
+    package:
+      name: turbo
+      type: npm
+
+  # turbo Yarn Berry local code execution — fixed in turbo >=2.9.14. We are on 2.9.14.
+  # Grype's DB was published before the patched-version metadata propagated.
+  # https://github.com/advisories/GHSA-3qcw-2rhx-2726
+  - vulnerability: GHSA-3qcw-2rhx-2726
+    package:
+      name: turbo
+      type: npm
+
+  # vite path traversal in optimized deps .map handling — fixed in vite >=6.4.2.
+  # We use vite 5.4.21 transitively via VitePress (docs only). Exploitable only when the
+  # dev server is explicitly started with --host; the docs dev server is never exposed in CI
+  # or production. Fix requires a major vite + VitePress upgrade.
+  # https://github.com/advisories/GHSA-4w7w-66w2-5vf9
+  - vulnerability: GHSA-4w7w-66w2-5vf9
+    package:
+      name: vite
+      type: npm

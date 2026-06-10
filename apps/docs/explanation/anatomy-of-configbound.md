@@ -13,7 +13,7 @@ The schema is a plain TypeScript object you pass to `ConfigBound.createConfig()`
 Each top-level key is either a `configItem` (a single value) or a `configSection` (a named group of items).
 
 ```typescript twoslash
-import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
+import { ConfigBound, configItem, configSection } from "@config-bound/core";
 import { z } from "zod";
 // ---cut---
 const config = await ConfigBound.createConfig({
@@ -39,13 +39,15 @@ A bind is a source adapter. It knows how to look up a value by its dot-path key 
 When you call `config.get()`, ConfigBound iterates the bind list in order and returns the first non-`undefined` result. This means bind order is meaningful: an `EnvVarBind` listed before a `FileBind` takes precedence.
 
 ```typescript twoslash
-import { ConfigBound, configItem, EnvVarBind, FileBind } from "@config-bound/config-bound";
+import { ConfigBound, configItem } from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core/binds/env";
+import { FileBind } from "@config-bound/core/binds/file";
 const schema = { port: configItem<number>({ default: 3000 }) };
 // ---cut---
 const config = await ConfigBound.createConfig(schema, {
   binds: [
-    new EnvVarBind(),                              // checked first
-    new FileBind({ filePath: '.env.local' })       // fallback
+    await EnvVarBind.create(),                              // checked first
+    await FileBind.create({ filePath: '.env.local' })       // fallback
   ]
 });
 ```
@@ -65,7 +67,7 @@ When `createConfig()` processes the schema, it builds the internal runtime struc
 This is why `config.get()` always takes two arguments: a section name and an element name.
 
 ```typescript twoslash
-import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
+import { ConfigBound, configItem, configSection } from "@config-bound/core";
 const config = await ConfigBound.createConfig({
   port: configItem<number>({ default: 3000 }),
   database: configSection({ host: configItem<string>({ default: 'localhost' }) })
@@ -99,7 +101,7 @@ An element is the unit of runtime behavior for a single configuration value.
 Validation runs when a value is retrieved: the value from the bind is passed through the Zod validator before being returned. You can also validate all values upfront at startup using `validate()` or by passing `validateOnInit: true` to `createConfig()`:
 
 ```typescript twoslash
-import { ConfigBound, configItem } from "@config-bound/config-bound";
+import { ConfigBound, configItem } from "@config-bound/core";
 import { z } from "zod";
 // ---cut---
 const config = await ConfigBound.createConfig(

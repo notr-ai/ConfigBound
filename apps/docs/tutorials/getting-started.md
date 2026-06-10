@@ -9,7 +9,7 @@ This tutorial gets a minimal ConfigBound setup running in a TypeScript app.
 ## Install
 
 ```bash
-npm install @config-bound/config-bound
+npm install @config-bound/core
 ```
 
 ## Create a config
@@ -19,8 +19,8 @@ import {
   ConfigBound,
   configItem,
   configSection
-} from "@config-bound/config-bound";
-import { EnvVarBind } from "@config-bound/config-bound";
+} from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core/binds/env";
 import { z } from "zod";
 
 const config = await ConfigBound.createConfig(
@@ -37,7 +37,7 @@ const config = await ConfigBound.createConfig(
     })
   },
   {
-    binds: [new EnvVarBind()],
+    binds: [await EnvVarBind.create()],
     validateOnInit: true
   }
 );
@@ -49,4 +49,4 @@ const host = await config.get("server", "host");
 ## What to read next
 
 - [Reference overview](/reference/)
-- [Bind API reference](/reference/api/@config-bound.config-bound.bind.bind.Class.Bind)
+- [Bind API reference](/reference/api/@config-bound.core.bind.bind.Class.Bind)

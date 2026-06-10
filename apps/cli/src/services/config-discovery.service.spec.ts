@@ -45,7 +45,7 @@ describe('ConfigDiscoveryService', () => {
     createTempFile(
       'config.ts',
       `
-      import { ConfigBound } from '@config-bound/config-bound';
+      import { ConfigBound } from '@config-bound/core';
       
       export const appConfig = ConfigBound.createConfig({
         name: 'MyApp',
@@ -66,7 +66,7 @@ describe('ConfigDiscoveryService', () => {
     createTempFile(
       'config.ts',
       `
-      import { createConfig } from '@config-bound/config-bound';
+      import { createConfig } from '@config-bound/core';
       
       export const dbConfig = createConfig({
         name: 'Database',
@@ -86,7 +86,7 @@ describe('ConfigDiscoveryService', () => {
     createTempFile(
       'config.ts',
       `
-      import { ConfigBound } from '@config-bound/config-bound';
+      import { ConfigBound } from '@config-bound/core';
       
       export default ConfigBound.createConfig({
         name: 'DefaultConfig',
@@ -107,7 +107,7 @@ describe('ConfigDiscoveryService', () => {
     createTempFile(
       'configs.ts',
       `
-      import { createConfig } from '@config-bound/config-bound';
+      import { createConfig } from '@config-bound/core';
       
       export const config1 = createConfig({ name: 'Config1', sections: {} });
       export const config2 = createConfig({ name: 'Config2', sections: {} });
@@ -126,7 +126,7 @@ describe('ConfigDiscoveryService', () => {
     createTempFile(
       'config1.ts',
       `
-      import { createConfig } from '@config-bound/config-bound';
+      import { createConfig } from '@config-bound/core';
       export const config1 = createConfig({ name: 'Config1', sections: {} });
     `
     );
@@ -134,7 +134,7 @@ describe('ConfigDiscoveryService', () => {
     createTempFile(
       'subdir/config2.ts',
       `
-      import { createConfig } from '@config-bound/config-bound';
+      import { createConfig } from '@config-bound/core';
       export const config2 = createConfig({ name: 'Config2', sections: {} });
     `
     );
@@ -148,7 +148,7 @@ describe('ConfigDiscoveryService', () => {
     createTempFile(
       'config1.ts',
       `
-      import { createConfig } from '@config-bound/config-bound';
+      import { createConfig } from '@config-bound/core';
       export const config1 = createConfig({ name: 'Config1', sections: {} });
     `
     );
@@ -156,7 +156,7 @@ describe('ConfigDiscoveryService', () => {
     createTempFile(
       'subdir/config2.ts',
       `
-      import { createConfig } from '@config-bound/config-bound';
+      import { createConfig } from '@config-bound/core';
       export const config2 = createConfig({ name: 'Config2', sections: {} });
     `
     );
@@ -170,7 +170,7 @@ describe('ConfigDiscoveryService', () => {
     createTempFile(
       'config.ts',
       `
-      import { createConfig } from '@config-bound/config-bound';
+      import { createConfig } from '@config-bound/core';
       const privateConfig = createConfig({ name: 'Private', sections: {} });
     `
     );
@@ -184,7 +184,7 @@ describe('ConfigDiscoveryService', () => {
     createTempFile(
       'config.spec.ts',
       `
-      import { createConfig } from '@config-bound/config-bound';
+      import { createConfig } from '@config-bound/core';
       export const testConfig = createConfig({ name: 'Test', sections: {} });
     `
     );

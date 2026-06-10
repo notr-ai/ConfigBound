@@ -1,5 +1,5 @@
-import { Section } from '@config-bound/config-bound/section';
-import { Element } from '@config-bound/config-bound/element';
+import { Section } from '@config-bound/core/section';
+import { Element } from '@config-bound/core/element';
 import { z } from 'zod';
 import {
   exportElement,
@@ -10,15 +10,15 @@ import {
 describe('Schema Exporter', () => {
   describe('exportElement', () => {
     it('should export a basic element', () => {
-      const element = new Element<string>(
-        'testElement',
-        'A test element',
-        'default-value',
-        'example-value',
-        false,
-        false,
-        z.string()
-      );
+      const element = new Element<string>({
+        name: 'testElement',
+        description: 'A test element',
+        default: 'default-value',
+        example: 'example-value',
+        sensitive: false,
+        omitFromSchema: false,
+        validator: z.string()
+      });
 
       const exported = exportElement(element);
 
@@ -32,15 +32,14 @@ describe('Schema Exporter', () => {
     });
 
     it('should handle required elements', () => {
-      const element = new Element<number>(
-        'requiredElement',
-        'A required element',
-        undefined,
-        42,
-        false,
-        false,
-        z.number()
-      );
+      const element = new Element<number>({
+        name: 'requiredElement',
+        description: 'A required element',
+        example: 42,
+        sensitive: false,
+        omitFromSchema: false,
+        validator: z.number()
+      });
 
       const exported = exportElement(element);
 
@@ -48,15 +47,14 @@ describe('Schema Exporter', () => {
     });
 
     it('should handle sensitive elements', () => {
-      const element = new Element<string>(
-        'secretKey',
-        'API secret key',
-        undefined,
-        'sk_test_123',
-        true,
-        false,
-        z.string()
-      );
+      const element = new Element<string>({
+        name: 'secretKey',
+        description: 'API secret key',
+        example: 'sk_test_123',
+        sensitive: true,
+        omitFromSchema: false,
+        validator: z.string()
+      });
 
       const exported = exportElement(element);
 
@@ -64,29 +62,28 @@ describe('Schema Exporter', () => {
     });
 
     it('should handle elements with omitFromSchema', () => {
-      const element = new Element<string>(
-        'privateKey',
-        'Private configuration key',
-        'default',
-        'example',
-        false,
-        true,
-        z.string()
-      );
+      const element = new Element<string>({
+        name: 'privateKey',
+        description: 'Private configuration key',
+        default: 'default',
+        example: 'example',
+        sensitive: false,
+        omitFromSchema: true,
+        validator: z.string()
+      });
 
       expect(element.omitFromSchema).toBe(true);
     });
 
     it('should extract zod validation object', () => {
-      const element = new Element<number>(
-        'port',
-        'Server port',
-        3000,
-        undefined,
-        false,
-        false,
-        z.number().min(1).max(65535)
-      );
+      const element = new Element<number>({
+        name: 'port',
+        description: 'Server port',
+        default: 3000,
+        sensitive: false,
+        omitFromSchema: false,
+        validator: z.number().min(1).max(65535)
+      });
 
       const exported = exportElement(element);
 
@@ -95,15 +92,14 @@ describe('Schema Exporter', () => {
     });
 
     it('should handle enum types', () => {
-      const element = new Element<string>(
-        'environment',
-        'Runtime environment',
-        'development',
-        undefined,
-        false,
-        false,
-        z.enum(['development', 'staging', 'production'])
-      );
+      const element = new Element<string>({
+        name: 'environment',
+        description: 'Runtime environment',
+        default: 'development',
+        sensitive: false,
+        omitFromSchema: false,
+        validator: z.enum(['development', 'staging', 'production'])
+      });
 
       const exported = exportElement(element);
 
@@ -116,8 +112,16 @@ describe('Schema Exporter', () => {
   describe('exportSection', () => {
     it('should export a section with elements', () => {
       const elements = [
-        new Element<string>('host', 'Database host', 'localhost'),
-        new Element<number>('port', 'Database port', 5432)
+        new Element<string>({
+          name: 'host',
+          description: 'Database host',
+          default: 'localhost'
+        }),
+        new Element<number>({
+          name: 'port',
+          description: 'Database port',
+          default: 5432
+        })
       ];
 
       const section = new Section(
@@ -145,24 +149,24 @@ describe('Schema Exporter', () => {
     });
 
     it('should filter out elements with omitFromSchema: true', () => {
-      const publicElement = new Element<string>(
-        'appName',
-        'Application name',
-        'myApp',
-        'exampleApp',
-        false,
-        false,
-        z.string()
-      );
-      const privateElement = new Element<string>(
-        'internalKey',
-        'Internal configuration key',
-        'secret',
-        'example',
-        false,
-        true,
-        z.string()
-      );
+      const publicElement = new Element<string>({
+        name: 'appName',
+        description: 'Application name',
+        default: 'myApp',
+        example: 'exampleApp',
+        sensitive: false,
+        omitFromSchema: false,
+        validator: z.string()
+      });
+      const privateElement = new Element<string>({
+        name: 'internalKey',
+        description: 'Internal configuration key',
+        default: 'secret',
+        example: 'example',
+        sensitive: false,
+        omitFromSchema: true,
+        validator: z.string()
+      });
 
       const section = new Section(
         'app',
@@ -183,24 +187,24 @@ describe('Schema Exporter', () => {
     });
 
     it('should include omitted elements when includeOmitted is true', () => {
-      const publicElement = new Element<string>(
-        'appName',
-        'Application name',
-        'myApp',
-        'exampleApp',
-        false,
-        false,
-        z.string()
-      );
-      const privateElement = new Element<string>(
-        'internalKey',
-        'Internal configuration key',
-        'secret',
-        'example',
-        false,
-        true,
-        z.string()
-      );
+      const publicElement = new Element<string>({
+        name: 'appName',
+        description: 'Application name',
+        default: 'myApp',
+        example: 'exampleApp',
+        sensitive: false,
+        omitFromSchema: false,
+        validator: z.string()
+      });
+      const privateElement = new Element<string>({
+        name: 'internalKey',
+        description: 'Internal configuration key',
+        default: 'secret',
+        example: 'example',
+        sensitive: false,
+        omitFromSchema: true,
+        validator: z.string()
+      });
 
       const section = new Section(
         'app',
@@ -220,16 +224,23 @@ describe('Schema Exporter', () => {
   describe('exportSchema', () => {
     it('should export a complete schema', () => {
       const appElements = [
-        new Element<number>('port', 'Application port', 3000),
-        new Element<string>('host', 'Application host', 'localhost')
+        new Element<number>({
+          name: 'port',
+          description: 'Application port',
+          default: 3000
+        }),
+        new Element<string>({
+          name: 'host',
+          description: 'Application host',
+          default: 'localhost'
+        })
       ];
 
       const dbElements = [
-        new Element<string>(
-          'connectionString',
-          'Database connection',
-          undefined
-        )
+        new Element<string>({
+          name: 'connectionString',
+          description: 'Database connection'
+        })
       ];
 
       const sections = [
@@ -246,24 +257,24 @@ describe('Schema Exporter', () => {
     });
 
     it('should include omitted elements when includeOmitted is true', () => {
-      const publicElement = new Element<string>(
-        'appName',
-        'Application name',
-        'myApp',
-        'exampleApp',
-        false,
-        false,
-        z.string()
-      );
-      const privateElement = new Element<string>(
-        'internalKey',
-        'Internal configuration key',
-        'secret',
-        'example',
-        false,
-        true,
-        z.string()
-      );
+      const publicElement = new Element<string>({
+        name: 'appName',
+        description: 'Application name',
+        default: 'myApp',
+        example: 'exampleApp',
+        sensitive: false,
+        omitFromSchema: false,
+        validator: z.string()
+      });
+      const privateElement = new Element<string>({
+        name: 'internalKey',
+        description: 'Internal configuration key',
+        default: 'secret',
+        example: 'example',
+        sensitive: false,
+        omitFromSchema: true,
+        validator: z.string()
+      });
 
       const sections = [
         new Section(

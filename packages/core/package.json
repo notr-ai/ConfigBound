@@ -1,0 +1,201 @@
+{
+  "name": "@config-bound/core",
+  "version": "0.3.0",
+  "description": "A config registration library",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notr-ai/ConfigBound.git"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist coverage",
+    "test": "jest --config jest.config.cjs",
+    "lint": "eslint src/**/*.ts --fix",
+    "lint:ci": "eslint src/**/*.ts",
+    "format": "prettier --write --config ../../.config/.prettierrc --ignore-path ../../.config/.prettierignore src/**/*.ts",
+    "format:ci": "prettier --check --config ../../.config/.prettierrc --ignore-path ../../.config/.prettierignore src/**/*.ts"
+  },
+  "main": "./dist/configBound.cjs",
+  "module": "./dist/configBound.mjs",
+  "types": "./dist/configBound.d.mts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/configBound.d.mts",
+        "default": "./dist/configBound.mjs"
+      },
+      "require": {
+        "types": "./dist/configBound.d.cts",
+        "default": "./dist/configBound.cjs"
+      }
+    },
+    "./section": {
+      "import": {
+        "types": "./dist/section/section.d.mts",
+        "default": "./dist/section/section.mjs"
+      },
+      "require": {
+        "types": "./dist/section/section.d.cts",
+        "default": "./dist/section/section.cjs"
+      }
+    },
+    "./element": {
+      "import": {
+        "types": "./dist/element/element.d.mts",
+        "default": "./dist/element/element.mjs"
+      },
+      "require": {
+        "types": "./dist/element/element.d.cts",
+        "default": "./dist/element/element.cjs"
+      }
+    },
+    "./bind": {
+      "import": {
+        "types": "./dist/bind/bind.d.mts",
+        "default": "./dist/bind/bind.mjs"
+      },
+      "require": {
+        "types": "./dist/bind/bind.d.cts",
+        "default": "./dist/bind/bind.cjs"
+      }
+    },
+    "./bind/configValueProvider": {
+      "import": {
+        "types": "./dist/bind/configValueProvider.d.mts",
+        "default": "./dist/bind/configValueProvider.mjs"
+      },
+      "require": {
+        "types": "./dist/bind/configValueProvider.d.cts",
+        "default": "./dist/bind/configValueProvider.cjs"
+      }
+    },
+    "./utilities": {
+      "import": {
+        "types": "./dist/utilities/index.d.mts",
+        "default": "./dist/utilities/index.mjs"
+      },
+      "require": {
+        "types": "./dist/utilities/index.d.cts",
+        "default": "./dist/utilities/index.cjs"
+      }
+    },
+    "./schema": {
+      "import": {
+        "types": "./dist/schema.d.mts",
+        "default": "./dist/schema.mjs"
+      },
+      "require": {
+        "types": "./dist/schema.d.cts",
+        "default": "./dist/schema.cjs"
+      }
+    },
+    "./binds/env": {
+      "import": {
+        "types": "./dist/binds/env.d.mts",
+        "default": "./dist/binds/env.mjs"
+      },
+      "require": {
+        "types": "./dist/binds/env.d.cts",
+        "default": "./dist/binds/env.cjs"
+      }
+    },
+    "./binds/file": {
+      "import": {
+        "types": "./dist/binds/file.d.mts",
+        "default": "./dist/binds/file.mjs"
+      },
+      "require": {
+        "types": "./dist/binds/file.d.cts",
+        "default": "./dist/binds/file.cjs"
+      }
+    },
+    "./binds/static": {
+      "import": {
+        "types": "./dist/binds/static.d.mts",
+        "default": "./dist/binds/static.mjs"
+      },
+      "require": {
+        "types": "./dist/binds/static.d.cts",
+        "default": "./dist/binds/static.cjs"
+      }
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "section": ["./dist/section/section.d.cts"],
+      "element": ["./dist/element/element.d.cts"],
+      "bind": ["./dist/bind/bind.d.cts"],
+      "bind/configValueProvider": ["./dist/bind/configValueProvider.d.cts"],
+      "utilities": ["./dist/utilities/index.d.cts"],
+      "schema": ["./dist/schema.d.cts"],
+      "binds/env": ["./dist/binds/env.d.cts"],
+      "binds/file": ["./dist/binds/file.d.cts"],
+      "binds/static": ["./dist/binds/static.d.cts"]
+    }
+  },
+  "sideEffects": false,
+  "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
+  "engines": { "node": ">=20" },
+  "typedocOptions": {
+    "entryPoints": [
+      "./src/configBound.ts",
+      "./src/schema.ts",
+      "./src/section/section.ts",
+      "./src/element/element.ts",
+      "./src/bind/bind.ts",
+      "./src/bind/configValueProvider.ts",
+      "./src/bind/binds/envVar.ts",
+      "./src/bind/binds/file.ts",
+      "./src/bind/binds/static.ts",
+      "./src/utilities/errors.ts",
+      "./src/utilities/logger.ts"
+    ],
+    "tsconfig": "./tsconfig.typedoc.json",
+    "exclude": ["**/*.spec.ts"]
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "keywords": [
+    "config",
+    "configuration",
+    "environment",
+    "settings"
+  ],
+  "author": "Robert Keyser",
+  "license": "MIT",
+  "devDependencies": {
+    "@changesets/cli": "^2.29.7",
+    "@config-bound/eslint-config": "workspace:*",
+    "@config-bound/typescript-config": "workspace:*",
+    "@eslint/js": "catalog:",
+    "@types/jest": "catalog:",
+    "jest": "catalog:",
+    "@types/js-yaml": "^4.0.9",
+    "@typescript-eslint/eslint-plugin": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "eslint-plugin-jest": "catalog:",
+    "eslint-plugin-turbo": "catalog:",
+    "globals": "catalog:",
+    "husky": "catalog:",
+    "jest-runner-groups": "catalog:",
+    "prettier": "catalog:",
+    "rimraf": "catalog:",
+    "ts-jest": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "zod": "^4.4.1"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "jsonc-parser": "^3.3.1"
+  }
+}

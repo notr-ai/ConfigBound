@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as fs from 'fs';
 import { pathToFileURL } from 'url';
-import { Section } from '@config-bound/config-bound/section';
+import { Section } from '@config-bound/core/section';
 import {
   ConfigBound,
-  TypedConfigBound,
   ConfigSchema,
   ConfigLoaderException,
   ConfigFileNotFoundException,
@@ -16,12 +15,12 @@ import {
   InvalidConfigBoundInstanceException,
   ConfigFileParseException,
   MissingDependencyException
-} from '@config-bound/config-bound';
+} from '@config-bound/core';
 
 export interface LoadedConfig {
   name: string;
-  sections: Section[];
-  instance: ConfigBound | TypedConfigBound<ConfigSchema>;
+  sections: ReadonlyArray<Section>;
+  instance: ConfigBound<ConfigSchema>;
 }
 
 @Injectable()
@@ -94,10 +93,7 @@ export class ConfigLoaderService {
       const fileURL = pathToFileURL(fileToLoad).href;
       const module = await import(fileURL);
 
-      let configInstance:
-        | ConfigBound
-        | TypedConfigBound<ConfigSchema>
-        | undefined;
+      let configInstance: ConfigBound<ConfigSchema> | undefined;
 
       if (exportName && exportName !== 'default') {
         configInstance = module[exportName];
@@ -156,9 +152,7 @@ export class ConfigLoaderService {
             );
           }
 
-          configInstance = configExports[0][1] as
-            | ConfigBound
-            | TypedConfigBound<ConfigSchema>;
+          configInstance = configExports[0][1] as ConfigBound<ConfigSchema>;
         } else {
           // exportName === 'default' was explicitly requested, so use it even if invalid
           configInstance = defaultExport;
@@ -320,9 +314,7 @@ export class ConfigLoaderService {
           exportName !== 'default' &&
           this.isConfigBoundInstance(exportValue)
         ) {
-          const typedValue = exportValue as
-            | ConfigBound
-            | TypedConfigBound<ConfigSchema>;
+          const typedValue = exportValue as ConfigBound<ConfigSchema>;
           configs.set(exportName, {
             name: typedValue.name,
             sections: typedValue.sections,
@@ -365,7 +357,7 @@ export class ConfigLoaderService {
 
   private isConfigBoundInstance(
     value: unknown
-  ): value is ConfigBound | TypedConfigBound<ConfigSchema> {
+  ): value is ConfigBound<ConfigSchema> {
     return (
       value !== null &&
       value !== undefined &&

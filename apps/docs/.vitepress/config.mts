@@ -80,7 +80,7 @@ export default defineConfig({
         {
           text: "API Packages",
           items: [
-            { text: "@config-bound/config-bound", link: "/reference/api/@config-bound.config-bound" },
+            { text: "@config-bound/core", link: "/reference/api/@config-bound.core" },
             { text: "@config-bound/schema-export", link: "/reference/api/@config-bound.schema-export" },
             { text: "@config-bound/nestjs", link: "/reference/api/@config-bound.nestjs" },
           ],
@@ -92,7 +92,7 @@ export default defineConfig({
           ],
         },
       ],
-      "/reference/api/@config-bound.config-bound": [
+      "/reference/api/@config-bound.core": [
         {
           text: "",
           items: [

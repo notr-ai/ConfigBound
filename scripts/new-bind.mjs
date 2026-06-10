@@ -82,7 +82,7 @@ const rootPackageJsonPath = resolve(repoRoot, 'package.json');
 const rootPackageJson = JSON.parse(readFileSync(rootPackageJsonPath, 'utf8'));
 
 if (!rootPackageJson.workspaces.includes(packagePath)) {
-  const configBoundIndex = rootPackageJson.workspaces.indexOf('packages/config-bound');
+  const configBoundIndex = rootPackageJson.workspaces.indexOf('packages/core');
   if (configBoundIndex !== -1) {
     rootPackageJson.workspaces.splice(configBoundIndex + 1, 0, packagePath);
   } else {
@@ -128,7 +128,7 @@ npm install ${packageName}
 **1. Pass a \`${pascal}Bind\` to \`ConfigBound.createConfig\`:**
 
 \`\`\`typescript
-import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
+import { ConfigBound, configItem, configSection } from "@config-bound/core";
 import { ${pascal}Bind } from "${packageName}";
 
 const config = await ConfigBound.createConfig(

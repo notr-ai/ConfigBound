@@ -24,8 +24,8 @@ import {
   configItem,
   configEnum,
   configSection
-} from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound';
+} from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 import { z } from 'zod';
 
 // Define your configuration schema with full type safety
@@ -58,7 +58,7 @@ const config = ConfigBound.createConfig(
     )
   },
   {
-    binds: [new EnvVarBind({ prefix: 'MYAPP' })],
+    binds: [await EnvVarBind.create({ prefix: 'MYAPP' })],
     validateOnInit: true // Catch config errors at startup!
   }
 );
@@ -82,10 +82,10 @@ try {
 For advanced use cases where you need fine-grained control over construction, you can use the imperative API:
 
 ```typescript
-import { ConfigBound } from '@config-bound/config-bound';
-import { Section } from '@config-bound/config-bound/section/section';
-import { Element } from '@config-bound/config-bound/element/element';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+import { ConfigBound } from '@config-bound/core';
+import { Section } from '@config-bound/core/section/section';
+import { Element } from '@config-bound/core/element';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 
 // Create configuration elements
 const portElement = new Element<number>('port', 'Application port', 3000);
@@ -101,7 +101,7 @@ const appSection = new Section('app', [portElement, logLevelElement]);
 // Create the config instance
 const config = new ConfigBound(
   'app',
-  [new EnvVarBind({ prefix: 'MYAPP' })],
+  [await EnvVarBind.create({ prefix: 'MYAPP' })],
   [appSection]
 );
 
@@ -156,7 +156,7 @@ const config = ConfigBound.createConfig(
     /* your schema */
   },
   {
-    binds: [new EnvVarBind({ prefix: 'MYAPP' })]
+    binds: [await EnvVarBind.create({ prefix: 'MYAPP' })]
   }
 );
 ```
@@ -180,9 +180,9 @@ MYAPP_API_APIKEY=your-secret-key
 Use `StaticBind` to inject values directly in code while still participating in bind priority order.
 
 ```typescript
-import { ConfigBound, configItem } from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
-import { StaticBind } from '@config-bound/config-bound/bind/binds/static';
+import { ConfigBound, configItem } from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
+import { StaticBind } from '@config-bound/core/binds/static';
 import { z } from 'zod';
 
 const config = ConfigBound.createConfig(
@@ -195,8 +195,8 @@ const config = ConfigBound.createConfig(
   {
     // Earlier bind wins: StaticBind overrides EnvVarBind here.
     binds: [
-      new StaticBind({ 'app.port': 8080 }),
-      new EnvVarBind({ prefix: 'MYAPP' })
+      await StaticBind.create({ 'app.port': 8080 }),
+      await EnvVarBind.create({ prefix: 'MYAPP' })
     ]
   }
 );

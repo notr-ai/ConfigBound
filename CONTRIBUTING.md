@@ -13,7 +13,7 @@ Thank you for your interest in contributing to Config-bound! Here's how you can 
 1. Make your changes
 2. Test your changes thoroughly. See [Testing](#testing)
 3. Commit with descriptive messages, preferably using [Conventional Commits](https://www.conventionalcommits.org/en) format: `git commit -m "feat: feature description"`
-4. Add a changeset describing your changes, running `npm run changeset` to create a changeset file in the `.changeset` directory. See [Releasing](./RELEASING.md) for more details. Don't edit the CHANGELOG.md file manually.
+4. Add a changeset describing your changes, running `pnpm run changeset` to create a changeset file in the `.changeset` directory. See [Releasing](./RELEASING.md) for more details. Don't edit the CHANGELOG.md file manually.
 5. Push to your branch: `git push origin feature/your-feature-name`
 
 ## Testing
@@ -33,8 +33,8 @@ There are three variants of the npm test script:
 Targeting a specific group of tests:
 
 ```bash
-npm run test -- --group=unit
-npm run test -- --group=integration
+pnpm run test -- --group=unit
+pnpm run test -- --group=integration
 ```
 
 ## Pre-commit Hooks
@@ -55,7 +55,7 @@ Config-bound uses [Husky](https://typicode.github.io/husky/) to manage Git hooks
 
 ### Installing hooks
 
-The hooks should install automatically when you run `npm install`. If you need to install them manually: `npm run prepare`
+The hooks should install automatically when you run `pnpm install`. If you need to install them manually: `pnpm run prepare`
 
 ### Skipping hooks (use sparingly!)
 

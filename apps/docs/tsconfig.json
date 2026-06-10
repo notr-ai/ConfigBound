@@ -3,7 +3,11 @@
   "extends": "@config-bound/typescript-config/base.tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "paths": {
+      "zod": ["../../node_modules/zod"],
+      "zod/*": ["../../node_modules/zod/*"]
+    }
   },
   "include": [".vitepress/**/*.ts", ".vitepress/**/*.mts"]
 }

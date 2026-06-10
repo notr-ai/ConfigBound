@@ -11,7 +11,7 @@ npm install @config-bound/schema-export
 ## Usage
 
 ```typescript
-import { ConfigBound } from '@config-bound/config-bound';
+import { ConfigBound } from '@config-bound/core';
 import {
   exportSchema,
   formatAsJSON,

@@ -28,8 +28,8 @@ import {
   configItem,
   configSection,
   configEnum
-} from "@config-bound/config-bound";
-import { EnvVarBind } from "@config-bound/config-bound";
+} from "@config-bound/core";
+import { EnvVarBind } from "@config-bound/core/binds/env";
 import {
   exportSchema,
   formatAsJSON,
@@ -73,7 +73,7 @@ const config = await ConfigBound.createConfig(
     )
   },
   {
-    binds: [new EnvVarBind({ prefix: "MYAPP" })]
+    binds: [await EnvVarBind.create({ prefix: "MYAPP" })]
   }
 );
 
@@ -92,7 +92,7 @@ By default, `exportSchema` excludes elements marked `omitFromSchema: true`. Pass
 `true` as the third argument to include them:
 
 ```typescript twoslash
-import { ConfigBound, configItem } from "@config-bound/config-bound";
+import { ConfigBound, configItem } from "@config-bound/core";
 import { exportSchema } from "@config-bound/schema-export";
 import { z } from "zod";
 const config = await ConfigBound.createConfig(
@@ -120,7 +120,7 @@ internalKey: configItem<string>({
 compact output:
 
 ```typescript twoslash
-import { ConfigBound, configItem } from "@config-bound/config-bound";
+import { ConfigBound, configItem } from "@config-bound/core";
 import { exportSchema, formatAsJSON } from "@config-bound/schema-export";
 import { z } from "zod";
 const config = await ConfigBound.createConfig(

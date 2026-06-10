@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigBoundService } from './config-bound.service';
 import { ConfigBoundModule } from './config-bound.module';
-import { configItem, configSection } from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
+import { configItem, configSection } from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
 import { z } from 'zod';
 
 type TestSchema = {
@@ -42,7 +42,7 @@ describe('ConfigBoundService', () => {
       imports: [
         ConfigBoundModule.forRoot({
           schema: testSchema,
-          binds: [new EnvVarBind()],
+          binds: [await EnvVarBind.create()],
           validateOnInit: false
         })
       ]
@@ -121,9 +121,9 @@ describe('ConfigBoundModule - forRootAsync', () => {
     module = await Test.createTestingModule({
       imports: [
         ConfigBoundModule.forRootAsync({
-          useFactory: () => ({
+          useFactory: async () => ({
             schema: testSchema,
-            binds: [new EnvVarBind()],
+            binds: [await EnvVarBind.create()],
             validateOnInit: false
           })
         })
@@ -180,7 +180,7 @@ describe('ConfigBoundService cache mode', () => {
       imports: [
         ConfigBoundModule.forRoot({
           schema: testSchema,
-          binds: [new EnvVarBind()],
+          binds: [await EnvVarBind.create()],
           validateOnInit: false,
           cacheMode: 'manual'
         })

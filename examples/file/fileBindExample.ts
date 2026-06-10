@@ -4,9 +4,9 @@ import {
   configItem,
   configEnum,
   configSection
-} from '@config-bound/config-bound';
-import { EnvVarBind } from '@config-bound/config-bound/bind/binds/envVar';
-import { FileBind } from '@config-bound/config-bound/bind/binds/file';
+} from '@config-bound/core';
+import { EnvVarBind } from '@config-bound/core/binds/env';
+import { FileBind } from '@config-bound/core/binds/file';
 import { z } from 'zod';
 
 /**
@@ -100,7 +100,7 @@ async function main() {
     },
     {
       // Earlier bind wins, so env vars override file values.
-      binds: [new EnvVarBind({ prefix: 'EXAMPLE' }), new FileBind({ filePath })]
+      binds: [await EnvVarBind.create({ prefix: 'EXAMPLE' }), await FileBind.create({ filePath })]
     }
   );
 

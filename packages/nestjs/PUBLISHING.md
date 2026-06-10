@@ -117,7 +117,7 @@ npm view @config-bound/nestjs
 ```bash
 cd /tmp/test-install
 npm init -y
-npm install @config-bound/nestjs @config-bound/config-bound @nestjs/common @nestjs/core
+npm install @config-bound/nestjs @config-bound/core @nestjs/common @nestjs/core
 ```
 
 ## Publishing from CI/CD

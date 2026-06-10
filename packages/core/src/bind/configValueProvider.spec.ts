@@ -1,0 +1,140 @@
+import { z } from 'zod';
+import { ConfigBound } from '../configBound';
+import { Element } from '../element/element';
+import { Section } from '../section/section';
+import { EnvVarBind } from './binds/envVar';
+import { testLogger } from '../../test/testUtils';
+
+/**
+ * @group integration
+ */
+describe('ConfigValueProvider functionality', () => {
+  let configBound: ConfigBound;
+  let serverSection: Section;
+  let databaseSection: Section;
+  let portElement: Element<number>;
+  let hostElement: Element<string>;
+  let dbHostElement: Element<string>;
+  let dbPortElement: Element<number>;
+
+  beforeEach(async () => {
+    // Set environment variables before creating any objects
+    process.env.TEST_APP_SERVER_PORT = '8081';
+    process.env.TEST_APP_DATABASE_HOST = 'test-db.example.com';
+
+    // Create config elements for server
+    portElement = new Element<number>({
+      name: 'port',
+      description: 'The port for the server to listen on',
+      default: 3000,
+      example: 8080,
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.number().int().min(0).max(65535)
+    });
+
+    hostElement = new Element<string>({
+      name: 'host',
+      description: 'The host for the server',
+      default: 'localhost',
+      example: '0.0.0.0',
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.string()
+    });
+
+    // Create config elements for database
+    dbHostElement = new Element<string>({
+      name: 'host',
+      description: 'The database host',
+      default: 'localhost',
+      example: 'db.example.com',
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.string()
+    });
+
+    dbPortElement = new Element<number>({
+      name: 'port',
+      description: 'The database port',
+      default: 5432,
+      example: 5432,
+      sensitive: false,
+      omitFromSchema: false,
+      validator: z.number().int().min(0).max(65535)
+    });
+
+    // Create sections
+    serverSection = new Section(
+      'server',
+      [portElement, hostElement],
+      'Server configuration settings'
+    );
+
+    databaseSection = new Section(
+      'database',
+      [dbHostElement, dbPortElement],
+      'Database configuration settings'
+    );
+
+    // Create bind first
+    const envVarBind = await EnvVarBind.create({ prefix: 'TEST_APP' });
+
+    // Create the config bound with bind and then add sections
+    configBound = new ConfigBound('my-app', [envVarBind], [], testLogger());
+
+    // Add sections to the configBound
+    configBound.addSection(serverSection);
+    configBound.addSection(databaseSection);
+  });
+
+  afterEach(() => {
+    // Clean up environment variables
+    delete process.env.TEST_APP_SERVER_PORT;
+    delete process.env.TEST_APP_DATABASE_HOST;
+  });
+
+  test('elements can get their values directly from the config value provider', async () => {
+    // Get the config value provider from the section
+    const serverConfigValueProvider = serverSection.getConfigValueProvider();
+    expect(serverConfigValueProvider).toBeDefined();
+
+    // Elements should be able to get their values from the config value provider
+    await expect(
+      portElement.get<number>(serverConfigValueProvider!)
+    ).resolves.toBe(8081);
+
+    // Host element should use default since not in env
+    await expect(
+      hostElement.get<string>(serverConfigValueProvider!)
+    ).resolves.toBe('localhost');
+  });
+
+  test('sections can get element values directly with getValue', async () => {
+    // Get element values through the section
+    await expect(serverSection.getValue<number>('port')).resolves.toBe(8081);
+
+    await expect(databaseSection.getValue<string>('host')).resolves.toBe(
+      'test-db.example.com'
+    );
+
+    // Non-existent element should return undefined
+    await expect(
+      serverSection.getValue<string>('nonexistent')
+    ).resolves.toBeUndefined();
+  });
+
+  test('configBound can get values via get method', async () => {
+    // Get values through the configBound
+    await expect(configBound.get<number>('server', 'port')).resolves.toBe(8081);
+
+    await expect(configBound.get<string>('database', 'host')).resolves.toBe(
+      'test-db.example.com'
+    );
+
+    // Element with default value should use default
+    await expect(configBound.get<string>('server', 'host')).resolves.toBe(
+      'localhost'
+    );
+  });
+});

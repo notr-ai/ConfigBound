@@ -2,18 +2,28 @@
   "name": "@config-bound/schema-export",
   "version": "0.1.2",
   "description": "Schema export utilities for ConfigBound configuration library",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
+  "sideEffects": false,
+  "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
+  "engines": { "node": ">=20" },
   "scripts": {
-    "build": "tsc",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
     "clean": "rimraf dist",
     "test": "jest",
     "lint": "eslint src/**/*.ts --fix",
@@ -32,28 +42,37 @@
   ],
   "author": "Robert Keyser",
   "license": "MIT",
-  "dependencies": {
-    "@config-bound/config-bound": "0.3.0",
-    "js-yaml": "^4.1.0",
+  "peerDependencies": {
     "zod": "^4.4.1"
   },
+  "dependencies": {
+    "@config-bound/core": "workspace:*",
+    "js-yaml": "^4.1.0"
+  },
   "devDependencies": {
-    "@config-bound/eslint-config": "*",
-    "@types/jest": "^30.0.0",
+    "@config-bound/eslint-config": "workspace:*",
+    "@config-bound/typescript-config": "workspace:*",
+    "@types/jest": "catalog:",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^24.10.0",
-    "eslint": "^9.39.1",
-    "jest": "^30.2.0",
-    "rimraf": "^6.1.0",
-    "ts-jest": "^29.4.5",
-    "typescript": "^6.0.0"
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "jest": "catalog:",
+    "rimraf": "catalog:",
+    "ts-jest": "catalog:",
+    "typescript": "catalog:",
+    "zod": "catalog:"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
+  "typedocOptions": {
+    "entryPoints": ["./src/index.ts"],
+    "tsconfig": "./tsconfig.typedoc.json",
+    "exclude": ["**/*.spec.ts"]
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/notr-ai/ConfigBound"
+    "url": "git+https://github.com/notr-ai/ConfigBound.git"
   }
 }

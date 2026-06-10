@@ -13,8 +13,8 @@ startup, or values derived from other runtime state.
 **1. Pass a `StaticBind` to `ConfigBound.createConfig`:**
 
 ```typescript twoslash
-import { ConfigBound, configItem, configSection } from "@config-bound/config-bound";
-import { StaticBind } from "@config-bound/config-bound";
+import { ConfigBound, configItem, configSection } from "@config-bound/core";
+import { StaticBind } from "@config-bound/core/binds/static";
 import { z } from "zod";
 
 const config = await ConfigBound.createConfig(
@@ -30,7 +30,7 @@ const config = await ConfigBound.createConfig(
   },
   {
     binds: [
-      new StaticBind({
+      await StaticBind.create({
         port: 8080,
         database: { host: "db.local" }
       })
@@ -42,9 +42,9 @@ const config = await ConfigBound.createConfig(
 **2. Values can be nested objects or flat dot-path keys. Both work:**
 
 ```typescript twoslash
-import { StaticBind } from "@config-bound/config-bound";
+import { StaticBind } from "@config-bound/core/binds/static";
 // ---cut---
-new StaticBind({
+await StaticBind.create({
   port: 8080,                  // nested key
   "database.host": "db.local"  // flat dot-path key
 })
@@ -69,6 +69,6 @@ sensitive values as long as they're resolved at runtime—fetched from an upstre
 
 ## Related
 
-- [`StaticBind` API reference](/reference/api/@config-bound.config-bound.bind.binds.static.Class.StaticBind)
+- [`StaticBind` API reference](/reference/api/@config-bound.core.bind.binds.static.Class.StaticBind)
 - [Use EnvVarBind](./env-var-bind.md) - read config from environment variables
 - [Use FileBind](./file-bind.md) - read config from a file

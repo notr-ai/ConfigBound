@@ -8,24 +8,24 @@ set -e
 
 echo "⚙️ Running pre-commit hooks..."
 
-echo "🔒 Checking package-lock.json..."
-npm list --depth=0 >/dev/null 2>&1 || {
-  echo "❌ package-lock.json is out of sync with package.json"
-  echo "   Run 'npm install' to update it"
+echo "🔒 Checking pnpm-lock.yaml..."
+pnpm list --depth=0 >/dev/null 2>&1 || {
+  echo "❌ pnpm-lock.yaml is out of sync with package.json"
+  echo "   Run 'pnpm install' to update it"
   exit 1
 }
 
 echo "📝 Checking Formatting..."
-npm run format:ci || {
+pnpm run format:ci || {
   echo "💡 To fix formatting issues, run: "
-  echo "      npm run format"
+  echo "      pnpm run format"
   exit 1
 }
 
 echo "🔎 Checking Linting..."
-npm run lint:ci || {
+pnpm run lint:ci || {
   echo "💡 To fix linting issues, run: "
-  echo "      npm run lint"
+  echo "      pnpm run lint"
   exit 1
 }
 

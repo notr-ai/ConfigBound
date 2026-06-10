@@ -100,7 +100,7 @@ export class BindGeneratorService {
   }
 
   private renderBindClass(names: BindNames): string {
-    return `import { Bind } from '@config-bound/config-bound/bind';
+    return `import { Bind } from '@config-bound/core/bind';
 
 /**
  * Options for constructing a ${names.pascal}Bind.
@@ -191,7 +191,7 @@ export class ${names.pascal}Bind extends Bind {
   "keywords": ["configbound", "config", "${names.kebab}"],
   "license": "MIT",
   "dependencies": {
-    "@config-bound/config-bound": "^0.1.0"
+    "@config-bound/core": "^0.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
