@@ -1,6 +1,6 @@
 {
   "name": "@config-bound/core",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "A config registration library",
   "repository": {
     "type": "git",
@@ -124,20 +124,45 @@
   },
   "typesVersions": {
     "*": {
-      "section": ["./dist/section/section.d.cts"],
-      "element": ["./dist/element/element.d.cts"],
-      "bind": ["./dist/bind/bind.d.cts"],
-      "bind/configValueProvider": ["./dist/bind/configValueProvider.d.cts"],
-      "utilities": ["./dist/utilities/index.d.cts"],
-      "schema": ["./dist/schema.d.cts"],
-      "binds/env": ["./dist/binds/env.d.cts"],
-      "binds/file": ["./dist/binds/file.d.cts"],
-      "binds/static": ["./dist/binds/static.d.cts"]
+      "section": [
+        "./dist/section/section.d.cts"
+      ],
+      "element": [
+        "./dist/element/element.d.cts"
+      ],
+      "bind": [
+        "./dist/bind/bind.d.cts"
+      ],
+      "bind/configValueProvider": [
+        "./dist/bind/configValueProvider.d.cts"
+      ],
+      "utilities": [
+        "./dist/utilities/index.d.cts"
+      ],
+      "schema": [
+        "./dist/schema.d.cts"
+      ],
+      "binds/env": [
+        "./dist/binds/env.d.cts"
+      ],
+      "binds/file": [
+        "./dist/binds/file.d.cts"
+      ],
+      "binds/static": [
+        "./dist/binds/static.d.cts"
+      ]
     }
   },
   "sideEffects": false,
-  "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
-  "engines": { "node": ">=20" },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "typedocOptions": {
     "entryPoints": [
       "./src/configBound.ts",
@@ -153,7 +178,9 @@
       "./src/utilities/logger.ts"
     ],
     "tsconfig": "./tsconfig.typedoc.json",
-    "exclude": ["**/*.spec.ts"]
+    "exclude": [
+      "**/*.spec.ts"
+    ]
   },
   "publishConfig": {
     "access": "public",

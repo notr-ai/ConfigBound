@@ -1,6 +1,6 @@
 {
   "name": "@config-bound/nestjs",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "NestJS integration for ConfigBound configuration library",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -19,8 +19,15 @@
     }
   },
   "sideEffects": false,
-  "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
-  "engines": { "node": ">=20" },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsdown",
     "typecheck": "tsc --noEmit",
@@ -69,9 +76,13 @@
     "registry": "https://registry.npmjs.org"
   },
   "typedocOptions": {
-    "entryPoints": ["./src/index.ts"],
+    "entryPoints": [
+      "./src/index.ts"
+    ],
     "tsconfig": "./tsconfig.typedoc.json",
-    "exclude": ["**/*.spec.ts"]
+    "exclude": [
+      "**/*.spec.ts"
+    ]
   },
   "repository": {
     "type": "git",
