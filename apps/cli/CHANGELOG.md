@@ -1,5 +1,13 @@
 # @config-bound/cli
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [87d2ab6]
+  - @config-bound/core@1.0.0
+  - @config-bound/schema-export@0.1.3
+
 ## 0.2.0
 
 ### Minor Changes
