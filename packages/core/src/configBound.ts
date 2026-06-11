@@ -85,12 +85,6 @@ export interface ConfigBoundCreateOptions {
 }
 
 /**
- * @deprecated Use {@link ConfigBound} directly. `ConfigBound` is now generic — replace
- * `TypedConfigBound<T>` with `ConfigBound<T>`. This alias will be removed in a future major version.
- */
-export type TypedConfigBound<T extends ConfigSchema> = ConfigBound<T>;
-
-/**
  * A ConfigBound is the top level object that contains all the {@link Section}s and {@link Bind}s.
  * It is used to retrieve the values of the {@link Element Elements} from its binds.
  *
@@ -505,7 +499,7 @@ export class ConfigBound<TSchema extends ConfigSchema = ConfigSchema> implements
    *
    * @param schema - Declarative configuration schema.
    * @param options - Optional name, binds, logger, and cache mode.
-   * @returns A fully initialized {@link TypedConfigBound} instance typed to the provided schema.
+   * @returns A fully initialized {@link ConfigBound} instance typed to the provided schema.
    * @example
    * ```typescript
    * const config = await ConfigBound.createConfig(

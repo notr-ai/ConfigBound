@@ -184,7 +184,7 @@ The service provides full type-safe access to your configuration:
 - `addBind(bind: Bind)`: Add a new bind at runtime
 - `addSection(section: Section)`: Add a new section at runtime
 - `getSections()`: Get all configuration sections
-- `getTypedConfigBound()`: Get the underlying TypedConfigBound instance
+- `getConfigBound()`: Get the underlying ConfigBound instance
 
 **Properties:**
 
