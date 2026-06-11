@@ -2,7 +2,7 @@
 description: Serialize your ConfigBound schema to JSON or YAML for use in documentation, CI, or tooling.
 ---
 
-# Export your configuration schema
+# Export your configuration schema <Badge type="tip" text="schema-export" />
 
 The config schema already contains everything needed to describe your
 configuration: structure, types, defaults, descriptions, and sensitivity flags.
