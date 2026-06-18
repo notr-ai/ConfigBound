@@ -93,7 +93,7 @@ An element is the unit of runtime behavior for a single configuration value.
 
 ## The ConfigBound instance
 
-`createConfig()` returns a `TypedConfigBound`, which wraps a `ConfigBound` and provides full TypeScript inference over the schema. The two main ways to read values are:
+`createConfig()` returns a `ConfigBound<T>`, which provides full TypeScript inference over the schema. The two main ways to read values are:
 
 - **`get(section, element)`** - returns the value or `undefined` if nothing is set and there is no default.
 - **`getOrThrow(section, element)`** - returns the value or throws if it is `undefined`.
